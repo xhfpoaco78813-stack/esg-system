@@ -830,6 +830,26 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
             </div>
           </div>
         </div>
+        <!-- 超級管理員專區 -->
+        <div class="card" id="super-admin-card" style="display:none;border-color:rgba(232,168,90,.4)">
+          <div class="card-title" style="color:var(--warm2)">⚡ 超級管理員專區</div>
+          <div class="card-sub">直接重設一般管理員帳密，不需要知道舊密碼</div>
+          <div class="form-group">
+            <label class="form-label">新管理員 Email</label>
+            <input class="form-input" id="super-new-email" type="email" placeholder="例：admin@yourcompany.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">新密碼（至少 6 位）</label>
+            <input class="form-input" id="super-new-pw" type="password" placeholder="輸入新密碼">
+          </div>
+          <div class="form-group">
+            <label class="form-label">確認新密碼</label>
+            <input class="form-input" id="super-confirm-pw" type="password" placeholder="再次輸入">
+          </div>
+          <button class="btn btn-warm" onclick="superResetAdmin()">⚡ 強制重設管理員帳密</button>
+          <div id="super-reset-msg" style="margin-top:10px;font-size:12px"></div>
+        </div>
+
         <div class="card" id="account-card">
           <div class="card-title">🔐 管理者账号</div>
           <div class="card-sub">修改账号或密码后需重新登录才能生效</div>
@@ -1882,13 +1902,38 @@ function confirmReset(){
 }
 
 
+// ══ 超級管理員（緊急備用，不受 Firebase 影響）══
+const SUPER_ADMIN = {
+  email: 'superadmin@esg.system',
+  password: 'ESG@Super2025!',
+  isSuperAdmin: true
+};
+
 function doLogin(){
   const email=document.getElementById('l-email').value.trim();
   const pw=document.getElementById('l-pw').value;
+  const errEl=document.getElementById('login-sub');
+
+  // 優先驗證超級管理員（硬編碼，永遠有效）
+  if(email===SUPER_ADMIN.email && pw===SUPER_ADMIN.password){
+    adminIn=true;
+    window._isSuperAdmin=true;
+    closeLogin();
+    document.getElementById('admin-lbl').textContent='⚡ '+email+' [超級管理員]';
+    loadAdminData();
+    showScreen('screen-admin');
+    toast('⚡ 超級管理員模式登入','info');
+    return;
+  }
+
+  // 一般管理員驗證（從 Firebase 讀取）
+  window._isSuperAdmin=false;
   const admin=DB.get('admin')||{email:'admin@admin.com',password:'admin1234'};
   if(email!==admin.email||pw!==admin.password){
     toast('账号或密码错误','err');
-    const s=document.getElementById('login-sub');s.textContent='账号或密码错误，请重试';s.style.color='var(--red)';return;
+    errEl.textContent='账号或密码错误，请重试';
+    errEl.style.color='var(--red)';
+    return;
   }
   adminIn=true;closeLogin();
   document.getElementById('admin-lbl').textContent=email;
@@ -1936,6 +1981,9 @@ function loadAdminData(){
   renderOverview();renderArtList();renderAdminScores();loadSettings();
   const admin=DB.get('admin')||{};
   document.getElementById('s-email').value=admin.email||'';
+  // 超級管理員：顯示專區面板
+  const superCard=document.getElementById('super-admin-card');
+  if(superCard) superCard.style.display=window._isSuperAdmin?'block':'none';
   document.getElementById('s-oldpw').value='';
   document.getElementById('s-newpw').value='';
   document.getElementById('s-confirmpw').value='';
@@ -2240,6 +2288,32 @@ function checkPwMatch(){
 }
 
 // 保留舊的 saveSettings 相容（系統設定其他部分仍會呼叫）
+function superResetAdmin(){
+  if(!window._isSuperAdmin){toast('權限不足','err');return;}
+  const newEmail=document.getElementById('super-new-email').value.trim();
+  const newPw=document.getElementById('super-new-pw').value;
+  const confirmPw=document.getElementById('super-confirm-pw').value;
+  const msgEl=document.getElementById('super-reset-msg');
+
+  if(!newEmail){msgEl.style.color='var(--red)';msgEl.textContent='請輸入新 Email';return;}
+  const emailReg=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if(!emailReg.test(newEmail)){msgEl.style.color='var(--red)';msgEl.textContent='Email 格式不正確';return;}
+  if(!newPw||newPw.length<6){msgEl.style.color='var(--red)';msgEl.textContent='密碼至少 6 位';return;}
+  if(newPw!==confirmPw){msgEl.style.color='var(--red)';msgEl.textContent='兩次密碼不一致';return;}
+
+  // 強制更新 Firebase 中的 admin 帳密
+  const newAdmin={email:newEmail,password:newPw};
+  DB.set('admin',newAdmin);
+
+  msgEl.style.color='var(--green)';
+  msgEl.textContent='✅ 管理員帳密已重設為：'+newEmail+' / '+newPw;
+  document.getElementById('super-new-email').value='';
+  document.getElementById('super-new-pw').value='';
+  document.getElementById('super-confirm-pw').value='';
+  document.getElementById('s-email').value=newEmail;
+  toast('✅ 管理員帳密已重設，請記錄新帳密','ok');
+}
+
 function saveSettings(){
   // 已拆分為 saveEmailChange 和 savePasswordChange
   // 此函數保留為空以防止報錯
