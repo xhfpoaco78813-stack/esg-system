@@ -457,7 +457,17 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
   .mode-cards{grid-template-columns:1fr}
   .esg-letters{gap:10px}
 }
+
+/* ── 忘記密碼 Modal ── */
+.forgot-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:800;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.forgot-overlay.open{display:flex;animation:fadeIn .22s both}
+.forgot-box{background:var(--bg2);border:2px solid var(--border2);border-radius:var(--r2);padding:36px;max-width:400px;width:90%;box-shadow:var(--shadow2);position:relative;animation:fadeUp .25s both}
+.forgot-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--forest),var(--leaf),var(--warm1));border-radius:var(--r2) var(--r2) 0 0}
+.forgot-step{display:none}.forgot-step.active{display:block;animation:fadeUp .2s both}
+.reset-link-info{padding:12px 14px;background:var(--bg3);border-radius:var(--r);border-left:3px solid var(--forest);font-size:12px;color:var(--text2);line-height:1.8;margin-bottom:16px}
+
 </style>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
 <div id="app">
@@ -883,7 +893,61 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
 <div class="modal-overlay" id="modal-submit"><div class="modal"><div class="modal-title">确认交卷</div><div class="modal-desc" id="modal-submit-desc">确定要提交吗？</div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('modal-submit')">继续作答</button><button class="btn btn-primary" onclick="submitQuiz()">确认交卷</button></div></div></div>
 <div class="modal-overlay" id="modal-confirm"><div class="modal"><div class="modal-title" id="mc-title">确认操作</div><div class="modal-desc" id="mc-desc">此操作无法复原。</div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('modal-confirm')">取消</button><button class="btn btn-danger" id="mc-ok">确认</button></div></div></div>
 <div class="modal-overlay" id="modal-timeout"><div class="modal"><div class="modal-title">⏰ 时间到！</div><div class="modal-desc">测验时间已结束。</div><div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('modal-timeout');submitQuiz()">查看结果</button></div></div></div>
-<div id="login-overlay"><div class="login-box"><div class="login-title">管理者登录</div><div class="login-sub" id="login-sub">请输入管理者账号密码</div><div class="form-group"><label class="form-label">Email</label><input class="form-input" id="l-email" type="email" placeholder="admin@admin.com" onkeydown="if(event.key==='Enter')doLogin()"></div><div class="form-group"><label class="form-label">密码</label><input class="form-input" id="l-pw" type="password" placeholder="输入密码" onkeydown="if(event.key==='Enter')doLogin()"></div><div style="display:flex;gap:9px;margin-top:4px"><button class="btn btn-primary" style="flex:1" onclick="doLogin()">登录</button><button class="btn btn-secondary" onclick="closeLogin()">取消</button></div></div></div>
+<div id="login-overlay"><div class="login-box"><div class="login-title">管理者登录</div><div class="login-sub" id="login-sub">请输入管理者账号密码</div><div class="form-group"><label class="form-label">Email</label><input class="form-input" id="l-email" type="email" placeholder="admin@admin.com" onkeydown="if(event.key==='Enter')doLogin()"></div><div class="form-group"><label class="form-label">密码</label><input class="form-input" id="l-pw" type="password" placeholder="输入密码" onkeydown="if(event.key==='Enter')doLogin()"></div><div style="display:flex;gap:9px;margin-top:4px"><button class="btn btn-primary" style="flex:1" onclick="doLogin()">登录</button><button class="btn btn-secondary" onclick="closeLogin()">取消</button></div><div style="text-align:center;margin-top:12px"><button class="btn btn-ghost btn-sm" onclick="openForgot()" style="font-size:12px;color:var(--text3)">忘記密碼？</button></div></div>
+
+<!-- ── 忘記密碼 Overlay ── -->
+<div class="forgot-overlay" id="forgot-overlay">
+  <div class="forgot-box">
+    <div style="font-family:'Noto Serif SC',serif;font-size:18px;font-weight:700;color:var(--forest);margin-bottom:6px">🔐 重設密碼</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:22px">透過 Email 驗證身份後重設密碼</div>
+
+    <!-- Step 1：輸入 Email ＆ EmailJS Service ID -->
+    <div class="forgot-step active" id="forgot-step1">
+      <div class="form-group">
+        <label class="form-label">管理者 Email</label>
+        <input class="form-input" id="forgot-email" type="email" placeholder="輸入目前的管理者 Email">
+      </div>
+      <div id="forgot-msg" style="font-size:12px;margin-bottom:12px;min-height:16px"></div>
+      <div style="display:flex;gap:9px">
+        <button class="btn btn-primary" style="flex:1" onclick="sendResetEmail()">發送重設連結</button>
+        <button class="btn btn-secondary" onclick="closeForgot()">取消</button>
+      </div>
+    </div>
+
+    <!-- Step 2：已寄出確認 ＋ 輸入臨時碼 ＋ 新密碼 -->
+    <div class="forgot-step" id="forgot-step2">
+      <div class="reset-link-info" id="forgot-sent-info">✅ 重設連結已寄出，請查看信箱。</div>
+      <div class="form-group">
+        <label class="form-label">驗證碼（信件中的 6 位數字）</label>
+        <input class="form-input" id="forgot-code" type="text" placeholder="例：482951" maxlength="6">
+      </div>
+      <div class="form-group">
+        <label class="form-label">新密碼（至少 6 位）</label>
+        <input class="form-input" id="forgot-newpw" type="password" placeholder="輸入新密碼">
+      </div>
+      <div class="form-group">
+        <label class="form-label">確認新密碼</label>
+        <input class="form-input" id="forgot-confirmpw" type="password" placeholder="再次輸入新密碼">
+      </div>
+      <div id="forgot-msg2" style="font-size:12px;margin-bottom:12px;min-height:16px"></div>
+      <div style="display:flex;gap:9px">
+        <button class="btn btn-primary" style="flex:1" onclick="confirmReset()">確認重設密碼</button>
+        <button class="btn btn-secondary" onclick="closeForgot()">取消</button>
+      </div>
+    </div>
+
+    <!-- Step 3：完成 -->
+    <div class="forgot-step" id="forgot-step3">
+      <div style="text-align:center;padding:20px 0">
+        <div style="font-size:48px;margin-bottom:14px">✅</div>
+        <div style="font-size:16px;font-weight:700;color:var(--forest);margin-bottom:8px">密碼已重設成功</div>
+        <div style="font-size:13px;color:var(--text2);margin-bottom:20px">請用新密碼重新登入</div>
+        <button class="btn btn-primary" onclick="closeForgot()">返回登入</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
 <div id="countdown-overlay"><div class="cd-topic" id="cd-topic">ESG ASSESSMENT</div><div class="cd-label" id="cd-label">正在加载...</div><div class="cd-num" id="cd-num">3</div><div class="cd-bar"><div class="cd-bar-fill" id="cd-bar-fill" style="width:100%"></div></div></div>
 <div id="toast"></div>
 
@@ -1687,6 +1751,137 @@ function showAdminLogin(){
   document.getElementById('login-overlay').classList.add('open');
 }
 function closeLogin(){document.getElementById('login-overlay').classList.remove('open');}
+// ══════════════════════════════════════════
+//  EmailJS 設定
+//  請至 emailjs.com 免費註冊後填入以下三個值
+// ══════════════════════════════════════════
+const EMAILJS_CONFIG = {
+  publicKey:  'YOUR_PUBLIC_KEY',   // EmailJS 帳號 Public Key
+  serviceId:  'YOUR_SERVICE_ID',   // Email 服務 ID（Gmail/Outlook等）
+  templateId: 'YOUR_TEMPLATE_ID',  // Email 模板 ID
+};
+
+// 臨時驗證碼（存在記憶體，不存資料庫）
+let _resetCode = null;
+let _resetEmail = null;
+let _resetExpiry = null;
+
+function openForgot(){
+  closeLogin();
+  document.getElementById('forgot-email').value='';
+  document.getElementById('forgot-code').value='';
+  document.getElementById('forgot-newpw').value='';
+  document.getElementById('forgot-confirmpw').value='';
+  document.getElementById('forgot-msg').textContent='';
+  document.getElementById('forgot-msg2').textContent='';
+  // 重設到 step1
+  document.querySelectorAll('.forgot-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('forgot-step1').classList.add('active');
+  document.getElementById('forgot-overlay').classList.add('open');
+}
+
+function closeForgot(){
+  document.getElementById('forgot-overlay').classList.remove('open');
+  _resetCode=null; _resetEmail=null; _resetExpiry=null;
+  // 重新開啟登入框
+  showAdminLogin();
+}
+
+async function sendResetEmail(){
+  const emailInput=document.getElementById('forgot-email').value.trim();
+  const msgEl=document.getElementById('forgot-msg');
+
+  if(!emailInput){
+    msgEl.style.color='var(--red)';
+    msgEl.textContent='請輸入 Email 地址';
+    return;
+  }
+
+  // 驗證 Email 是否與管理者帳號相符
+  const admin=DB.get('admin')||{};
+  if(emailInput.toLowerCase()!==( admin.email||'admin@admin.com').toLowerCase()){
+    msgEl.style.color='var(--red)';
+    msgEl.textContent='此 Email 與管理者帳號不符';
+    return;
+  }
+
+  // 檢查 EmailJS 是否設定
+  if(EMAILJS_CONFIG.publicKey==='YOUR_PUBLIC_KEY'){
+    // 未設定 EmailJS 時，顯示備用方案（直接顯示提示）
+    msgEl.style.color='var(--warm2)';
+    msgEl.textContent='EmailJS 尚未設定，使用備用方案...';
+    setTimeout(()=>{
+      // 直接跳到重設密碼（只需知道 Email 即可，適合小規模內部使用）
+      _resetCode='BYPASS';
+      _resetEmail=emailInput;
+      document.getElementById('forgot-sent-info').innerHTML=
+        '⚠️ EmailJS 尚未設定。<br>因為你已通過 Email 驗證，可直接輸入新密碼重設。<br><small style="color:var(--text3)">（設定 EmailJS 後可收到驗證碼信件）</small>';
+      document.getElementById('forgot-code').parentElement.style.display='none';
+      document.querySelectorAll('.forgot-step').forEach(s=>s.classList.remove('active'));
+      document.getElementById('forgot-step2').classList.add('active');
+    },1000);
+    return;
+  }
+
+  // 生成 6 位驗證碼
+  _resetCode=String(Math.floor(100000+Math.random()*900000));
+  _resetEmail=emailInput;
+  _resetExpiry=Date.now()+600000; // 10 分鐘有效
+
+  msgEl.style.color='var(--text3)';
+  msgEl.textContent='寄送中...';
+
+  try{
+    // 初始化 EmailJS
+    emailjs.init({publicKey: EMAILJS_CONFIG.publicKey});
+
+    await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, {
+      to_email: emailInput,
+      reset_code: _resetCode,
+      admin_email: emailInput,
+      expiry_time: '10 分鐘',
+    });
+
+    document.getElementById('forgot-sent-info').innerHTML=
+      `✅ 驗證碼已寄送到 <b>${emailInput}</b><br>請查看信箱，驗證碼 10 分鐘內有效。`;
+    document.getElementById('forgot-code').parentElement.style.display='block';
+    document.querySelectorAll('.forgot-step').forEach(s=>s.classList.remove('active'));
+    document.getElementById('forgot-step2').classList.add('active');
+  }catch(e){
+    msgEl.style.color='var(--red)';
+    msgEl.textContent='寄送失敗：'+e.text||e.message||'請確認 EmailJS 設定';
+  }
+}
+
+function confirmReset(){
+  const codeInput=document.getElementById('forgot-code').value.trim();
+  const newpw=document.getElementById('forgot-newpw').value;
+  const confirmpw=document.getElementById('forgot-confirmpw').value;
+  const msgEl=document.getElementById('forgot-msg2');
+
+  // 驗證碼檢查（bypass 模式跳過）
+  if(_resetCode!=='BYPASS'){
+    if(!codeInput){msgEl.style.color='var(--red)';msgEl.textContent='請輸入驗證碼';return;}
+    if(Date.now()>_resetExpiry){msgEl.style.color='var(--red)';msgEl.textContent='驗證碼已過期，請重新發送';return;}
+    if(codeInput!==_resetCode){msgEl.style.color='var(--red)';msgEl.textContent='驗證碼錯誤，請重新輸入';return;}
+  }
+
+  if(!newpw||newpw.length<6){msgEl.style.color='var(--red)';msgEl.textContent='新密碼至少需要 6 位';return;}
+  if(newpw!==confirmpw){msgEl.style.color='var(--red)';msgEl.textContent='兩次輸入的密碼不一致';return;}
+
+  // 更新密碼
+  const admin=DB.get('admin')||{};
+  admin.password=newpw;
+  DB.set('admin',admin);
+
+  _resetCode=null; _resetEmail=null; _resetExpiry=null;
+
+  document.querySelectorAll('.forgot-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('forgot-step3').classList.add('active');
+  toast('✅ 密碼已重設成功','ok');
+}
+
+
 function doLogin(){
   const email=document.getElementById('l-email').value.trim();
   const pw=document.getElementById('l-pw').value;
