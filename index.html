@@ -715,7 +715,12 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
 <!-- ══ ADMIN ══ -->
 <div id="screen-admin" class="screen">
   <div class="topbar">
-    <div class="topbar-logo">🌿 管理后台</div>
+    <div class="topbar-logo" style="display:flex;align-items:center;gap:8px">
+      🌿 管理后台
+      <span id="fb-status-dot" title="Firebase 連線中..."
+        style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#999;flex-shrink:0;cursor:help"></span>
+      <span id="fb-status-txt" style="font-size:10px;color:var(--text3)">連線中</span>
+    </div>
     <div class="topbar-right">
       <span style="font-size:11px;color:var(--text3)" id="admin-lbl"></span>
       <button class="btn btn-secondary btn-sm" onclick="adminLogout()">登出</button>
@@ -1019,7 +1024,18 @@ const DB={
   set(k,v){
     _localCache[k]=v;
     _db.collection(this._col).doc(k).set({value:JSON.stringify(v)})
-      .catch(e=>console.warn('Firebase write error:',e));
+      .then(()=>{
+        // 寫入成功，更新 UI 的狀態指示器
+        const ind = document.getElementById('fb-status-dot');
+        if(ind){ ind.style.background='#4caf50'; ind.title='Firebase 連線正常'; }
+      })
+      .catch(e=>{
+        console.error('Firebase write FAILED:', e.code, e.message);
+        // 寫入失敗：顯示警告
+        const ind = document.getElementById('fb-status-dot');
+        if(ind){ ind.style.background='#f44336'; ind.title='Firebase 寫入失敗：'+e.message; }
+        toast('⚠️ 雲端同步失敗：'+e.message+'（資料僅存於本機）','err');
+      });
   },
   // 非同步從 Firebase 讀取最新資料
   async fetch(k){
@@ -1107,6 +1123,23 @@ async function initDB(){
     const adminSc=document.getElementById('admin-scores');
     if(adminSc) renderAdminScores();
   });
+
+  // Firebase 連線診斷
+  try {
+    await _db.collection('esg_data').doc('_ping').set({ts: Date.now()});
+    console.log('%c✅ Firebase 寫入測試：成功', 'color:green;font-weight:bold');
+    const ind = document.getElementById('fb-status-dot');
+    const txt = document.getElementById('fb-status-txt');
+    if(ind){ ind.style.background='#4caf50'; }
+    if(txt){ txt.textContent='已連線'; txt.style.color='var(--forest)'; }
+  } catch(pingErr) {
+    console.error('%c❌ Firebase 寫入測試：失敗', 'color:red;font-weight:bold', pingErr.code, pingErr.message);
+    const ind = document.getElementById('fb-status-dot');
+    const txt = document.getElementById('fb-status-txt');
+    if(ind){ ind.style.background='#f44336'; }
+    if(txt){ txt.textContent='未連線 ('+pingErr.code+')'; txt.style.color='var(--red)'; }
+    toast('⚠️ Firebase 連線失敗（'+pingErr.code+'）：資料無法跨裝置同步', 'err');
+  }
 
   // 移除載入畫面
   const loadEl=document.getElementById('fb-loading');
