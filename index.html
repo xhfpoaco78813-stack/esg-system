@@ -277,6 +277,9 @@ body::before{content:'';position:fixed;inset:0;
 .qdot.cur{border-color:var(--warm1);box-shadow:0 0 0 2px rgba(232,168,90,.25)}
 #btn-next.prompt-next{animation:promptNext 1.2s ease infinite}
 @keyframes promptNext{0%,100%{box-shadow:0 4px 16px rgba(45,90,39,.25)}50%{box-shadow:0 4px 28px rgba(45,90,39,.55),0 0 0 6px rgba(45,90,39,.1)}}
+/* 確保導航按鈕永遠可點擊，不受任何狀態影響 */
+#btn-next,#btn-prev{pointer-events:auto!important;position:relative;z-index:10}
+.quiz-nav{pointer-events:auto!important}
 
 /* ════ RESULT ════ */
 #screen-result{align-items:center;padding:48px 20px;overflow-y:auto}
@@ -329,7 +332,7 @@ body::before{content:'';position:fixed;inset:0;
 .lb-card{max-width:680px;width:100%;background:var(--bg2);border:2px solid var(--border);border-radius:var(--r2);overflow:hidden;box-shadow:var(--shadow);margin-top:14px}
 .lb-hd{padding:22px 32px;border-bottom:1.5px solid var(--border);background:var(--bg3);display:flex;align-items:center;justify-content:space-between}
 .lb-title{font-family:'Noto Serif SC',serif;font-size:18px;font-weight:700;color:var(--forest)}
-.lb-row{display:grid;grid-template-columns:46px 1fr 80px 80px 94px;align-items:center;padding:12px 32px;border-bottom:1px solid var(--border);transition:background var(--trans)}
+.lb-row{display:grid;grid-template-columns:40px 1fr 66px 90px 66px 70px 80px;align-items:center;padding:12px 32px;border-bottom:1px solid var(--border);transition:background var(--trans)}
 .lb-row:hover{background:var(--bg3)}
 .lb-row.lbh{font-size:10px;color:var(--text3);letter-spacing:1px;padding:8px 32px;background:var(--bg3)}
 .lb-rank{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--text3)}
@@ -704,7 +707,7 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
 <div id="screen-leaderboard" class="screen">
   <div class="lb-card">
     <div class="lb-hd"><div class="lb-title">🏆 成绩排行榜</div><button class="btn btn-secondary btn-sm" onclick="showScreen('screen-landing')">返回</button></div>
-    <div class="lb-row lbh"><div>排名</div><div>姓名</div><div>分数</div><div>用时</div><div>日期</div></div>
+    <div class="lb-row lbh"><div>排名</div><div>姓名</div><div>分数</div><div>題數/難度</div><div>限時</div><div>用时</div><div>日期</div></div>
     <div id="lb-body"></div>
   </div>
 </div>
@@ -780,7 +783,7 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
         <div class="panel-title">成绩记录</div>
         <div class="panel-desc">所有测试者的历史测验记录</div>
         <div class="card" style="padding:0;overflow:hidden">
-          <div class="lb-row lbh"><div>排名</div><div>姓名</div><div>分数</div><div>用时</div><div>日期</div></div>
+          <div class="lb-row lbh"><div>排名</div><div>姓名</div><div>分数</div><div>題數/難度</div><div>限時</div><div>用时</div><div>日期</div></div>
           <div id="admin-scores"></div>
         </div>
         <div style="margin-top:12px"><button class="btn btn-danger btn-sm" onclick="confirmClearScores()">清空所有记录</button></div>
@@ -989,6 +992,16 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const _db = firebase.firestore();
+// 啟用離線持久化（讓 Firebase 在網路恢復後自動同步）
+_db.enablePersistence({synchronizeTabs:true}).catch(err=>{
+  if(err.code==='failed-precondition'){
+    // 多個分頁同時開啟，只有一個可以啟用
+    console.warn('Firebase persistence: multiple tabs open');
+  } else if(err.code==='unimplemented'){
+    // 瀏覽器不支援（Safari 私密模式等）
+    console.warn('Firebase persistence: not supported in this browser');
+  }
+});
 
 // ══════════════════════════════════════════
 //  STORAGE — Firebase 雲端版（含本機快取加速）
@@ -1053,18 +1066,18 @@ async function initDB(){
       DB.fetch('apikey')
     ]);
   } catch(e) {
-    console.error('Firebase 載入失敗:', e);
-    // 顯示錯誤提示，但不阻止系統運作
-    const loadEl = document.getElementById('fb-loading');
-    if(loadEl) {
-      loadEl.innerHTML = '<div style="text-align:center;padding:20px">'+
-        '<div style="font-size:28px;margin-bottom:12px">⚠️</div>'+
-        '<div style="color:#e65100;font-size:14px;font-weight:600;margin-bottom:8px">資料庫連線失敗</div>'+
-        '<div style="color:#9a9080;font-size:12px;margin-bottom:16px">請確認 Firebase 安全規則已開放，或網路連線正常</div>'+
-        '<button onclick="location.reload()" style="padding:8px 20px;background:#2d6a2d;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px">重新載入</button>'+
-        '</div>';
+    console.warn('Firebase 初次載入失敗，嘗試重試:', e);
+    // 重試一次
+    try {
+      await new Promise(r=>setTimeout(r,2000));
+      await Promise.all([
+        DB.fetch('admin'), DB.fetch('articles'),
+        DB.fetch('scores'), DB.fetch('settings'), DB.fetch('apikey')
+      ]);
+    } catch(e2) {
+      console.error('Firebase 重試失敗:', e2);
+      // 不 return，繼續用本地預設值運作
     }
-    return;
   }
 
   // 設定預設值（僅首次）
@@ -1131,10 +1144,14 @@ function populateArticleSelector(){
 function showSetup(mode){
   currentMode=mode||'quiz';
   // 每次進入選題畫面，重新從 Firebase 讀取最新文章
-  DB.fetch('articles').then(arts => {
-    if(arts) _localCache['articles'] = arts;
-    populateArticleSelector();
-  }).catch(()=>populateArticleSelector());
+  // 強制等待 Firebase，再渲染文章選單
+  (async()=>{
+    try{
+      const arts = await DB.fetch('articles');
+      if(arts) _localCache['articles'] = arts;
+    }catch(e){ console.warn('fetch articles failed:', e); }
+    finally{ populateArticleSelector(); }
+  })();
   const isQuiz=currentMode==='quiz';
   document.getElementById('setup-title').textContent=isQuiz?'开始测验':'学习模式';
   document.getElementById('setup-mode-badge').innerHTML=isQuiz
@@ -1193,7 +1210,7 @@ async function startQuizMode(article,apiKey){
     document.getElementById('quiz-timer').textContent='生成中...';
     try{
       const qs=await generateQuizQuestions(article,count,diff,apiKey);
-      QZ={qs,name,ans:{},start:Date.now(),timeLimit:timeVal*60,timerRef:null,idx:0,done:false,mode:'instant'};
+      QZ={qs,name,ans:{},start:Date.now(),timeLimit:timeVal*60,timerRef:null,idx:0,done:false,mode:'instant',diff};
       document.getElementById('ai-gen-loading').style.display='none';
       document.getElementById('quiz-body-wrap').style.display='flex';
       document.getElementById('quiz-nav-bar').style.display='flex';
@@ -1583,9 +1600,16 @@ function showInstantFeedback(qIdx,ans){
 }
 
 function navQ(dir){
-  if(dir===1&&window._quizIsLast){confirmSubmit();return;}
+  // 強制清除所有鎖定狀態
+  instantLocked=false;
+  document.getElementById('btn-next').classList.remove('prompt-next');
+
+  if(dir===1&&window._quizIsLast){
+    confirmSubmit();
+    return;
+  }
   const n=QZ.idx+dir;
-  if(n>=0&&n<QZ.qs.length)renderQ(n);
+  if(n>=0&&n<QZ.qs.length) renderQ(n);
 }
 
 // ── 提示功能 ──
@@ -1649,11 +1673,36 @@ function submitQuiz(){
   clearInterval(QZ.timerRef);
   QZ.done=true;
   const elapsed=Math.floor((Date.now()-QZ.start)/1000);
+  const total=QZ.qs.length;
   let correct=0;
-  QZ.qs.forEach((q,i)=>{if((QZ.ans[i]||[]).slice().sort().join(',')===q.correct.slice().sort().join(','))correct++;});
-  const score=Math.round(correct/QZ.qs.length*100);
-  const rec={name:QZ.name,score,correct,total:QZ.qs.length,elapsed,date:new Date().toLocaleDateString('zh-CN'),ts:Date.now()};
-  const scores=DB.get('scores')||[];scores.push(rec);
+  QZ.qs.forEach((q,i)=>{
+    if((QZ.ans[i]||[]).slice().sort().join(',')===q.correct.slice().sort().join(','))correct++;
+  });
+  // 100分制：每題分數 = 100 / 總題數
+  const pointsPerQ=100/total;
+  const score=Math.round(correct*pointsPerQ);
+
+  // 難度標籤
+  const diffLabel={easy:'初級',medium:'中等',hard:'高級',mixed:'混合'}[QZ.diff||'mixed']||'混合';
+  // 時間限制標籤
+  const timeLimitLabel=QZ.timeLimit>0?(QZ.timeLimit/60)+'分鐘':'無限制';
+
+  const rec={
+    name:QZ.name,
+    score,
+    correct,
+    total,
+    pointsPerQ:Math.round(pointsPerQ*10)/10,
+    diff:QZ.diff||'mixed',
+    diffLabel,
+    timeLimit:QZ.timeLimit||0,
+    timeLimitLabel,
+    elapsed,
+    date:new Date().toLocaleDateString('zh-TW'),
+    ts:Date.now()
+  };
+  const scores=DB.get('scores')||[];
+  scores.push(rec);
   DB.set('scores',scores.sort((a,b)=>b.score-a.score||a.elapsed-b.elapsed));
   showResult(rec);
 }
@@ -1756,8 +1805,24 @@ function renderLB(){
   const body=document.getElementById('lb-body');
   if(!scores.length){body.innerHTML='<div class="lb-empty">目前尚无测验记录</div>';return;}
   const avg=scores.length?Math.round(scores.reduce((a,s)=>a+s.score,0)/scores.length):0;
-  const avgBar=`<div style="padding:8px 32px;font-size:11px;color:var(--text3);background:var(--bg3);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px"><span>📊 全体平均：<b style="color:var(--forest);font-family:'JetBrains Mono',monospace">${avg} 分</b></span><span style="flex:1;height:3px;background:var(--bg4);border-radius:2px;position:relative"><span style="position:absolute;left:0;top:0;height:100%;width:${avg}%;background:var(--forest);border-radius:2px"></span></span></div>`;
-  body.innerHTML=avgBar+scores.map((s,i)=>`<div class="lb-row"><div class="lb-rank ${i<3?'r'+(i+1):''}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div><div class="lb-name">${esc(s.name)}${s.score>avg?'<span style="font-size:9px;color:var(--green);margin-left:4px;background:rgba(74,143,58,.1);padding:1px 5px;border-radius:3px">↑均上</span>':''}</div><div class="lb-score">${s.score} 分</div><div class="lb-time">${pad(Math.floor(s.elapsed/60))}:${pad(s.elapsed%60)}</div><div class="lb-date">${s.date}</div></div>`).join('');
+  const avgBar='<div style="padding:8px 32px;font-size:11px;color:var(--text3);background:var(--bg3);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px">'+
+    '<span>📊 全体平均：<b style="color:var(--forest);font-family:JetBrains Mono,monospace">'+avg+' 分</b></span>'+
+    '<span style="flex:1;height:3px;background:var(--bg4);border-radius:2px;position:relative">'+
+    '<span style="position:absolute;left:0;top:0;height:100%;width:'+avg+'%;background:var(--forest);border-radius:2px"></span></span></div>';
+  body.innerHTML=avgBar+scores.map((s,i)=>{
+    const diffLabel=s.diffLabel||s.diff||'--';
+    const timeLbl=s.timeLimitLabel||(s.timeLimit>0?(s.timeLimit/60)+'分鐘':'無限制');
+    const aboveAvg=s.score>avg?'<span style="font-size:9px;color:var(--green);margin-left:4px;background:rgba(74,143,58,.1);padding:1px 5px;border-radius:3px">↑均上</span>':'';
+    return '<div class="lb-row">'+
+      '<div class="lb-rank '+(i<3?'r'+(i+1):'')+'">'+(i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1)+'</div>'+
+      '<div class="lb-name">'+esc(s.name)+aboveAvg+'</div>'+
+      '<div class="lb-score">'+s.score+' 分</div>'+
+      '<div style="font-size:11px;color:var(--text2);text-align:center">'+s.total+'題 / '+diffLabel+'</div>'+
+      '<div style="font-size:11px;color:var(--text3);text-align:center">'+timeLbl+'</div>'+
+      '<div class="lb-time">'+pad(Math.floor(s.elapsed/60))+':'+pad(s.elapsed%60)+'</div>'+
+      '<div class="lb-date">'+s.date+'</div>'+
+    '</div>';
+  }).join('');
 }
 
 // ══════════════════════════════════════════
@@ -2019,7 +2084,7 @@ function renderOverview(){
   const avg=sc.length?Math.round(sc.reduce((a,r)=>a+r.score,0)/sc.length):0;
   document.getElementById('ov-stats').innerHTML=`<div class="sc"><div class="sc-v">${arts.length}</div><div class="sc-l">已上传文章</div></div><div class="sc"><div class="sc-v">${sc.length}</div><div class="sc-l">测验记录数</div></div><div class="sc"><div class="sc-v">${avg}</div><div class="sc-l">平均分数</div></div>`;
   const rec=sc.slice(0,5);
-  document.getElementById('ov-scores').innerHTML=rec.length?`<div class="lb-row lbh"><div>排名</div><div>姓名</div><div>分数</div><div>用时</div><div>日期</div></div>`+rec.map((s,i)=>`<div class="lb-row"><div class="lb-rank">${i+1}</div><div class="lb-name">${esc(s.name)}</div><div class="lb-score">${s.score}</div><div class="lb-time">${pad(Math.floor(s.elapsed/60))}:${pad(s.elapsed%60)}</div><div class="lb-date">${s.date}</div></div>`).join(''):'<div style="color:var(--text3);font-size:13px;padding:8px 0">尚无记录</div>';
+  document.getElementById('ov-scores').innerHTML=rec.length?`<div class="lb-row lbh"><div>排名</div><div>姓名</div><div>分数</div><div>題數/難度</div><div>限時</div><div>用时</div><div>日期</div></div>`+rec.map((s,i)=>`<div class="lb-row"><div class="lb-rank">${i+1}</div><div class="lb-name">${esc(s.name)}</div><div class="lb-score">${s.score}</div><div class="lb-time">${pad(Math.floor(s.elapsed/60))}:${pad(s.elapsed%60)}</div><div class="lb-date">${s.date}</div></div>`).join(''):'<div style="color:var(--text3);font-size:13px;padding:8px 0">尚无记录</div>';
 }
 function saveArticle(){
   const title=document.getElementById('art-title').value.trim();
@@ -2177,7 +2242,19 @@ function renderAdminScores(){
   const sc=DB.get('scores')||[];
   const body=document.getElementById('admin-scores');
   if(!sc.length){body.innerHTML='<div class="lb-empty">尚无记录</div>';return;}
-  body.innerHTML=sc.map((s,i)=>`<div class="lb-row"><div class="lb-rank">${i+1}</div><div class="lb-name">${esc(s.name)}</div><div class="lb-score">${s.score}</div><div class="lb-time">${pad(Math.floor(s.elapsed/60))}:${pad(s.elapsed%60)}</div><div class="lb-date">${s.date}</div></div>`).join('');
+  body.innerHTML=sc.map((s,i)=>{
+    const diffLabel=s.diffLabel||s.diff||'--';
+    const timeLbl=s.timeLimitLabel||(s.timeLimit>0?(s.timeLimit/60)+'分鐘':'無限制');
+    return '<div class="lb-row">'+
+      '<div class="lb-rank">'+(i+1)+'</div>'+
+      '<div class="lb-name">'+esc(s.name)+'</div>'+
+      '<div class="lb-score">'+s.score+'</div>'+
+      '<div style="font-size:11px;color:var(--text2);text-align:center">'+s.total+'題 / '+diffLabel+'</div>'+
+      '<div style="font-size:11px;color:var(--text3);text-align:center">'+timeLbl+'</div>'+
+      '<div class="lb-time">'+pad(Math.floor(s.elapsed/60))+':'+pad(s.elapsed%60)+'</div>'+
+      '<div class="lb-date">'+s.date+'</div>'+
+    '</div>';
+  }).join('');
 }
 function confirmClearScores(){
   openConfirm('清空成绩记录','此操作将删除所有测验记录，无法复原。',()=>{DB.set('scores',[]);renderAdminScores();renderOverview();toast('成绩记录已清空');});
