@@ -998,15 +998,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const _db = firebase.firestore();
 // 啟用離線持久化（讓 Firebase 在網路恢復後自動同步）
-_db.enablePersistence({synchronizeTabs:true}).catch(err=>{
-  if(err.code==='failed-precondition'){
-    // 多個分頁同時開啟，只有一個可以啟用
-    console.warn('Firebase persistence: multiple tabs open');
-  } else if(err.code==='unimplemented'){
-    // 瀏覽器不支援（Safari 私密模式等）
-    console.warn('Firebase persistence: not supported in this browser');
-  }
-});
+// enablePersistence 已移除（iOS Safari 不支援，會導致手機卡住）
 
 // ══════════════════════════════════════════
 //  STORAGE — Firebase 雲端版（含本機快取加速）
@@ -1072,27 +1064,27 @@ async function initDB(){
     '<style>@keyframes loadbar{from{width:20%}to{width:90%}}</style>'
   );
 
-  // 從 Firebase 載入所有資料（含錯誤處理）
+  // 從 Firebase 載入所有資料（含 timeout 保護，最多等 8 秒）
+  const fetchTimeout = (promise, ms) =>
+    Promise.race([promise, new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),ms))]);
+
   try {
-    await Promise.all([
+    await fetchTimeout(Promise.all([
       DB.fetch('admin'),
       DB.fetch('articles'),
       DB.fetch('scores'),
       DB.fetch('settings'),
       DB.fetch('apikey')
-    ]);
+    ]), 8000);
   } catch(e) {
-    console.warn('Firebase 初次載入失敗，嘗試重試:', e);
-    // 重試一次
+    console.warn('Firebase 載入失敗或逾時，嘗試重試:', e.message);
     try {
-      await new Promise(r=>setTimeout(r,2000));
-      await Promise.all([
+      await fetchTimeout(Promise.all([
         DB.fetch('admin'), DB.fetch('articles'),
         DB.fetch('scores'), DB.fetch('settings'), DB.fetch('apikey')
-      ]);
+      ]), 6000);
     } catch(e2) {
-      console.error('Firebase 重試失敗:', e2);
-      // 不 return，繼續用本地預設值運作
+      console.warn('Firebase 重試失敗，使用本地預設值繼續運作');
     }
   }
 
@@ -1805,11 +1797,13 @@ function showResult(rec){
   document.getElementById('rs-correct').textContent=rec.correct;
   document.getElementById('rs-total').textContent=rec.total;
   document.getElementById('rs-acc').textContent=Math.round(rec.correct/rec.total*100)+'%';
-  document.getElementById('rs-time').textContent=`${pad(Math.floor(rec.elapsed/60))}:${pad(rec.elapsed%60)}`;
+  document.getElementById('rs-time').textContent=pad(Math.floor(rec.elapsed/60))+':'+pad(rec.elapsed%60);
   const circ=2*Math.PI*48;
-  setTimeout(()=>{document.getElementById('res-ring-fill').style.strokeDashoffset=circ*(1-rec.score/100);},120);
+  setTimeout(function(){document.getElementById('res-ring-fill').style.strokeDashoffset=circ*(1-rec.score/100);},120);
   const gm=rec.score>=90?['S级','var(--forest)']:rec.score>=75?['A级','var(--green)']:rec.score>=60?['B级','var(--blue)']:['C级','var(--red)'];
-  const g=document.getElementById('res-grade');g.textContent=gm[0];g.style.cssText=`background:${gm[1]}18;color:${gm[1]};border:1px solid ${gm[1]}33`;
+  const g=document.getElementById('res-grade');
+  g.textContent=gm[0];
+  g.style.cssText='background:'+gm[1]+'18;color:'+gm[1]+';border:1px solid '+gm[1]+'33';
   const rank=ESG_RANKS.find(r=>rec.score>=r.min)||ESG_RANKS[ESG_RANKS.length-1];
   document.getElementById('rank-icon').textContent=rank.icon;
   document.getElementById('rank-title').textContent=rank.title;
@@ -1832,7 +1826,15 @@ function showResult(rec){
       const keys=q.type==='truefalse'?['T（正确）','F（错误）']:q.choices.map((_,ci)=>String.fromCharCode(65+ci)+'. '+q.choices[ci]);
       const uL=(QZ.ans[i]||[]).map(x=>keys[x]||x).join('、')||'（未作答）';
       const cL=q.correct.map(x=>keys[x]||x).join('、');
-      return`<div class="rev-item ${ok?'ok':'ng'}"><div class="rev-q">${i+1}. ${esc(q.text)}</div><div class="rev-a"><span style="color:${ok?'var(--green)':'var(--red)'}">${ok?'✓ 答对':'✗ 答错'} — 您的答案：${uL}</span>${!ok?`<br><span style="color:var(--green)">正确答案：${cL}</span>`:''}</div>${q.explanation?`<div class="rev-explain">📌 ${esc(q.explanation)}</div>`:''}</div>`;
+      var okCls=ok?'ok':'ng';
+      var okColor=ok?'var(--green)':'var(--red)';
+      var okTxt=ok?'✓ 答对':'✗ 答错';
+      var wrongAns=!ok?('<br><span style="color:var(--green)">正确答案：'+cL+'</span>'):'';
+      var explainHtml=q.explanation?('<div class="rev-explain">📌 '+esc(q.explanation)+'</div>'):'';
+      return '<div class="rev-item '+okCls+'">'+
+        '<div class="rev-q">'+(i+1)+'. '+esc(q.text)+'</div>'+
+        '<div class="rev-a"><span style="color:'+okColor+'">'+okTxt+' — 您的答案：'+uL+'</span>'+wrongAns+'</div>'+
+        explainHtml+'</div>';
     }).join('');
   }else rs.style.display='none';
   showScreen('screen-result');
