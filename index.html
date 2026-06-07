@@ -1096,12 +1096,34 @@ async function initDB(){
     }
   }
 
-  // 設定預設值（僅首次）
-  if(!DB.get('admin'))    DB.set('admin',{email:'admin@admin.com',password:'admin1234'});
-  if(!DB.get('articles')) DB.set('articles',[]);
-  if(!DB.get('scores'))   DB.set('scores',[]);
-  if(!DB.get('settings')) DB.set('settings',{showExplain:true,hiContrast:false,fontSize:'normal'});
-  if(!DB.get('apikey'))   DB.set('apikey','');
+  // 設定預設值：只在 Firebase 真的沒有資料時才寫入預設值
+  // 絕對不覆蓋 Firebase 已有的資料
+  const fbAdmin    = DB.get('admin');
+  const fbArticles = DB.get('articles');
+  const fbScores   = DB.get('scores');
+  const fbSettings = DB.get('settings');
+  const fbApikey   = DB.get('apikey');
+
+  // admin：Firebase 沒有時才寫預設值
+  if(fbAdmin===null || fbAdmin===undefined){
+    DB.set('admin',{email:'admin@admin.com',password:'admin1234'});
+  }
+  // articles：Firebase 沒有時才寫空陣列（注意：[] 是有效值，null/undefined 才是沒有）
+  if(fbArticles===null || fbArticles===undefined){
+    DB.set('articles',[]);
+  }
+  // scores：Firebase 沒有時才寫空陣列
+  if(fbScores===null || fbScores===undefined){
+    DB.set('scores',[]);
+  }
+  // settings：Firebase 沒有時才寫預設值
+  if(fbSettings===null || fbSettings===undefined){
+    DB.set('settings',{showExplain:true,hiContrast:false,fontSize:'normal'});
+  }
+  // apikey：Firebase 沒有時才寫空字串
+  if(fbApikey===null || fbApikey===undefined){
+    DB.set('apikey','');
+  }
 
   // 套用外觀設定
   const s=DB.get('settings')||{};
