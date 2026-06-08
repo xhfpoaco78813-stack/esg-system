@@ -1047,10 +1047,7 @@ const DB={
   // 即時監聽：只在伺服器資料到來時更新（不用本地快取觸發）
   listen(k,cb){
     return _db.collection(this._col).doc(k).onSnapshot(
-      {includeMetadataChanges:true},
       function(doc){
-        // fromCache=true 表示是本地快取，等真實伺服器資料
-        if(doc.metadata && doc.metadata.fromCache) return;
         if(doc.exists){
           try{
             const val=JSON.parse(doc.data().value);
@@ -1058,7 +1055,8 @@ const DB={
             cb(val);
           }catch(e){console.warn('listen parse error:',e);}
         }
-      }
+      },
+      function(err){console.warn('listen error:',err);}
     );
   }
 };
