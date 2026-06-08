@@ -1137,24 +1137,47 @@ async function initDB(){
   if(s.fontSize==='lg') document.body.classList.add('font-lg');
   if(s.fontSize==='xl') document.body.classList.add('font-xl');
 
-  // 監聽文章即時更新（管理者上傳後，所有人自動更新）
-  DB.listen('articles', val=>{
-    _localCache['articles']=val;
+  // ── 等待 Firebase 真實資料到達後才移除 loading ──
+  // 用 onSnapshot 監聽 articles，第一次收到伺服器資料時移除 loading
+  var _loadingRemoved = false;
+  function removeLoading(){
+    if(_loadingRemoved) return;
+    _loadingRemoved = true;
+    const loadEl = document.getElementById('fb-loading');
+    if(loadEl) loadEl.remove();
+    // 更新狀態燈
+    const ind = document.getElementById('fb-status-dot');
+    const txt = document.getElementById('fb-status-txt');
+    if(ind){ ind.style.background='#4caf50'; }
+    if(txt){ txt.textContent='已連線'; txt.style.color='var(--forest)'; }
+    // 資料到齊後刷新總覽
+    renderOverview();
+  }
+
+  // 監聽 articles：收到伺服器資料時移除 loading 並刷新
+  DB.listen('articles', function(val){
+    _localCache['articles'] = val;
+    removeLoading();
+    // 若選題畫面開著，自動更新選單
+    const setupSc = document.getElementById('screen-setup');
+    if(setupSc && setupSc.classList.contains('active')){
+      populateArticleSelector();
+    }
   });
+
   // 監聽成績即時更新
-  DB.listen('scores', val=>{
-    _localCache['scores']=val;
-    // 如果排行榜畫面開著，自動刷新
-    const lb=document.getElementById('screen-leaderboard');
-    if(lb&&lb.classList.contains('active')) renderLB();
-    // 如果後台成績頁開著，自動刷新
-    const adminSc=document.getElementById('admin-scores');
+  DB.listen('scores', function(val){
+    _localCache['scores'] = val;
+    const lb = document.getElementById('screen-leaderboard');
+    if(lb && lb.classList.contains('active')) renderLB();
+    const adminSc = document.getElementById('admin-scores');
     if(adminSc) renderAdminScores();
   });
 
-  // 移除載入畫面
-  const loadEl=document.getElementById('fb-loading');
-  if(loadEl) loadEl.remove();
+  // 保底：15 秒內若 loading 還沒移除，強制移除
+  setTimeout(function(){
+    removeLoading();
+  }, 15000);
 }
 
 // ══════════════════════════════════════════
@@ -2209,8 +2232,13 @@ function showPanel(id){
 }
 function renderOverview(){
   const arts=DB.get('articles')||[],sc=DB.get('scores')||[];
-  const avg=sc.length?Math.round(sc.reduce((a,r)=>a+r.score,0)/sc.length):0;
-  document.getElementById('ov-stats').innerHTML=`<div class="sc"><div class="sc-v">${arts.length}</div><div class="sc-l">已上传文章</div></div><div class="sc"><div class="sc-v">${sc.length}</div><div class="sc-l">测验记录数</div></div><div class="sc"><div class="sc-v">${avg}</div><div class="sc-l">平均分数</div></div>`;
+  const avg=sc.length?Math.round(sc.reduce(function(a,r){return a+r.score;},0)/sc.length):0;
+  const ovStats=document.getElementById('ov-stats');
+  if(ovStats){
+    ovStats.innerHTML='<div class="sc"><div class="sc-v">'+arts.length+'</div><div class="sc-l">已上传文章</div></div>'+
+      '<div class="sc"><div class="sc-v">'+sc.length+'</div><div class="sc-l">测验记录数</div></div>'+
+      '<div class="sc"><div class="sc-v">'+avg+'</div><div class="sc-l">平均分数</div></div>';
+  }
   const rec=sc.slice(0,5);
   document.getElementById('ov-scores').innerHTML=rec.length?`<div class="lb-row lbh"><div>排名</div><div>姓名</div><div>分数</div><div>題數/難度</div><div>限時</div><div>用时</div><div>日期</div></div>`+rec.map((s,i)=>`<div class="lb-row"><div class="lb-rank">${i+1}</div><div class="lb-name">${esc(s.name)}</div><div class="lb-score">${s.score}</div><div class="lb-time">${pad(Math.floor(s.elapsed/60))}:${pad(s.elapsed%60)}</div><div class="lb-date">${s.date}</div></div>`).join(''):'<div style="color:var(--text3);font-size:13px;padding:8px 0">尚无记录</div>';
 }
