@@ -2192,6 +2192,20 @@ function saveApiKey(){
 }
 
 function loadAdminData(){
+  // 先從 Firebase 讀取最新資料，確保手機和其他裝置看到正確數據
+  (async function(){
+    try{
+      await Promise.all([
+        DB.fetch('articles'),
+        DB.fetch('scores'),
+        DB.fetch('admin'),
+        DB.fetch('apikey'),
+        DB.fetch('settings')
+      ]);
+    }catch(e){ console.warn('loadAdminData fetch error:', e); }
+    renderOverview();renderArtList();renderAdminScores();loadSettings();
+  })();
+  // 同時立即渲染當前快取資料（電腦端不需等待）
   renderOverview();renderArtList();renderAdminScores();loadSettings();
   const admin=DB.get('admin')||{};
   document.getElementById('s-email').value=admin.email||'';
