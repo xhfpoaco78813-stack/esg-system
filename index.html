@@ -2274,10 +2274,11 @@ function saveArticle(){
         content: content,
         chars: content.length
       };
-      var {error} = await _sb.from('articles').insert([{
-        id: newArt.id, title: newArt.title,
-        content: newArt.content, chars: newArt.chars
-      }]);
+      var {data: inserted, error} = await _sb.from('articles')
+        .insert([{title: newArt.title, content: newArt.content, chars: newArt.chars}])
+        .select();
+      // 用 Supabase 回傳的真實 id
+      if(inserted && inserted[0]) newArt.id = inserted[0].id;
       if(error) throw error;
       // 更新本地快取
       var arts = _cache['articles'] || [];
