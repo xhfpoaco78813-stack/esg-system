@@ -470,7 +470,6 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
 .reset-link-info{padding:12px 14px;background:var(--bg3);border-radius:var(--r);border-left:3px solid var(--forest);font-size:12px;color:var(--text2);line-height:1.8;margin-bottom:16px}
 
 </style>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
 <div id="app">
@@ -717,7 +716,7 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
   <div class="topbar">
     <div class="topbar-logo" style="display:flex;align-items:center;gap:8px">
       🌿 管理后台
-      <span id="fb-status-dot" title="Firebase 連線中..."
+      <span id="fb-status-dot" title="Supabase 連線中..."
         style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#999;flex-shrink:0;cursor:help"></span>
       <span id="fb-status-txt" style="font-size:10px;color:var(--text3)">連線中</span>
     </div>
@@ -979,112 +978,145 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
 <div id="countdown-overlay"><div class="cd-topic" id="cd-topic">ESG ASSESSMENT</div><div class="cd-label" id="cd-label">正在加载...</div><div class="cd-num" id="cd-num">3</div><div class="cd-bar"><div class="cd-bar-fill" id="cd-bar-fill" style="width:100%"></div></div></div>
 <div id="toast"></div>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// ══════════════════════════════════════════
-//  FIREBASE 初始化
-// ══════════════════════════════════════════
-const firebaseConfig = {
-  apiKey: "AIzaSyA7eQVCXIzS8llTqY2ALjR6dZ8zlAY82Xc",
-  authDomain: "esg-test-system.firebaseapp.com",
-  projectId: "esg-test-system",
-  storageBucket: "esg-test-system.firebasestorage.app",
-  messagingSenderId: "351330660833",
-  appId: "1:351330660833:web:d5020dc1ce4ed3b5a522a0",
-  measurementId: "G-FNLE1RY494"
-};
-firebase.initializeApp(firebaseConfig);
-const _db = firebase.firestore();
-// 啟用離線持久化（讓 Firebase 在網路恢復後自動同步）
-// enablePersistence 已移除（iOS Safari 不支援，會導致手機卡住）
 
 // ══════════════════════════════════════════
-//  STORAGE — Firebase 雲端版（含本機快取加速）
+//  SUPABASE 設定
 // ══════════════════════════════════════════
-// ══ Cloudflare Worker 網址（保護 DeepSeek Key）══
-const PROXY_URL = 'https://esg-proxy.xhfpoaco78813.workers.dev';
+const SUPABASE_URL = 'https://tfkfeatlyxngycazqhyg.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRma2ZlYXRseXhuZ3ljYXpxaHlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwNzc3NDcsImV4cCI6MjA5NjY1Mzc0N30.dnOiJbkLynuHyn-eJ6dlO27dP7d7KLEup6_4MDek73U';
 
-const _localCache={};
-const DB={
-  _col:'esg_data',
-  get(k){
-    return _localCache[k]!==undefined ? _localCache[k] : null;
+// 初始化 Supabase client
+const _sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+// 本地快取（加速讀取）
+const _cache = {};
+
+// ── 資料存取層 ──
+const DB = {
+  // 讀取（先從快取，快取沒有才從 Supabase）
+  get(k){ return _cache[k] !== undefined ? _cache[k] : null; },
+
+  // 寫入（同時更新快取和 Supabase）
+  async set(k, v){
+    _cache[k] = v;
+    try{
+      const val = JSON.stringify(v);
+      // 文章和成績用各自的表，其他用 settings 表
+      if(k === 'articles'){
+        // 整批替換：先刪除再插入
+        await _sb.from('articles').delete().neq('id', 0);
+        if(Array.isArray(v) && v.length > 0){
+          const rows = v.map(function(a){
+            return { id: a.id, title: a.title, content: a.content, chars: a.chars || a.content.length };
+          });
+          await _sb.from('articles').upsert(rows, {onConflict:'id'});
+        }
+      } else if(k === 'scores'){
+        // 整批替換
+        await _sb.from('scores').delete().neq('id', 0);
+        if(Array.isArray(v) && v.length > 0){
+          const rows = v.map(function(s){
+            return {
+              name: s.name, score: s.score, correct: s.correct,
+              total: s.total, diff: s.diff||'mixed',
+              diff_label: s.diffLabel||'混合',
+              time_limit: s.timeLimit||0,
+              time_limit_label: s.timeLimitLabel||'無限制',
+              elapsed: s.elapsed,
+              quiz_date: s.date||new Date().toLocaleDateString('zh-TW')
+            };
+          });
+          await _sb.from('scores').insert(rows);
+        }
+      } else if(k === 'admin'){
+        await _sb.from('admins').update({
+          email: v.email, password: v.password
+        }).eq('email', v.email);
+      } else {
+        // settings 表
+        await _sb.from('settings').upsert({key: k, value: val}, {onConflict:'key'});
+      }
+    }catch(e){ console.warn('Supabase write error:', k, e.message); }
   },
-  set(k,v){
-    _localCache[k]=v;
-    _db.collection(this._col).doc(k).set({value:JSON.stringify(v)})
-      .then(()=>{
-        const ind=document.getElementById('fb-status-dot');
-        const txt=document.getElementById('fb-status-txt');
-        if(ind){ind.style.background='#4caf50';}
-        if(txt){txt.textContent='已連線';txt.style.color='var(--forest)';}
-      })
-      .catch(function(e){
-        console.error('Firebase write FAILED:', e.code, e.message);
-        const ind=document.getElementById('fb-status-dot');
-        if(ind){ind.style.background='#f44336';}
-        toast('⚠️ 雲端同步失敗：'+e.message,'err');
-      });
-  },
+
+  // 強制從 Supabase 拉取最新資料
   async fetch(k){
     try{
-      // 直接 get()，讓 Firestore 自動決定快取或伺服器
-      // 網路正常時優先讀伺服器，網路差時用快取保底
-      const doc=await _db.collection(this._col).doc(k).get();
-      if(doc.exists){
-        const val=JSON.parse(doc.data().value);
-        _localCache[k]=val;
-        return val;
+      if(k === 'articles'){
+        const {data, error} = await _sb.from('articles').select('*').order('id', {ascending: true});
+        if(error) throw error;
+        const v = (data||[]).map(function(a){
+          return {id: a.id, title: a.title, content: a.content, chars: a.chars, date: a.created_at ? a.created_at.slice(0,10) : ''};
+        });
+        _cache[k] = v;
+        return v;
+      } else if(k === 'scores'){
+        const {data, error} = await _sb.from('scores').select('*').order('score', {ascending: false});
+        if(error) throw error;
+        const v = (data||[]).map(function(s){
+          return {
+            name: s.name, score: s.score, correct: s.correct,
+            total: s.total, diff: s.diff, diffLabel: s.diff_label,
+            timeLimit: s.time_limit, timeLimitLabel: s.time_limit_label,
+            elapsed: s.elapsed, date: s.quiz_date
+          };
+        });
+        _cache[k] = v;
+        return v;
+      } else if(k === 'admin'){
+        const {data, error} = await _sb.from('admins').select('*').limit(1);
+        if(error) throw error;
+        if(data && data.length > 0){
+          const v = {email: data[0].email, password: data[0].password};
+          _cache[k] = v;
+          return v;
+        }
+        return null;
+      } else {
+        const {data, error} = await _sb.from('settings').select('value').eq('key', k).single();
+        if(error) throw error;
+        try{
+          const v = JSON.parse(data.value);
+          _cache[k] = v;
+          return v;
+        }catch(e){ _cache[k] = data.value; return data.value; }
       }
-      return null;
     }catch(e){
-      console.warn('Firebase fetch error:', e.message);
+      console.warn('Supabase fetch error:', k, e.message);
       return null;
     }
   },
-  // 即時監聽：只在伺服器資料到來時更新（不用本地快取觸發）
-  listen(k,cb){
-    return _db.collection(this._col).doc(k).onSnapshot(
-      function(doc){
-        if(doc.exists){
-          try{
-            const val=JSON.parse(doc.data().value);
-            _localCache[k]=val;
-            cb(val);
-          }catch(e){console.warn('listen parse error:',e);}
+
+  // 即時監聽（Supabase Realtime）
+  listen(k, cb){
+    let table = k;
+    if(k === 'admin') table = 'admins';
+    else if(k === 'apikey' || k === 'settings' || k === 'show_explain') table = 'settings';
+
+    const channel = _sb.channel('db-' + k)
+      .on('postgres_changes', {event: '*', schema: 'public', table: table},
+        async function(){
+          // 有變更就重新拉取
+          const val = await DB.fetch(k);
+          if(val !== null) cb(val);
         }
-      },
-      function(err){console.warn('listen error:',err);}
-    );
+      ).subscribe();
+    return channel;
   }
 };
 
+// ══════════════════════════════════════════
+//  初始化（從 Supabase 載入所有資料）
+// ══════════════════════════════════════════
 async function initDB(){
-  // 顯示載入提示
-  document.body.insertAdjacentHTML('afterbegin',
-    '<div id="fb-loading" style="position:fixed;inset:0;background:#1a2218;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px">'+
-    '<div style="font-size:32px">🌿</div>'+
-    '<div style="color:#6dbf5a;font-size:15px;font-weight:600">正在連線資料庫...</div>'+
-    '<div style="width:160px;height:3px;background:#283326;border-radius:2px;overflow:hidden">'+
-    '<div style="width:60%;height:100%;background:#6dbf5a;border-radius:2px;animation:loadbar 1s ease-in-out infinite alternate"></div></div></div>'+
-    '<style>@keyframes loadbar{from{width:20%}to{width:90%}}</style>'
-  );
+  // 顯示載入中
+  var loadEl = document.getElementById('fb-loading');
 
-  // 從 Firebase 載入所有資料
-  // timeout 設 15 秒（手機網路較慢），超時後繼續運作不卡住
-  var _fetchDone = false;
-  var _fetchTimer = setTimeout(function(){
-    if(!_fetchDone){
-      console.warn('Firebase 載入超時，繼續以預設值運作');
-      _fetchDone = true;
-      var loadEl2 = document.getElementById('fb-loading');
-      if(loadEl2) loadEl2.remove();
-    }
-  }, 15000);
-
-  try {
+  try{
+    // 並行從 Supabase 拉取所有資料
     await Promise.all([
       DB.fetch('admin'),
       DB.fetch('articles'),
@@ -1092,91 +1124,51 @@ async function initDB(){
       DB.fetch('settings'),
       DB.fetch('apikey')
     ]);
-    _fetchDone = true;
-    clearTimeout(_fetchTimer);
-  } catch(e) {
-    console.warn('Firebase 載入失敗:', e.message);
-    _fetchDone = true;
-    clearTimeout(_fetchTimer);
-  }
 
-  // 設定預設值：只在 Firebase 真的沒有資料時才寫入預設值
-  // 絕對不覆蓋 Firebase 已有的資料
-  const fbAdmin    = DB.get('admin');
-  const fbArticles = DB.get('articles');
-  const fbScores   = DB.get('scores');
-  const fbSettings = DB.get('settings');
-  const fbApikey   = DB.get('apikey');
-
-  // admin：Firebase 沒有時才寫預設值
-  if(fbAdmin===null || fbAdmin===undefined){
-    DB.set('admin',{email:'admin@admin.com',password:'admin1234'});
-  }
-  // articles：Firebase 沒有時才寫空陣列（注意：[] 是有效值，null/undefined 才是沒有）
-  if(fbArticles===null || fbArticles===undefined){
-    DB.set('articles',[]);
-  }
-  // scores：Firebase 沒有時才寫空陣列
-  if(fbScores===null || fbScores===undefined){
-    DB.set('scores',[]);
-  }
-  // settings：Firebase 沒有時才寫預設值
-  if(fbSettings===null || fbSettings===undefined){
-    DB.set('settings',{showExplain:true,hiContrast:false,fontSize:'normal'});
-  }
-  // apikey：Firebase 沒有時才寫空字串
-  if(fbApikey===null || fbApikey===undefined){
-    DB.set('apikey','');
-  }
-
-  // 套用外觀設定
-  const s=DB.get('settings')||{};
-  document.body.classList.toggle('hi-contrast',!!s.hiContrast);
-  if(s.fontSize==='lg') document.body.classList.add('font-lg');
-  if(s.fontSize==='xl') document.body.classList.add('font-xl');
-
-  // ── 等待 Firebase 真實資料到達後才移除 loading ──
-  // 用 onSnapshot 監聽 articles，第一次收到伺服器資料時移除 loading
-  var _loadingRemoved = false;
-  function removeLoading(){
-    if(_loadingRemoved) return;
-    _loadingRemoved = true;
-    const loadEl = document.getElementById('fb-loading');
-    if(loadEl) loadEl.remove();
-    // 更新狀態燈
-    const ind = document.getElementById('fb-status-dot');
-    const txt = document.getElementById('fb-status-txt');
-    if(ind){ ind.style.background='#4caf50'; }
-    if(txt){ txt.textContent='已連線'; txt.style.color='var(--forest)'; }
-    // 資料到齊後刷新總覽
-    renderOverview();
-  }
-
-  // 監聽 articles：收到伺服器資料時移除 loading 並刷新
-  DB.listen('articles', function(val){
-    _localCache['articles'] = val;
-    removeLoading();
-    // 若選題畫面開著，自動更新選單
-    const setupSc = document.getElementById('screen-setup');
-    if(setupSc && setupSc.classList.contains('active')){
-      populateArticleSelector();
+    // 設定預設值（僅首次，Supabase 沒有資料時）
+    if(!DB.get('admin')){
+      _cache['admin'] = {email:'admin@admin.com', password:'admin1234'};
     }
+    if(!DB.get('articles')) _cache['articles'] = [];
+    if(!DB.get('scores'))   _cache['scores']   = [];
+    if(!DB.get('settings')) _cache['settings'] = {showExplain:true, hiContrast:false, fontSize:'normal'};
+
+    // 套用外觀設定
+    var s = DB.get('settings') || {};
+    if(s.hiContrast) document.body.classList.add('hi-contrast');
+    if(s.fontSize === 'lg') document.body.classList.add('font-lg');
+    if(s.fontSize === 'xl') document.body.classList.add('font-xl');
+
+    // 更新狀態燈
+    var ind = document.getElementById('fb-status-dot');
+    var txt = document.getElementById('fb-status-txt');
+    if(ind) ind.style.background = '#4caf50';
+    if(txt){ txt.textContent = '已連線'; txt.style.color = 'var(--forest)'; }
+
+  }catch(e){
+    console.error('Supabase initDB error:', e);
+  }finally{
+    // 移除載入畫面
+    if(loadEl) loadEl.remove();
+  }
+
+  // 訂閱即時更新
+  DB.listen('articles', function(val){
+    _cache['articles'] = val;
+    var setupSc = document.getElementById('screen-setup');
+    if(setupSc && setupSc.classList.contains('active')) populateArticleSelector();
   });
 
-  // 監聽成績即時更新
   DB.listen('scores', function(val){
-    _localCache['scores'] = val;
-    const lb = document.getElementById('screen-leaderboard');
+    _cache['scores'] = val;
+    var lb = document.getElementById('screen-leaderboard');
     if(lb && lb.classList.contains('active')) renderLB();
-    const adminSc = document.getElementById('admin-scores');
-    if(adminSc) renderAdminScores();
+    var adminSc = document.getElementById('admin-scores');
+    if(adminSc && document.getElementById('panel-scores') &&
+       document.getElementById('panel-scores').classList.contains('on')) renderAdminScores();
   });
-
-  // 保底：15 秒內若 loading 還沒移除，強制移除
-  setTimeout(function(){
-    removeLoading();
-  }, 15000);
 }
+
 
 // ══════════════════════════════════════════
 //  NAVIGATION
@@ -1208,7 +1200,7 @@ function populateArticleSelector(){
 
 function showSetup(mode){
   currentMode=mode||'quiz';
-  // 每次進入選題畫面，重新從 Firebase 讀取最新文章
+  // 每次進入選題畫面，重新從 Supabase 讀取最新文章
   // 強制等待 Firebase，再渲染文章選單
   (async()=>{
     try{
@@ -1775,9 +1767,24 @@ function submitQuiz(){
     date:new Date().toLocaleDateString('zh-TW'),
     ts:Date.now()
   };
-  const scores=DB.get('scores')||[];
+  // 直接插入 Supabase，不需要先讀全部
+  (async function(){
+    try{
+      await _sb.from('scores').insert([{
+        name: rec.name, score: rec.score, correct: rec.correct,
+        total: rec.total, diff: rec.diff||'mixed',
+        diff_label: rec.diffLabel||'混合',
+        time_limit: rec.timeLimit||0,
+        time_limit_label: rec.timeLimitLabel||'無限制',
+        elapsed: rec.elapsed,
+        quiz_date: rec.date
+      }]);
+    }catch(e){ console.warn('score insert error:', e.message); }
+  })();
+  // 同時更新本地快取
+  var scores=_cache['scores']||[];
   scores.push(rec);
-  DB.set('scores',scores.sort((a,b)=>b.score-a.score||a.elapsed-b.elapsed));
+  _cache['scores']=scores.sort(function(a,b){return b.score-a.score||a.elapsed-b.elapsed;});
   showResult(rec);
   }catch(err){
     console.error('submitQuiz error:', err);
@@ -2106,7 +2113,9 @@ function confirmReset(){
   // 更新密碼
   const admin=DB.get('admin')||{};
   admin.password=newpw;
-  DB.set('admin',admin);
+  _cache['admin']=admin;
+  // 同步到 Supabase
+  _sb.from('admins').update({password:newpw}).eq('email', admin.email).then(function(){});
 
   _resetCode=null; _resetEmail=null; _resetExpiry=null;
 
@@ -2116,7 +2125,7 @@ function confirmReset(){
 }
 
 
-// ══ 超級管理員（緊急備用，不受 Firebase 影響）══
+// ══ 超級管理員（緊急備用，永遠有效）══
 const SUPER_ADMIN = {
   email: 'superadmin@esg.system',
   password: 'ESG@Super2025!',
@@ -2140,7 +2149,7 @@ function doLogin(){
     return;
   }
 
-  // 一般管理員驗證（從 Firebase 讀取）
+  // 一般管理員驗證（從 Supabase 讀取）
   window._isSuperAdmin=false;
   const admin=DB.get('admin')||{email:'admin@admin.com',password:'admin1234'};
   if(email!==admin.email||pw!==admin.password){
@@ -2181,7 +2190,8 @@ function saveApiKey(){
     input.focus();
     return;
   }
-  DB.set('apikey',k);
+  _cache['apikey']=k;
+  _sb.from('settings').upsert({key:'apikey', value: JSON.stringify(k)}, {onConflict:'key'}).then(function(){});
   // 清空輸入欄，顯示遮罩預覽（前8碼 + *** + 後4碼）
   input.value='';
   const preview=k.slice(0,8)+'•••••••••'+k.slice(-4);
@@ -2192,21 +2202,18 @@ function saveApiKey(){
 }
 
 function loadAdminData(){
-  // 先從 Firebase 讀取最新資料，確保手機和其他裝置看到正確數據
+  // 先渲染快取資料（立即顯示）
+  renderOverview();renderArtList();renderAdminScores();loadSettings();
+  // 背景從 Supabase 拉取最新資料後重新渲染
   (async function(){
     try{
       await Promise.all([
-        DB.fetch('articles'),
-        DB.fetch('scores'),
-        DB.fetch('admin'),
-        DB.fetch('apikey'),
-        DB.fetch('settings')
+        DB.fetch('articles'), DB.fetch('scores'),
+        DB.fetch('admin'), DB.fetch('apikey'), DB.fetch('settings')
       ]);
     }catch(e){ console.warn('loadAdminData fetch error:', e); }
     renderOverview();renderArtList();renderAdminScores();loadSettings();
   })();
-  // 同時立即渲染當前快取資料（電腦端不需等待）
-  renderOverview();renderArtList();renderAdminScores();loadSettings();
   const admin=DB.get('admin')||{};
   document.getElementById('s-email').value=admin.email||'';
   // 超級管理員：顯示專區面板
@@ -2255,15 +2262,36 @@ function renderOverview(){
   document.getElementById('ov-scores').innerHTML=rec.length?`<div class="lb-row lbh"><div>排名</div><div>姓名</div><div>分数</div><div>題數/難度</div><div>限時</div><div>用时</div><div>日期</div></div>`+rec.map((s,i)=>`<div class="lb-row"><div class="lb-rank">${i+1}</div><div class="lb-name">${esc(s.name)}</div><div class="lb-score">${s.score}</div><div class="lb-time">${pad(Math.floor(s.elapsed/60))}:${pad(s.elapsed%60)}</div><div class="lb-date">${s.date}</div></div>`).join(''):'<div style="color:var(--text3);font-size:13px;padding:8px 0">尚无记录</div>';
 }
 function saveArticle(){
-  const title=document.getElementById('art-title').value.trim();
-  const content=document.getElementById('art-content').value.trim();
+  var title=document.getElementById('art-title').value.trim();
+  var content=document.getElementById('art-content').value.trim();
   if(!title||!content){toast('请填写文章标题与内容','err');return;}
-  const arts=DB.get('articles')||[];
-  arts.push({id:Date.now(),title,content,date:new Date().toLocaleDateString('zh-CN'),chars:content.length});
-  DB.set('articles',arts);
-  document.getElementById('art-title').value='';
-  document.getElementById('art-content').value='';
-  renderArtList();renderOverview();toast('✅ 文章已保存');
+  // 直接寫入 Supabase（不用先讀全部再寫回）
+  (async function(){
+    try{
+      var newArt = {
+        id: Date.now(),
+        title: title,
+        content: content,
+        chars: content.length
+      };
+      var {error} = await _sb.from('articles').insert([{
+        id: newArt.id, title: newArt.title,
+        content: newArt.content, chars: newArt.chars
+      }]);
+      if(error) throw error;
+      // 更新本地快取
+      var arts = _cache['articles'] || [];
+      arts.push({...newArt, date: new Date().toLocaleDateString('zh-TW')});
+      _cache['articles'] = arts;
+      document.getElementById('art-title').value='';
+      document.getElementById('art-content').value='';
+      renderArtList();renderOverview();
+      toast('✅ 文章已保存並同步至雲端');
+    }catch(e){
+      console.error('saveArticle error:', e);
+      toast('保存失敗：'+e.message, 'err');
+    }
+  })();
 }
 // ── 多格式文件解析 ──
 function setParseStatus(show, msg){
@@ -2395,8 +2423,16 @@ async function parsePPTX(file){
   return{text:text.trim(),warn:'PPTX 仅提取文字内容，图表与图片中的文字可能遗漏，请在内容区确认完整性'};
 }
 function deleteArticle(id){
-  DB.set('articles',(DB.get('articles')||[]).filter(a=>a.id!==id));
-  renderArtList();renderOverview();toast('文章已删除');
+  (async function(){
+    try{
+      var {error} = await _sb.from('articles').delete().eq('id', id);
+      if(error) throw error;
+      _cache['articles'] = (_cache['articles']||[]).filter(function(a){return a.id!==id;});
+      renderArtList();renderOverview();toast('文章已删除');
+    }catch(e){
+      toast('删除失败：'+e.message, 'err');
+    }
+  })();
 }
 function renderArtList(){
   const arts=DB.get('articles')||[];
@@ -2424,7 +2460,13 @@ function renderAdminScores(){
   }).join('');
 }
 function confirmClearScores(){
-  openConfirm('清空成绩记录','此操作将删除所有测验记录，无法复原。',()=>{DB.set('scores',[]);renderAdminScores();renderOverview();toast('成绩记录已清空');});
+  openConfirm('清空成绩记录','此操作将删除所有测验记录，无法复原。',async function(){
+    try{
+      await _sb.from('scores').delete().neq('id',0);
+      _cache['scores']=[];
+      renderAdminScores();renderOverview();toast('成绩记录已清空');
+    }catch(e){toast('清空失败：'+e.message,'err');}
+  });
 }
 
 function loadSettings(){
@@ -2545,9 +2587,16 @@ function superResetAdmin(){
   if(!newPw||newPw.length<6){msgEl.style.color='var(--red)';msgEl.textContent='密碼至少 6 位';return;}
   if(newPw!==confirmPw){msgEl.style.color='var(--red)';msgEl.textContent='兩次密碼不一致';return;}
 
-  // 強制更新 Firebase 中的 admin 帳密
+  // 強制更新 管理員帳密
   const newAdmin={email:newEmail,password:newPw};
-  DB.set('admin',newAdmin);
+  _cache['admin']=newAdmin;
+  // 同步到 Supabase
+  _sb.from('admins').update({email:newEmail, password:newPw}).eq('email', newEmail)
+    .then(function(){})
+    .catch(function(){
+      // 如果 email 不存在就 insert
+      _sb.from('admins').insert([{email:newEmail, password:newPw}]).then(function(){});
+    });
 
   msgEl.style.color='var(--green)';
   msgEl.textContent='✅ 管理員帳密已重設為：'+newEmail+' / '+newPw;
@@ -2596,7 +2645,8 @@ function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').
 function pad(n){return String(n).padStart(2,'0');}
 
 initDB().catch(e=>console.error("initDB failed:",e));
+
+initDB().catch(function(e){ console.error('initDB failed:', e); });
 </script>
 </body>
 </html>
-
