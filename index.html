@@ -800,7 +800,7 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
           <div class="card-title">🤖 AI 设定</div>
           <div class="card-sub">由管理者设定 DeepSeek API Key，测验者使用时无需填写</div>
           <div class="form-group">
-            <label class="form-label">Claude API Key</label>
+            <label class="form-label">DeepSeek API Key</label>
             <div style="display:flex;gap:8px">
               <input class="form-input" id="s-apikey" type="text"
                 placeholder="粘贴 DeepSeek API Key（sk-...）"
@@ -812,7 +812,7 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
           </div>
           <div style="padding:12px 14px;background:var(--bg3);border-radius:var(--r);border-left:3px solid var(--border2);font-size:12px;color:var(--text3);line-height:1.8">
             🔑 取得 API Key：<a href="https://platform.deepseek.com" target="_blank" style="color:var(--forest)">platform.deepseek.com</a><br>
-            ⚠ 本系统需<b style="color:var(--text2)">下载后在本地浏览器开启</b>才能正常调用 AI 功能
+            ⚠ 本系统需<b style="color:var(--text2)">直接使用網址即可</b>才能正常调用 AI 功能
           </div>
         </div>
         <div class="card">
@@ -1229,7 +1229,7 @@ async function handleSetupStart(){
   // 從 DB 讀取管理者設定的 API Key
   const apiKey=DB.get('apikey')||'';
   if(!apiKey){
-    toast('请先由管理者在后台设定 Claude API Key','err');
+    toast('请先由管理者在后台设定 DeepSeek API Key','err');
     return;
   }
   let article;
@@ -1535,8 +1535,11 @@ function safeParseJSON(raw){
 //  CLAUDE API
 // ══════════════════════════════════════════
 // ── DeepSeek API（OpenAI 相容格式）──
+// ══ Vercel API 網址（部署後如不同請更新）══
+const PROXY_URL = 'https://esg-api-iota.vercel.app/api/ai';
+
 async function callClaude(messages,_apiKey,maxTokens=2000){
-  // API Key 由 Cloudflare Worker 保管，前端不需要 Key
+  // API Key 由 Vercel 保管，前端不需要 Key
   let resp;
   try{
     resp=await fetch(PROXY_URL,{
@@ -2179,7 +2182,7 @@ function saveApiKey(){
     if(existing){
       toast('API Key 已设定，如需更换请粘贴新 Key 后保存','info');
     } else {
-      toast('请粘贴 Claude API Key','err');
+      toast('请粘贴 DeepSeek API Key','err');
     }
     return;
   }
