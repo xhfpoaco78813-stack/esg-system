@@ -1076,7 +1076,8 @@ const DB = {
         }
         return null;
       } else {
-        const {data, error} = await _sb.from('settings').select('value').eq('key', k).single();
+        const {data, error} = await _sb.from('settings').select('value').eq('key', k).maybeSingle();
+      if(!data) return null;
         if(error) throw error;
         try{
           const v = JSON.parse(data.value);
@@ -1096,15 +1097,25 @@ const DB = {
     if(k === 'admin') table = 'admins';
     else if(k === 'apikey' || k === 'settings' || k === 'show_explain') table = 'settings';
 
-    const channel = _sb.channel('db-' + k)
-      .on('postgres_changes', {event: '*', schema: 'public', table: table},
-        async function(){
-          // 有變更就重新拉取
-          const val = await DB.fetch(k);
-          if(val !== null) cb(val);
-        }
-      ).subscribe();
-    return channel;
+    try{
+      const channel = _sb.channel('db-' + k)
+        .on('postgres_changes', {event: '*', schema: 'public', table: table},
+          async function(){
+            try{
+              const val = await DB.fetch(k);
+              if(val !== null) cb(val);
+            }catch(e){ console.warn('listen fetch error:', k, e.message); }
+          }
+        ).subscribe(function(status){
+          if(status === 'CHANNEL_ERROR'){
+            console.warn('Realtime channel error for:', k);
+          }
+        });
+      return channel;
+    }catch(e){
+      console.warn('listen setup error:', k, e.message);
+      return null;
+    }
   }
 };
 
@@ -1205,7 +1216,7 @@ function showSetup(mode){
   (async()=>{
     try{
       const arts = await DB.fetch('articles');
-      if(arts) _localCache['articles'] = arts;
+      if(arts) _cache['articles'] = arts;
     }catch(e){ console.warn('fetch articles failed:', e); }
     finally{ populateArticleSelector(); }
   })();
