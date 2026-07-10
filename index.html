@@ -644,7 +644,7 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
       <div class="qstat"><div class="qstat-v" id="q-ans">0</div><div class="qstat-l">已作答</div></div>
     </div>
     <div class="quiz-timer" id="quiz-timer">--:--</div>
-    <button class="btn btn-danger btn-sm" onclick="confirmSubmit()">交卷</button>
+    <button class="btn btn-danger btn-sm" id="btn-submit-top">交卷</button>
   </div>
   <div class="prog-wrap"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
   <div id="ai-gen-loading" style="display:none;flex:1;align-items:center;justify-content:center">
@@ -667,8 +667,8 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
   <div class="quiz-nav" id="quiz-nav-bar">
     <div class="qdots" id="qdots"></div>
     <div style="display:flex;gap:9px">
-      <button class="btn btn-secondary btn-sm" id="btn-prev" onclick="navQ(-1)" disabled>← 上一题</button>
-      <button class="btn btn-primary btn-sm" id="btn-next" onclick="navQ(1)">下一题 →</button>
+      <button class="btn btn-secondary btn-sm" id="btn-prev" disabled>← 上一题</button>
+      <button class="btn btn-primary btn-sm" id="btn-next">下一题 →</button>
     </div>
   </div>
 </div>
@@ -917,9 +917,9 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
 </div><!-- #app -->
 
 <!-- MODALS -->
-<div class="modal-overlay" id="modal-submit"><div class="modal"><div class="modal-title">确认交卷</div><div class="modal-desc" id="modal-submit-desc">确定要提交吗？</div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('modal-submit')">继续作答</button><button class="btn btn-primary" onclick="submitQuiz()">确认交卷</button></div></div></div>
+<div class="modal-overlay" id="modal-submit"><div class="modal"><div class="modal-title">确认交卷</div><div class="modal-desc" id="modal-submit-desc">确定要提交吗？</div><div class="modal-actions"><button class="btn btn-secondary" id="btn-modal-continue">继续作答</button><button class="btn btn-primary" id="btn-modal-confirm-submit">确认交卷</button></div></div></div>
 <div class="modal-overlay" id="modal-confirm"><div class="modal"><div class="modal-title" id="mc-title">确认操作</div><div class="modal-desc" id="mc-desc">此操作无法复原。</div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('modal-confirm')">取消</button><button class="btn btn-danger" id="mc-ok">确认</button></div></div></div>
-<div class="modal-overlay" id="modal-timeout"><div class="modal"><div class="modal-title">⏰ 时间到！</div><div class="modal-desc">测验时间已结束。</div><div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('modal-timeout');submitQuiz()">查看结果</button></div></div></div>
+<div class="modal-overlay" id="modal-timeout"><div class="modal"><div class="modal-title">⏰ 时间到！</div><div class="modal-desc">测验时间已结束。</div><div class="modal-actions"><button class="btn btn-primary" id="btn-modal-timeout-ok">查看结果</button></div></div></div>
 <div id="login-overlay"><div class="login-box"><div class="login-title">管理者登录</div><div class="login-sub" id="login-sub">请输入管理者账号密码</div><div class="form-group"><label class="form-label">Email</label><input class="form-input" id="l-email" type="email" placeholder="admin@admin.com" onkeydown="if(event.key==='Enter')doLogin()"></div><div class="form-group"><label class="form-label">密码</label><input class="form-input" id="l-pw" type="password" placeholder="输入密码" onkeydown="if(event.key==='Enter')doLogin()"></div><div style="display:flex;gap:9px;margin-top:4px"><button class="btn btn-primary" style="flex:1" onclick="doLogin()">登录</button><button class="btn btn-secondary" onclick="closeLogin()">取消</button></div><div style="text-align:center;margin-top:12px"><button class="btn btn-ghost btn-sm" onclick="openForgot()" style="font-size:12px;color:var(--text3)">忘記密碼？</button></div></div>
 
 <!-- ── 忘記密碼 Overlay ── -->
@@ -1328,6 +1328,9 @@ async function generateQuizQuestions(article,count,diff,apiKey){
       '',
       '严格禁止出现：人名、具体日期、版本号、文件编号、申请人、审批人信息。只考查核心概念、原则、流程、目标。',
       '',
+      '严格禁止出题内容涉及任一特定国家/地区的政策、法规、计划或措施（例如：台湾2050净零排放路径、欧盟CBAM、中国双碳政策、美国IRA法案等具体国别政策，一律避免作为考题），以避免不同国家使用者产生认知偏差与地域争议。',
+      '若文章中提及联合国（UN）发布的框架、原则、报告或倡议（例如UN Global Compact、SDGs、Who Cares Wins报告等具有国际普遍适用性的准则），可优先作为考题来源，因其属于跨国通用的国际标准，不涉及特定国家立场。',
+      '',
       '必须只输出JSON，格式如下（不要加任何前缀或说明）：',
       '{"questions":[{"text":"题目","type":"single","difficulty":"easy","choices":["A","B","C","D"],"correct":[0],"explanation":"解析"}]}',
       '',
@@ -1372,6 +1375,7 @@ async function startLearnMode(article,apiKey){
 ${article.content.slice(0,5000)}
 
 要求：内容必须简洁精炼，每条不超过20字，避免冗长。
+practice练习题严格禁止涉及任一特定国家/地区的政策、法规、计划或措施（例如具体国别的净零路径、法案、补贴计划等），以避免不同国家使用者产生认知偏差；若文章提及联合国（UN）发布的框架、原则或倡议，可优先纳入练习题，因其属于跨国通用的国际标准。
 
 请严格只输出以下JSON，不要有任何其他文字：
 {"summary":"核心摘要（2句话以内，30字内）","key_points":["重点1（15字内）","重点2","重点3","重点4","重点5"],"keywords":[{"term":"关键词","definition":"定义（15字内）"},{"term":"关键词2","definition":"定义"},{"term":"关键词3","definition":"定义"},{"term":"关键词4","definition":"定义"}],"insights":["洞察1（20字内）","洞察2","洞察3"],"practice":[{"q":"练习题1（单选）","opts":["A选项","B选项","C选项","D选项"],"ans":0,"explain":"解析（15字内）"},{"q":"练习题2","opts":["A","B","C","D"],"ans":1,"explain":"解析"},{"q":"练习题3","opts":["A","B","C","D"],"ans":2,"explain":"解析"}]}`;
@@ -1800,6 +1804,18 @@ function confirmSubmit(){
   document.getElementById('modal-submit-desc').textContent=left?('还有 '+left+' 题未作答，确定要提交吗？'):'所有题目均已作答，确定要提交吗？';
   document.getElementById('modal-submit').classList.add('open');
 }
+
+// 導覽/交卷按鈕改用 addEventListener 綁定（避免行內 onclick 在部分瀏覽器環境／擴充功能下被攔截導致無反應）
+(function bindQuizNavButtons(){
+  const byId=id=>document.getElementById(id);
+  const on=(id,fn)=>{ const el=byId(id); if(el) el.addEventListener('click',fn); };
+  on('btn-prev',()=>navQ(-1));
+  on('btn-next',()=>navQ(1));
+  on('btn-submit-top',()=>confirmSubmit());
+  on('btn-modal-continue',()=>closeModal('modal-submit'));
+  on('btn-modal-confirm-submit',()=>submitQuiz());
+  on('btn-modal-timeout-ok',()=>{closeModal('modal-timeout');submitQuiz();});
+})();
 
 // ── ESG 等級定義 ──
 const ESG_RANKS = [
