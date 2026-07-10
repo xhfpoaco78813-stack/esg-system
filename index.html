@@ -1375,11 +1375,10 @@ ${article.content.slice(0,5000)}
 
 请严格只输出以下JSON，不要有任何其他文字：
 {"summary":"核心摘要（2句话以内，30字内）","key_points":["重点1（15字内）","重点2","重点3","重点4","重点5"],"keywords":[{"term":"关键词","definition":"定义（15字内）"},{"term":"关键词2","definition":"定义"},{"term":"关键词3","definition":"定义"},{"term":"关键词4","definition":"定义"}],"insights":["洞察1（20字内）","洞察2","洞察3"],"practice":[{"q":"练习题1（单选）","opts":["A选项","B选项","C选项","D选项"],"ans":0,"explain":"解析（15字内）"},{"q":"练习题2","opts":["A","B","C","D"],"ans":1,"explain":"解析"},{"q":"练习题3","opts":["A","B","C","D"],"ans":2,"explain":"解析"}]}`;
-    const data=await callClaude([{role:'user',content:prompt}],apiKey,2500);
+    const data=await callClaude([{role:'user',content:prompt}],apiKey,3500);
     const raw=data.content.map(cc=>cc.text||'').join('');
-    const clean=raw.replace(/```json\s*/g,'').replace(/```\s*/g,'').trim();
-    const ji=clean.indexOf('{');
-    const notes=JSON.parse(ji>=0?clean.slice(ji):clean);
+    const notes=safeParseAIJSON(raw);
+    if(!notes) throw new Error('AI 回传内容格式异常，未能解析为有效笔记，请点击「返回重试」重新生成一次');
     renderLearnNotes(article.title,notes);
   }catch(err){
     const isKeyErr=err.message.includes('API Key')||err.message.includes('x-api-key')||err.message.includes('invalid')||err.message.includes('401');
@@ -1467,6 +1466,56 @@ function answerPQ(pi, oi, ans){
   if(exp) exp.classList.add('show');
 }
 
+
+// 修補字串「內部」未跳脫的控制字元（換行/Tab等），這是 AI 輸出 JSON 最常見的格式錯誤來源
+// 只處理雙引號字串內部，不影響結構性空白，避免破壞正常 JSON
+function sanitizeJSONControlChars(s){
+  let out='', inStr=false, esc=false;
+  for(let i=0;i<s.length;i++){
+    const ch=s[i];
+    if(inStr){
+      if(esc){ out+=ch; esc=false; }
+      else if(ch==='\\'){ out+=ch; esc=true; }
+      else if(ch==='"'){ out+=ch; inStr=false; }
+      else if(ch==='\n'){ out+='\\n'; }
+      else if(ch==='\r'){ out+='\\r'; }
+      else if(ch==='\t'){ out+='\\t'; }
+      else { out+=ch; }
+    } else {
+      if(ch==='"') inStr=true;
+      out+=ch;
+    }
+  }
+  return out;
+}
+
+// 通用 AI JSON 回應解析（適用於任何 schema，非僅題目陣列）
+// 依序嘗試：直接解析 → 修補控制字元 → 移除多餘逗號後再解析
+function safeParseAIJSON(raw){
+  if(!raw) return null;
+  let s=raw;
+  const fenceStart=s.indexOf('```');
+  if(fenceStart!==-1){
+    const fenceEnd=s.lastIndexOf('```');
+    if(fenceEnd>fenceStart) s=s.slice(fenceStart+3,fenceEnd);
+    if(s.startsWith('json')) s=s.slice(4);
+  }
+  s=s.trim();
+  const jStart=s.indexOf('{');
+  const jEnd=s.lastIndexOf('}');
+  if(jStart===-1||jEnd<=jStart) return null;
+  s=s.slice(jStart,jEnd+1);
+
+  try { return JSON.parse(s); } catch(e1){}
+
+  const sanitized=sanitizeJSONControlChars(s);
+  try { return JSON.parse(sanitized); } catch(e2){}
+
+  const noTrailingComma=sanitized.replace(/,(\s*[}\]])/g,'$1');
+  try { return JSON.parse(noTrailingComma); } catch(e3){}
+
+  return null;
+}
 
 function safeParseJSON(raw){
   if(!raw) return null;
