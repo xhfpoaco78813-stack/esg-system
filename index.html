@@ -2408,10 +2408,31 @@ async function parsePDF(file){
 }
 
 async function parseDOCX(file){
-  await loadScript('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js');
-  const ab=await readAsArrayBuffer(file);
-  const result=await mammoth.extractRawText({arrayBuffer:ab});
+  const ext=file.name.split('.').pop().toLowerCase();
+  if(ext==='doc'){
+    throw new Error('不支持旧版 .doc 格式（97-2003），请用 Word 打开后「另存新档」为 .docx 格式再上传');
+  }
+  try{
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js');
+  }catch(e){
+    throw new Error('Word 解析工具加载失败，请检查网络连线或浏览器是否拦截了 cdnjs.cloudflare.com（可尝试关闭广告拦截器/VPN 后重试）');
+  }
+  let ab;
+  try{
+    ab=await readAsArrayBuffer(file);
+  }catch(e){
+    throw new Error('文件读取失败：'+e.message);
+  }
+  let result;
+  try{
+    result=await mammoth.extractRawText({arrayBuffer:ab});
+  }catch(e){
+    throw new Error('文件内容解析失败，请确认这是有效的 .docx 文件（非加密、未损坏）：'+e.message);
+  }
   const warn=result.messages?.length?'部分内容（图片、表格）无法提取，已跳过':'';
+  if(!result.value||!result.value.trim()){
+    throw new Error('未能从文件中提取到任何文字内容，该文件可能几乎全为图片/表格');
+  }
   return{text:result.value||'',warn};
 }
 
@@ -2660,7 +2681,8 @@ function toast(msg,type='ok'){
   const icon=type==='ok'?'✓':type==='err'?'✕':'ℹ';
   el.innerHTML=`<span style="font-size:15px;opacity:.8">${icon}</span><span>${msg}</span>`;
   el.className='show '+type;
-  clearTimeout(el._t);el._t=setTimeout(()=>el.className='',3400);
+  const dur=type==='err'?6500:3400;
+  clearTimeout(el._t);el._t=setTimeout(()=>el.className='',dur);
 }
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 function openConfirm(title,desc,cb){
