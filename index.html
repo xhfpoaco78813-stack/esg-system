@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>ESG 学习测验系统</title>
+<title>ESG 学习测验系统 · V3</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 /* ══ NATURE GREEN WARM PALETTE ══ */
@@ -80,6 +80,10 @@ body::before{content:'';position:fixed;inset:0;
 .mode-card.quiz-card::before{background:linear-gradient(135deg,rgba(90,158,74,.06),transparent)}
 .mode-card.learn-card::before{background:linear-gradient(135deg,rgba(232,168,90,.08),transparent)}
 .mode-card:hover::before{opacity:1}
+.mode-card.phase2-card{cursor:not-allowed;opacity:.68}
+.mode-card.phase2-card:hover{border-color:var(--border);transform:none;box-shadow:none}
+.mode-card.phase2-card:hover::before{opacity:0}
+.mode-card.phase2-card .mc-tag{background:rgba(110,104,91,.10);color:var(--text3)}
 .mc-icon{font-size:32px;margin-bottom:12px}
 .mc-title{font-family:'Noto Serif SC',serif;font-size:18px;font-weight:700;color:var(--forest);margin-bottom:6px}
 .mc-desc{font-size:12px;color:var(--text2);line-height:1.7}
@@ -178,7 +182,7 @@ body::before{content:'';position:fixed;inset:0;
 .note-insight{border-left-color:var(--warm1)!important}
 .note-insight .note-item-bullet{color:var(--warm1)}
 
-/* 練習題區塊 */
+/* 練習题區塊 */
 .practice-section{margin-top:28px;padding-top:24px;border-top:2px solid var(--border)}
 .practice-title{font-size:11px;font-weight:700;color:var(--forest);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:8px;padding-bottom:8px;border-bottom:1px solid var(--border)}
 .practice-title::before{content:'';width:3px;height:14px;background:var(--forest);border-radius:2px;flex-shrink:0}
@@ -412,7 +416,7 @@ body::before{content:'';position:fixed;inset:0;
 .cd-bar-fill{height:100%;background:linear-gradient(90deg,var(--forest),var(--leaf));border-radius:2px;transition:width .9s linear}
 
 /* TOAST */
-#toast{position:fixed;bottom:28px;right:28px;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--r);padding:13px 18px;font-size:13px;box-shadow:var(--shadow2);transform:translateY(16px) scale(.95);opacity:0;transition:all .28s cubic-bezier(.4,0,.2,1);z-index:2000;max-width:300px;display:flex;align-items:center;gap:9px}
+#toast{position:fixed;bottom:28px;right:28px;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--r);padding:13px 18px;font-size:13px;box-shadow:var(--shadow2);transform:translateY(16px) scale(.95);opacity:0;transition:all .28s cubic-bezier(.4,0,.2,1);z-index:2000;max-width:300px;display:flex;align-items:center;gap:9px;pointer-events:none}
 #toast.show{transform:translateY(0) scale(1);opacity:1}
 #toast.ok{border-color:rgba(74,143,58,.35)}
 #toast.err{border-color:rgba(201,64,64,.35)}
@@ -468,6 +472,26 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
 .forgot-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--forest),var(--leaf),var(--warm1));border-radius:var(--r2) var(--r2) 0 0}
 .forgot-step{display:none}.forgot-step.active{display:block;animation:fadeUp .2s both}
 .reset-link-info{padding:12px 14px;background:var(--bg3);border-radius:var(--r);border-left:3px solid var(--forest);font-size:12px;color:var(--text2);line-height:1.8;margin-bottom:16px}
+
+
+
+.q-meta-row{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.q-level-badge,.q-skill-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;padding:4px 10px;border-radius:20px;font-weight:700;letter-spacing:.3px;border:1px solid var(--border2)}
+.q-level-badge.lv1{background:rgba(126,208,104,.10);color:var(--green);border-color:rgba(126,208,104,.28)}
+.q-level-badge.lv2{background:rgba(106,172,224,.11);color:var(--blue);border-color:rgba(106,172,224,.28)}
+.q-level-badge.lv3{background:rgba(232,184,106,.12);color:var(--warm1);border-color:rgba(232,184,106,.30)}
+.q-level-badge.lv4{background:rgba(224,96,96,.11);color:var(--red);border-color:rgba(224,96,96,.30)}
+.q-skill-badge{background:var(--bg3);color:var(--text2)}
+/* Official knowledge and assessment local review mode */
+.official-panel{width:min(1120px,94vw);margin:34px auto;padding-bottom:50px}
+.official-hero{background:linear-gradient(135deg,rgba(74,140,63,.14),rgba(72,140,192,.08));border:1px solid var(--border);border-radius:18px;padding:24px;margin-bottom:18px}
+.official-hero h2{font-family:var(--serif);font-size:28px;color:var(--green);margin-bottom:8px}.official-hero p{color:var(--text2);line-height:1.8}
+.official-toolbar{display:flex;gap:12px;align-items:end;flex-wrap:wrap;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:18px}
+.official-field{min-width:160px;flex:1}.official-field label{display:block;font-size:11px;color:var(--text3);margin-bottom:6px}.official-field select,.official-field input{width:100%;padding:10px 12px;border-radius:9px;border:1px solid var(--border2);background:var(--bg);color:var(--text)}
+.learning-layout-official{display:grid;grid-template-columns:300px minmax(0,1fr);gap:16px}.kp-list{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:10px;max-height:68vh;overflow:auto}.kp-item{padding:12px;border-radius:9px;cursor:pointer;border:1px solid transparent}.kp-item:hover,.kp-item.on{background:rgba(91,169,74,.10);border-color:var(--green)}.kp-item b{display:block;color:var(--text);font-size:13px}.kp-item span{font-size:11px;color:var(--text3)}
+.kp-detail{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px;min-height:420px}.kp-badges{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}.kp-chip{font-size:11px;padding:4px 9px;border-radius:999px;background:rgba(91,169,74,.12);color:var(--green)}.kp-detail h3{font-family:var(--serif);font-size:25px;margin-bottom:16px}.kp-section{margin:14px 0;padding:14px;background:var(--bg3);border-radius:10px}.kp-section b{display:block;color:var(--green);font-size:12px;margin-bottom:6px}.kp-section p{color:var(--text2);line-height:1.75}.source-proof{border-left:3px solid var(--blue);padding-left:13px}.source-proof a{color:var(--blue);word-break:break-all}.mode-card.available-card{opacity:1;cursor:pointer}.mode-card.available-card .mc-tag{background:rgba(91,169,74,.12);color:var(--green)}
+.review-banner{font-size:12px;color:var(--warm1);margin-top:8px}.official-stat{display:inline-flex;gap:7px;align-items:center;padding:5px 9px;border-radius:999px;background:rgba(72,140,192,.10);color:var(--blue);font-size:11px}
+@media(max-width:760px){.learning-layout-official{grid-template-columns:1fr}.kp-list{max-height:260px}.official-panel{margin-top:18px}}
 
 </style>
 </head>
@@ -534,17 +558,11 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
 
     <!-- MODE CARDS -->
     <div class="mode-cards">
-      <div class="mode-card quiz-card" onclick="showSetup('quiz')">
-        <div class="mc-icon">📝</div>
-        <div class="mc-title">测验模式</div>
-        <div class="mc-desc">AI 根据上传文章即时生成题目，测试你的 ESG 知识掌握程度，并提供详细成绩分析。</div>
-        <span class="mc-tag">AI 即时出题 · 成绩排行</span>
+      <div class="mode-card quiz-card available-card" role="button" tabindex="0" onclick="showOfficialTestSetup()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showOfficialTestSetup()}">
+        <div class="mc-icon">📝</div><div class="mc-title">测验模式</div><div class="mc-desc">从中国官方知识技能题库组卷，作答期间不显示答案，交卷后统一查看解析。</div><span class="mc-tag">120题 · 10/20/30题组卷</span>
       </div>
-      <div class="mode-card learn-card" onclick="showSetup('learn')">
-        <div class="mc-icon">📖</div>
-        <div class="mc-title">学习模式</div>
-        <div class="mc-desc">AI 阅读文章后生成重点摘要与读书笔记，并可针对内容提问，深度理解 ESG 核心知识。</div>
-        <span class="mc-tag">AI 读书笔记 · 互动提问</span>
+      <div class="mode-card learn-card available-card" role="button" tabindex="0" onclick="showOfficialLearning()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showOfficialLearning()}">
+        <div class="mc-icon">📖</div><div class="mc-title">学习模式</div><div class="mc-desc">按模块阅读官方知识卡、工作情境、常见错误与答案依据，再进行针对性练习。</div><span class="mc-tag">80个知识点 · 12项官方来源</span>
       </div>
     </div>
     <div class="land-admin">
@@ -554,7 +572,31 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
   </div>
 </div>
 
+
 <!-- ══ SETUP (quiz & learn share this) ══ -->
+
+<div id="screen-official-test-setup" class="screen">
+  <div class="official-panel">
+    <div class="official-hero"><h2>📝 中国官方知识技能测验</h2><p>从 120 道本地评审题中组卷。作答过程中不显示答案，提交后统一查看成绩、正确答案与解析。</p><div style="margin-top:10px"><span class="official-stat">L1 18题（15%）</span> <span class="official-stat">L2 42题（35%）</span> <span class="official-stat">L3 42题（35%）</span> <span class="official-stat">L4 18题（15%）</span></div><div class="review-banner">当前为本地模拟：不会写入线上成绩或正式题库。</div></div>
+    <div class="official-toolbar">
+      <div class="official-field"><label>知识模块</label><select id="official-test-module"></select></div>
+      <div class="official-field"><label>题目数量</label><select id="official-test-count"><option value="10">10题</option><option value="20" selected>20题</option><option value="30">30题</option></select></div>
+      <div class="official-field"><label>难度</label><select id="official-test-difficulty"><option value="all">混合 L1-L4</option><option>L1</option><option>L2</option><option>L3</option><option>L4</option></select></div>
+      <div class="official-field"><label>时间限制</label><select id="official-test-time"><option value="0">无限制</option><option value="20">20分钟</option><option value="30" selected>30分钟</option><option value="45">45分钟</option></select></div>
+      <div class="official-field"><label>测试者姓名</label><input id="official-test-name" maxlength="20" value="本地测试者"></div>
+    </div>
+    <div style="display:flex;gap:10px"><button class="btn btn-primary" onclick="startOfficialAssessment()">开始测验 →</button><button class="btn btn-secondary" onclick="showScreen('screen-landing')">返回首页</button></div>
+  </div>
+</div>
+
+<div id="screen-official-learning" class="screen">
+  <div class="official-panel">
+    <div class="official-hero"><h2>📖 中国官方知识学习模式</h2><p>先阅读知识卡、工作情境与常见错误，再练习对应题目。每个知识点都可追溯官方来源。</p><div style="margin-top:10px"><span class="official-stat">12项官方来源</span> <span class="official-stat">80个知识点</span> <span class="official-stat">120道练习题</span></div></div>
+    <div class="official-toolbar"><div class="official-field"><label>选择模块</label><select id="learning-module" onchange="renderLearningList()"></select></div><button class="btn btn-secondary" onclick="showScreen('screen-landing')">返回首页</button></div>
+    <div class="learning-layout-official"><div class="kp-list" id="learning-kp-list"></div><div class="kp-detail" id="learning-kp-detail"></div></div>
+  </div>
+</div>
+
 <div id="screen-setup" class="screen">
   <div class="setup-card" style="margin:auto">
     <div class="setup-title" id="setup-title">开始测验</div>
@@ -692,7 +734,7 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
     </div>
     <div class="rank-section"><div class="rank-card" id="rank-card"><div class="rank-icon" id="rank-icon">🌿</div><div class="rank-title" id="rank-title">--</div><div class="rank-desc" id="rank-desc"></div><div class="rank-next" id="rank-next" style="display:none"></div></div></div>
     <div class="pct-section" id="pct-section"><div class="pct-label" id="pct-label">超越了<br><b style="color:var(--forest);font-size:18px" id="pct-val">--</b> 的测验者</div><div class="pct-bar-wrap"><div class="pct-bar-fill" id="pct-bar" style="width:0%"></div></div></div>
-    <div class="growth-section"><div class="growth-title">📈 我的成长轨迹</div><div id="growth-area"></div></div>
+    <div class="growth-section" id="growth-section"><div class="growth-title">📈 我的成长轨迹</div><div id="growth-area"></div></div>
     <div class="review-sec" id="review-sec" style="display:none"><div class="review-ttl">📋 答题解析</div><div id="review-list"></div></div>
     <div class="res-actions">
       <button class="btn btn-primary" onclick="showScreen('screen-landing')">返回首页</button>
@@ -706,7 +748,7 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
 <div id="screen-leaderboard" class="screen">
   <div class="lb-card">
     <div class="lb-hd"><div class="lb-title">🏆 成绩排行榜</div><button class="btn btn-secondary btn-sm" onclick="showScreen('screen-landing')">返回</button></div>
-    <div class="lb-row lbh"><div>排名</div><div>姓名</div><div>分数</div><div>題數/難度</div><div>限時</div><div>用时</div><div>日期</div></div>
+    <div class="lb-row lbh"><div>排名</div><div>姓名</div><div>分数</div><div>题數/難度</div><div>限時</div><div>用时</div><div>日期</div></div>
     <div id="lb-body"></div>
   </div>
 </div>
@@ -787,7 +829,7 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
         <div class="panel-title">成绩记录</div>
         <div class="panel-desc">所有测试者的历史测验记录</div>
         <div class="card" style="padding:0;overflow:hidden">
-          <div class="lb-row lbh"><div>排名</div><div>姓名</div><div>分数</div><div>題數/難度</div><div>限時</div><div>用时</div><div>日期</div></div>
+          <div class="lb-row lbh"><div>排名</div><div>姓名</div><div>分数</div><div>题數/難度</div><div>限時</div><div>用时</div><div>日期</div></div>
           <div id="admin-scores"></div>
         </div>
         <div style="margin-top:12px"><button class="btn btn-danger btn-sm" onclick="confirmClearScores()">清空所有记录</button></div>
@@ -798,21 +840,10 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
         <div class="panel-desc">管理 AI 功能与账号设定</div>
         <div class="card">
           <div class="card-title">🤖 AI 设定</div>
-          <div class="card-sub">由管理者设定 DeepSeek API Key，测验者使用时无需填写</div>
-          <div class="form-group">
-            <label class="form-label">DeepSeek API Key</label>
-            <div style="display:flex;gap:8px">
-              <input class="form-input" id="s-apikey" type="text"
-                placeholder="粘贴 DeepSeek API Key（sk-...）"
-                autocomplete="off" spellcheck="false"
-                style="font-family:'JetBrains Mono',monospace;font-size:12px;flex:1">
-              <button class="btn btn-primary" onclick="saveApiKey()" style="flex-shrink:0">保存</button>
-            </div>
-            <div id="apikey-status" style="margin-top:8px;font-size:12px"></div>
-          </div>
+          <div class="card-sub">DeepSeek 固定经由服务端代理调用，浏览器不保存 API Key</div>
           <div style="padding:12px 14px;background:var(--bg3);border-radius:var(--r);border-left:3px solid var(--border2);font-size:12px;color:var(--text3);line-height:1.8">
-            🔑 取得 API Key：<a href="https://platform.deepseek.com" target="_blank" style="color:var(--forest)">platform.deepseek.com</a><br>
-            ⚠ 本系统需<b style="color:var(--text2)">直接使用網址即可</b>才能正常调用 AI 功能
+            🔒 API Key 必须配置在服务端环境变量，不可写入公开 HTML 或公开数据表。<br>
+            当前正式学习与测验内容来自中国官方知识技能题库；AI 仅通过服务端代理调用。
           </div>
         </div>
         <div class="card">
@@ -837,26 +868,6 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
             </div>
           </div>
         </div>
-        <!-- 超級管理員專區 -->
-        <div class="card" id="super-admin-card" style="display:none;border-color:rgba(232,168,90,.4)">
-          <div class="card-title" style="color:var(--warm2)">⚡ 超級管理員專區</div>
-          <div class="card-sub">直接重設一般管理員帳密，不需要知道舊密碼</div>
-          <div class="form-group">
-            <label class="form-label">新管理員 Email</label>
-            <input class="form-input" id="super-new-email" type="email" placeholder="例：admin@yourcompany.com">
-          </div>
-          <div class="form-group">
-            <label class="form-label">新密碼（至少 6 位）</label>
-            <input class="form-input" id="super-new-pw" type="password" placeholder="輸入新密碼">
-          </div>
-          <div class="form-group">
-            <label class="form-label">確認新密碼</label>
-            <input class="form-input" id="super-confirm-pw" type="password" placeholder="再次輸入">
-          </div>
-          <button class="btn btn-warm" onclick="superResetAdmin()">⚡ 強制重設管理員帳密</button>
-          <div id="super-reset-msg" style="margin-top:10px;font-size:12px"></div>
-        </div>
-
         <div class="card" id="account-card">
           <div class="card-title">🔐 管理者账号</div>
           <div class="card-sub">修改账号或密码后需重新登录才能生效</div>
@@ -991,10 +1002,23 @@ const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz
 // 初始化 Supabase client
 const _sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
+_sb.auth.onAuthStateChange(function(event){
+  if(event!=='PASSWORD_RECOVERY') return;
+  const overlay=document.getElementById('forgot-overlay');
+  if(!overlay) return;
+  document.querySelectorAll('.forgot-step').forEach(function(step){step.classList.remove('active');});
+  const codeInput=document.getElementById('forgot-code');
+  if(codeInput&&codeInput.parentElement) codeInput.parentElement.style.display='none';
+  const info=document.getElementById('forgot-sent-info');
+  if(info) info.textContent='安全链接验证成功，请设置新密码。';
+  document.getElementById('forgot-step2').classList.add('active');
+  overlay.classList.add('open');
+});
+
 // 本地快取（加速讀取）
 const _cache = {};
 
-// ── 資料存取層 ──
+// ── 数据存取層 ──
 const DB = {
   // 讀取（先從快取，快取沒有才從 Supabase）
   get(k){ return _cache[k] !== undefined ? _cache[k] : null; },
@@ -1031,10 +1055,6 @@ const DB = {
           });
           await _sb.from('scores').insert(rows);
         }
-      } else if(k === 'admin'){
-        await _sb.from('admins').update({
-          email: v.email, password: v.password
-        }).eq('email', v.email);
       } else {
         // settings 表
         await _sb.from('settings').upsert({key: k, value: val}, {onConflict:'key'});
@@ -1042,7 +1062,7 @@ const DB = {
     }catch(e){ console.warn('Supabase write error:', k, e.message); }
   },
 
-  // 強制從 Supabase 拉取最新資料
+  // 強制從 Supabase 拉取最新数据
   async fetch(k){
     try{
       if(k === 'articles'){
@@ -1066,15 +1086,6 @@ const DB = {
         });
         _cache[k] = v;
         return v;
-      } else if(k === 'admin'){
-        const {data, error} = await _sb.from('admins').select('*').limit(1);
-        if(error) throw error;
-        if(data && data.length > 0){
-          const v = {email: data[0].email, password: data[0].password};
-          _cache[k] = v;
-          return v;
-        }
-        return null;
       } else {
         const {data, error} = await _sb.from('settings').select('value').eq('key', k).maybeSingle();
       if(!data) return null;
@@ -1093,9 +1104,9 @@ const DB = {
 
   // 即時監聽（Supabase Realtime）
   listen(k, cb){
+    if(location.hostname==='127.0.0.1'||location.hostname==='localhost') return null;
     let table = k;
-    if(k === 'admin') table = 'admins';
-    else if(k === 'apikey' || k === 'settings' || k === 'show_explain') table = 'settings';
+    if(k === 'settings' || k === 'show_explain') table = 'settings';
 
     try{
       const channel = _sb.channel('db-' + k)
@@ -1120,26 +1131,21 @@ const DB = {
 };
 
 // ══════════════════════════════════════════
-//  初始化（從 Supabase 載入所有資料）
+//  初始化（從 Supabase 載入所有数据）
 // ══════════════════════════════════════════
 async function initDB(){
   // 顯示載入中
   var loadEl = document.getElementById('fb-loading');
 
   try{
-    // 並行從 Supabase 拉取所有資料
+    // 並行從 Supabase 拉取所有数据
     await Promise.all([
-      DB.fetch('admin'),
       DB.fetch('articles'),
       DB.fetch('scores'),
-      DB.fetch('settings'),
-      DB.fetch('apikey')
+      DB.fetch('settings')
     ]);
 
-    // 設定預設值（僅首次，Supabase 沒有資料時）
-    if(!DB.get('admin')){
-      _cache['admin'] = {email:'admin@admin.com', password:'admin1234'};
-    }
+    // 設定預設值（僅首次，Supabase 沒有数据時）
     if(!DB.get('articles')) _cache['articles'] = [];
     if(!DB.get('scores'))   _cache['scores']   = [];
     if(!DB.get('settings')) _cache['settings'] = {showExplain:true, hiContrast:false, fontSize:'normal'};
@@ -1209,9 +1215,608 @@ function populateArticleSelector(){
   sel.innerHTML='<option value="">-- 请选择文章素材 --</option>'+allOpt+arts.map(a=>`<option value="${a.id}">📄 ${esc(a.title)}</option>`).join('');
 }
 
+
+// Legacy ten-question subset retained only as embedded source data for migration compatibility.
+let prototypeQuestionCache=null;
+const SIMULATION_MODE=true;
+// v3 local review build: official learning, assessment and mock commerce are embedded; no production writes.
+const SIMULATION_QUESTION_ROWS=
+[
+  {
+    "question_id": "CNQ001",
+    "knowledge_id": "KP-CN-ESG-001",
+    "source_id": "SRC-CN-SSE-ESG-2024",
+    "question_type": "single_choice",
+    "difficulty": "L1",
+    "question_text": "企业自有锅炉的碳排放主要属于ESG哪一维度？",
+    "options": [
+      {
+        "key": "A",
+        "text": "环境E"
+      },
+      {
+        "key": "B",
+        "text": "社会S"
+      },
+      {
+        "key": "C",
+        "text": "治理G"
+      },
+      {
+        "key": "D",
+        "text": "不属于ESG"
+      }
+    ],
+    "correct_answers": [
+      "A"
+    ],
+    "explanation": "温室气体排放属于环境维度。",
+    "practical_use": "ESG议题分类",
+    "answer_basis": "上交所可持续发展报告指引的环境议题",
+    "display_order": 1,
+    "status": "pilot",
+    "is_prototype": true,
+    "knowledge_points": {
+      "module": "ESG基础",
+      "title": "ESG三维度"
+    }
+  },
+  {
+    "question_id": "CNQ003",
+    "knowledge_id": "KP-CN-ESG-002",
+    "source_id": "SRC-CN-MOF-BASE-2024",
+    "question_type": "decision",
+    "difficulty": "L2",
+    "question_text": "公司只因某议题近期热门，就直接列为最高重要议题。首先应补做什么？",
+    "options": [
+      {
+        "key": "A",
+        "text": "结合业务、影响、风险和机遇重新评估"
+      },
+      {
+        "key": "B",
+        "text": "增加宣传预算"
+      },
+      {
+        "key": "C",
+        "text": "删除其他议题"
+      },
+      {
+        "key": "D",
+        "text": "由AI随机选择"
+      }
+    ],
+    "correct_answers": [
+      "A"
+    ],
+    "explanation": "重要性应结合企业活动、资源、关系以及相关影响、风险和机遇判断。",
+    "practical_use": "重要性评估",
+    "answer_basis": "企业可持续披露准则——基本准则（试行）",
+    "display_order": 2,
+    "status": "pilot",
+    "is_prototype": true,
+    "knowledge_points": {
+      "module": "可持续披露",
+      "title": "重要性判断"
+    }
+  },
+  {
+    "question_id": "CNQ006",
+    "knowledge_id": "KP-CN-ESG-003",
+    "source_id": "SRC-CN-MOF-BASE-2024",
+    "question_type": "data_interpretation",
+    "difficulty": "L3",
+    "question_text": "同一能耗指标今年按平方米计算、去年按员工人数计算，报告未解释变化。最主要影响是？",
+    "options": [
+      {
+        "key": "A",
+        "text": "可比性下降"
+      },
+      {
+        "key": "B",
+        "text": "真实性必然提高"
+      },
+      {
+        "key": "C",
+        "text": "无需说明"
+      },
+      {
+        "key": "D",
+        "text": "只影响版面"
+      }
+    ],
+    "correct_answers": [
+      "A"
+    ],
+    "explanation": "口径变化未解释会削弱跨期可比性。",
+    "practical_use": "指标判读",
+    "answer_basis": "基本准则的信息质量特征",
+    "display_order": 3,
+    "status": "pilot",
+    "is_prototype": true,
+    "knowledge_points": {
+      "module": "可持续披露",
+      "title": "信息质量"
+    }
+  },
+  {
+    "question_id": "CNQ010",
+    "knowledge_id": "KP-CN-CLM-001",
+    "source_id": "SRC-CN-MOF-CLIMATE-2025",
+    "question_type": "multiple_choice",
+    "difficulty": "L2",
+    "question_text": "哪些通常属于气候转型风险？",
+    "options": [
+      {
+        "key": "A",
+        "text": "碳成本上升"
+      },
+      {
+        "key": "B",
+        "text": "低碳技术替代"
+      },
+      {
+        "key": "C",
+        "text": "客户偏好转向低碳产品"
+      },
+      {
+        "key": "D",
+        "text": "台风直接损坏厂房"
+      }
+    ],
+    "correct_answers": [
+      "A",
+      "B",
+      "C"
+    ],
+    "explanation": "政策、技术和市场变化属于转型风险；台风直接损坏属于物理风险。",
+    "practical_use": "气候风险分类",
+    "answer_basis": "企业可持续披露准则第1号——气候（试行）",
+    "display_order": 4,
+    "status": "pilot",
+    "is_prototype": true,
+    "knowledge_points": {
+      "module": "气候管理",
+      "title": "物理风险与转型风险"
+    }
+  },
+  {
+    "question_id": "CNQ016",
+    "knowledge_id": "KP-CN-GHG-003",
+    "source_id": "SRC-CN-SSE-ESG-2024",
+    "question_type": "comprehensive_case",
+    "difficulty": "L3",
+    "question_text": "企业有自有锅炉、外购电力、员工通勤和第三方物流，合理分类是？",
+    "options": [
+      {
+        "key": "A",
+        "text": "锅炉S1／电力S2／通勤S3／物流S3"
+      },
+      {
+        "key": "B",
+        "text": "全部S1"
+      },
+      {
+        "key": "C",
+        "text": "锅炉S2／电力S1／其余S2"
+      },
+      {
+        "key": "D",
+        "text": "全部S3"
+      }
+    ],
+    "correct_answers": [
+      "A"
+    ],
+    "explanation": "直接燃烧为范围一，外购电力为范围二，通勤与第三方物流通常为范围三。",
+    "practical_use": "综合盘查",
+    "answer_basis": "上交所指引附录范围1、2、3定义",
+    "display_order": 5,
+    "status": "pilot",
+    "is_prototype": true,
+    "knowledge_points": {
+      "module": "温室气体",
+      "title": "范围三排放"
+    }
+  },
+  {
+    "question_id": "CNQ021",
+    "knowledge_id": "KP-CN-GHG-007",
+    "source_id": "SRC-CN-MEE-GHG-POWER-2026",
+    "question_type": "calculation",
+    "difficulty": "L2",
+    "question_text": "某活动数据为10,000 kWh，给定因子0.50 kgCO2e/kWh。排放量是多少？",
+    "options": [
+      {
+        "key": "A",
+        "text": "0.5 tCO2e"
+      },
+      {
+        "key": "B",
+        "text": "5 tCO2e"
+      },
+      {
+        "key": "C",
+        "text": "50 tCO2e"
+      },
+      {
+        "key": "D",
+        "text": "5,000 tCO2e"
+      }
+    ],
+    "correct_answers": [
+      "B"
+    ],
+    "explanation": "10,000×0.50=5,000 kgCO2e=5 tCO2e。",
+    "practical_use": "基础排放计算",
+    "answer_basis": "生态环境部核算报告指南的排放因子法",
+    "display_order": 6,
+    "status": "pilot",
+    "is_prototype": true,
+    "knowledge_points": {
+      "module": "温室气体",
+      "title": "二氧化碳当量计算"
+    }
+  },
+  {
+    "question_id": "CNQ026",
+    "knowledge_id": "KP-CN-ENV-001",
+    "source_id": "SRC-CN-NPC-ENV-2014",
+    "question_type": "decision",
+    "difficulty": "L2",
+    "question_text": "生产线改造可能增加废水污染风险，合理做法是？",
+    "options": [
+      {
+        "key": "A",
+        "text": "事前识别影响并落实防治措施和监测"
+      },
+      {
+        "key": "B",
+        "text": "先投产再考虑"
+      },
+      {
+        "key": "C",
+        "text": "只在宣传材料写绿色"
+      },
+      {
+        "key": "D",
+        "text": "将责任全部转给供应商"
+      }
+    ],
+    "correct_answers": [
+      "A"
+    ],
+    "explanation": "企业应预防和减少污染及生态破坏。",
+    "practical_use": "环境风险管理",
+    "answer_basis": "环境保护法第六条等",
+    "display_order": 7,
+    "status": "pilot",
+    "is_prototype": true,
+    "knowledge_points": {
+      "module": "环境管理",
+      "title": "污染防治主体责任"
+    }
+  },
+  {
+    "question_id": "CNQ031",
+    "knowledge_id": "KP-CN-ENV-005",
+    "source_id": "SRC-CN-SSE-ESG-2024",
+    "question_type": "decision",
+    "difficulty": "L3",
+    "question_text": "制造企业用水量不高但危险废物风险突出，环境管理优先级应如何设定？",
+    "options": [
+      {
+        "key": "A",
+        "text": "结合实际影响优先管理危险废物风险"
+      },
+      {
+        "key": "B",
+        "text": "所有议题平均投入"
+      },
+      {
+        "key": "C",
+        "text": "只管理用水"
+      },
+      {
+        "key": "D",
+        "text": "按其他公司报告照抄"
+      }
+    ],
+    "correct_answers": [
+      "A"
+    ],
+    "explanation": "环境管理应结合自身生产经营特点和实际影响。",
+    "practical_use": "环境优先级",
+    "answer_basis": "上交所指引环境议题要求",
+    "display_order": 8,
+    "status": "pilot",
+    "is_prototype": true,
+    "knowledge_points": {
+      "module": "环境管理",
+      "title": "资源与生态议题"
+    }
+  },
+  {
+    "question_id": "CNQ041",
+    "knowledge_id": "KP-CN-GOV-001",
+    "source_id": "SRC-CN-NPC-COMPANY-2023",
+    "question_type": "decision",
+    "difficulty": "L2",
+    "question_text": "重大投资事项仅凭董事长口头指示执行，未按章程履行决策程序。主要治理缺口是？",
+    "options": [
+      {
+        "key": "A",
+        "text": "未依法律和章程落实治理程序"
+      },
+      {
+        "key": "B",
+        "text": "投资金额太小"
+      },
+      {
+        "key": "C",
+        "text": "必须由媒体批准"
+      },
+      {
+        "key": "D",
+        "text": "只需事后补宣传"
+      }
+    ],
+    "correct_answers": [
+      "A"
+    ],
+    "explanation": "公司治理事项应依法律和章程由相应机构履行程序。",
+    "practical_use": "公司决策治理",
+    "answer_basis": "公司法第五条及治理规定",
+    "display_order": 9,
+    "status": "pilot",
+    "is_prototype": true,
+    "knowledge_points": {
+      "module": "公司治理",
+      "title": "章程与治理机构"
+    }
+  },
+  {
+    "question_id": "CNQ050",
+    "knowledge_id": "KP-CN-GOV-005",
+    "source_id": "SRC-CN-NPC-AUCL-2025",
+    "question_type": "comprehensive_case",
+    "difficulty": "L4",
+    "question_text": "采购人员收受供应商回扣，营销又夸大环保性能。企业应优先采取哪组措施？",
+    "options": [
+      {
+        "key": "A",
+        "text": "停止问题行为、调查留痕、处理利益冲突并纠正披露"
+      },
+      {
+        "key": "B",
+        "text": "只更换广告颜色"
+      },
+      {
+        "key": "C",
+        "text": "仅要求供应商保密"
+      },
+      {
+        "key": "D",
+        "text": "删除投诉"
+      }
+    ],
+    "correct_answers": [
+      "A"
+    ],
+    "explanation": "应同时处理商业贿赂、诚信经营和虚假宣传风险，并保留治理记录。",
+    "practical_use": "治理综合实战",
+    "answer_basis": "反不正当竞争法及公司治理要求",
+    "display_order": 10,
+    "status": "pilot",
+    "is_prototype": true,
+    "knowledge_points": {
+      "module": "商业道德",
+      "title": "公平竞争与诚信经营"
+    }
+  }
+]
+;
+
+const OFFICIAL_SOURCES=[{"source_id":"SRC-CN-MOF-BASE-2024","priority":"P0","source_type":"国家准则","organization":"财政部等九部门","title":"企业可持续披露准则——基本准则（试行）","primary_use":"可持续信息披露总体原则、重要性与信息质量","source_url":"https://kjs.mof.gov.cn/zhengcefabu/202412/t20241216_3949745.htm","notes":"财会〔2024〕17号；实施范围明确前由企业自愿实施","status":"active"},{"source_id":"SRC-CN-MOF-CLIMATE-2025","priority":"P0","source_type":"国家准则","organization":"财政部等十部门","title":"企业可持续披露准则第1号——气候（试行）","primary_use":"气候风险、机遇、影响、温室气体与转型计划披露","source_url":"https://kjs.mof.gov.cn/zhengcefabu/202512/t20251225_3980202.htm","notes":"财会〔2025〕34号；实施范围明确前由企业自愿实施","status":"active"},{"source_id":"SRC-CN-SSE-ESG-2024","priority":"P0","source_type":"交易所自律规则","organization":"上海证券交易所","title":"上市公司自律监管指引第14号——可持续发展报告（试行）","primary_use":"治理—战略—影响风险机遇管理—指标目标及21项议题","source_url":"https://www.sse.com.cn/lawandrules/sselawsrules2025/stocks/mainipo/c/c_20250516_10779150.shtml","notes":"2024年5月1日起实施；题目会标明适用主体","status":"active"},{"source_id":"SRC-CN-MEE-ENV-DISC-2021","priority":"P0","source_type":"部门规章","organization":"生态环境部","title":"企业环境信息依法披露管理办法","primary_use":"环境信息披露责任、台账、原始记录与质量要求","source_url":"https://www.mee.gov.cn/gzk/gz/202112/t20211210_963770.shtml","notes":"生态环境部令第24号；2022年2月8日起施行","status":"active"},{"source_id":"SRC-CN-MEE-GHG-DISC-2025","priority":"P0","source_type":"政策意见","organization":"生态环境部办公厅等四部门","title":"关于促进企业温室气体信息自愿披露的意见","primary_use":"温室气体信息自愿披露、质量与应用场景","source_url":"https://www.mee.gov.cn/xxgk2018/xxgk/xxgk05/202503/t20250303_1103199.html","notes":"环办气候〔2025〕7号；强调规范、可比、真实、准确、透明","status":"active"},{"source_id":"SRC-CN-MEE-GHG-POWER-2026","priority":"P1","source_type":"核算报告指南","organization":"生态环境部","title":"企业温室气体排放核算与报告指南 发电设施（2026技术要求）","primary_use":"活动数据、排放因子、核算报告与数据质量","source_url":"https://www.mee.gov.cn/xxgk2018/xxgk/xxgk06/202606/t20260629_1160473.html","notes":"行业技术指南；涉及发电设施时才作为直接答案依据","status":"active"},{"source_id":"SRC-CN-NPC-ENV-2014","priority":"P0","source_type":"国家法律","organization":"全国人民代表大会常务委员会","title":"中华人民共和国环境保护法","primary_use":"环境责任、污染防治、信息公开与公众参与","source_url":"https://www.npc.gov.cn/zgrdw/npc/zfjc/zfjcelys/2016-10/26/content_1999801.htm","notes":"2014年修订；2015年1月1日起施行","status":"active"},{"source_id":"SRC-CN-NPC-SAFE-2021","priority":"P0","source_type":"国家法律","organization":"全国人民代表大会常务委员会","title":"中华人民共和国安全生产法","primary_use":"生产经营单位主体责任、风险防控、培训与应急","source_url":"https://flk.npc.gov.cn/detail?fileId=&id=ff8081817a66b816017a7956b7db0ad4&title=%E4%B8%AD%E5%8D%8E%E4%BA%BA%E6%B0%91%E5%85%B1%E5%92%8C%E5%9B%BD%E5%AE%89%E5%85%A8%E7%94%9F%E4%BA%A7%E6%B3%95&type=","notes":"2021年修正；2021年9月1日起施行","status":"active"},{"source_id":"SRC-CN-MOHRSS-LABOR-2012","priority":"P0","source_type":"国家法律","organization":"人力资源和社会保障部","title":"中华人民共和国劳动合同法","primary_use":"劳动合同订立、履行、变更、解除与劳动者权益","source_url":"https://www.mohrss.gov.cn/xxgk2020/fdzdgknr/zcfg/fl/202011/t20201102_394622_wap.html","notes":"2012年修正的现行文本","status":"active"},{"source_id":"SRC-CN-NPC-COMPANY-2023","priority":"P0","source_type":"国家法律","organization":"全国人民代表大会常务委员会","title":"中华人民共和国公司法","primary_use":"公司治理、章程、董事义务与利益相关方权益","source_url":"https://www.npc.gov.cn/npc/c2/c30834/202312/t20231229_433999.html","notes":"2023年修订；2024年7月1日起施行","status":"active"},{"source_id":"SRC-CN-NPC-PIPL-2021","priority":"P0","source_type":"国家法律","organization":"全国人民代表大会常务委员会","title":"中华人民共和国个人信息保护法","primary_use":"个人信息处理原则、最小必要、安全与权益保护","source_url":"https://www.npc.gov.cn/WZWSREL25wYy9jMi9jMzA4MzQvMjAyMTA4L3QyMDIxMDgyMF8zMTMwODguaHRtbD9yZWY9aW1i","notes":"2021年11月1日起施行","status":"active"},{"source_id":"SRC-CN-NPC-AUCL-2025","priority":"P0","source_type":"国家法律","organization":"全国人民代表大会常务委员会","title":"中华人民共和国反不正当竞争法","primary_use":"诚信经营、商业贿赂、虚假宣传与商业秘密","source_url":"https://www.npc.gov.cn/npc/c2/c30834/202506/t20250627_446247.html","notes":"2025年第二次修订；2025年10月15日起施行","status":"active"}];
+const OFFICIAL_KNOWLEDGE_POINTS=[{"knowledge_id":"KP-CN-ESG-001","module":"ESG基础","title":"ESG三维度","practical_definition":"环境、社会和治理共同构成企业可持续发展议题的主要观察维度。","work_scenario":"判断碳排、员工安全、董事会监督分别属于哪个维度。","common_mistake":"把ESG等同于环保或碳排。","difficulty":"L1","source_id":"SRC-CN-SSE-ESG-2024","answer_basis":"上交所指引覆盖环境、社会和公司治理议题。","generatable_question_types":["single_choice","multiple_choice"],"status":"pilot"},{"knowledge_id":"KP-CN-ESG-002","module":"可持续披露","title":"重要性判断","practical_definition":"企业应结合自身活动、资源和关系识别重要的可持续风险、机遇和影响。","work_scenario":"决定报告和管理资源优先投入哪些议题。","common_mistake":"只按网络热度选择议题。","difficulty":"L2","source_id":"SRC-CN-MOF-BASE-2024","answer_basis":"基本准则关于重要信息、风险、机遇和影响的要求。","generatable_question_types":["decision","error_spotting"],"status":"pilot"},{"knowledge_id":"KP-CN-ESG-003","module":"可持续披露","title":"信息质量","practical_definition":"可持续信息应真实、完整、可比、可验证并保持方法一致。","work_scenario":"复核指标口径、边界、数据来源和前后期一致性。","common_mistake":"只披露对企业有利的数据。","difficulty":"L2","source_id":"SRC-CN-MOF-BASE-2024","answer_basis":"基本准则关于信息质量特征的规定。","generatable_question_types":["multiple_choice","error_spotting","data_interpretation"],"status":"pilot"},{"knowledge_id":"KP-CN-ESG-004","module":"可持续披露","title":"四支柱披露框架","practical_definition":"重要议题通常围绕治理、战略、风险和机遇管理、指标与目标组织信息。","work_scenario":"编制气候或其他重要议题的披露提纲。","common_mistake":"只有指标表，没有治理和管理过程。","difficulty":"L2","source_id":"SRC-CN-SSE-ESG-2024","answer_basis":"上交所指引对具有财务重要性议题的四项核心内容。","generatable_question_types":["process","single_choice"],"status":"pilot"},{"knowledge_id":"KP-CN-ESG-005","module":"可持续披露","title":"目标与进展","practical_definition":"目标应有口径、基准、期间和可衡量指标，并报告进展。","work_scenario":"将节能口号改成可跟踪的年度目标。","common_mistake":"目标没有基准年和期限。","difficulty":"L2","source_id":"SRC-CN-SSE-ESG-2024","answer_basis":"上交所指引第十九条及相关指标目标要求。","generatable_question_types":["error_spotting","decision"],"status":"pilot"},{"knowledge_id":"KP-CN-CLM-001","module":"气候管理","title":"物理风险与转型风险","practical_definition":"物理风险来自气候事件和长期变化，转型风险来自政策、技术、市场等低碳转型变化。","work_scenario":"评估洪涝停产与碳成本上升的不同影响。","common_mistake":"把所有气候风险都归为极端天气。","difficulty":"L2","source_id":"SRC-CN-MOF-CLIMATE-2025","answer_basis":"气候准则术语定义与风险识别要求。","generatable_question_types":["single_choice","multiple_choice"],"status":"pilot"},{"knowledge_id":"KP-CN-CLM-002","module":"气候管理","title":"气候机遇","practical_definition":"能源效率、低碳产品和资源替代等措施可能形成成本、市场或融资机遇。","work_scenario":"评估节能改造和低碳产品机会。","common_mistake":"只识别风险，不识别机遇。","difficulty":"L2","source_id":"SRC-CN-MOF-CLIMATE-2025","answer_basis":"气候准则关于气候相关机遇的要求。","generatable_question_types":["decision","comprehensive_case"],"status":"pilot"},{"knowledge_id":"KP-CN-GHG-001","module":"温室气体","title":"范围一排放","practical_definition":"企业拥有或控制的排放源产生的直接温室气体排放。","work_scenario":"识别自有锅炉、公务车和冷媒逸散。","common_mistake":"把外购电力列为范围一。","difficulty":"L1","source_id":"SRC-CN-SSE-ESG-2024","answer_basis":"上交所指引附录对范围一的定义。","generatable_question_types":["single_choice","multiple_choice"],"status":"pilot"},{"knowledge_id":"KP-CN-GHG-002","module":"温室气体","title":"范围二排放","practical_definition":"企业因外购能源产生的间接温室气体排放，典型为外购电力。","work_scenario":"盘点各运营地点购入电力。","common_mistake":"认为不是现场燃烧就不需管理。","difficulty":"L1","source_id":"SRC-CN-SSE-ESG-2024","answer_basis":"上交所指引附录对范围二的定义。","generatable_question_types":["single_choice","calculation"],"status":"pilot"},{"knowledge_id":"KP-CN-GHG-003","module":"温室气体","title":"范围三排放","practical_definition":"价值链上下游除范围二之外的其他间接排放。","work_scenario":"辨识采购、第三方运输、商务旅行与员工通勤。","common_mistake":"把第三方物流直接列为范围一。","difficulty":"L2","source_id":"SRC-CN-SSE-ESG-2024","answer_basis":"上交所指引附录列示十五类范围三来源。","generatable_question_types":["multiple_choice","comprehensive_case"],"status":"pilot"},{"knowledge_id":"KP-CN-GHG-004","module":"温室气体","title":"核算边界","practical_definition":"核算前应明确纳入的组织、运营地点、排放源和报告期间。","work_scenario":"集团盘查前确定子公司和厂区范围。","common_mistake":"先计算，最后再选择有利范围。","difficulty":"L2","source_id":"SRC-CN-MOF-CLIMATE-2025","answer_basis":"气候准则要求披露核算方法、输入值、假设和范围。","generatable_question_types":["process","decision"],"status":"pilot"},{"knowledge_id":"KP-CN-GHG-005","module":"温室气体","title":"活动数据与证据链","practical_definition":"活动数据应可追溯至计量记录、账单、台账或原始凭证。","work_scenario":"用电量、燃料量和冷媒补充量均保存来源。","common_mistake":"只保留汇总数字，不保留原始记录。","difficulty":"L2","source_id":"SRC-CN-MEE-GHG-POWER-2026","answer_basis":"核算报告指南关于活动数据、计量和数据质量。","generatable_question_types":["data_interpretation","error_spotting"],"status":"pilot"},{"knowledge_id":"KP-CN-GHG-006","module":"温室气体","title":"排放因子与单位","practical_definition":"活动数据应匹配适用的排放因子、年份和单位。","work_scenario":"核对吨、千克、兆瓦时与千瓦时换算。","common_mistake":"把kgCO2e直接当作tCO2e。","difficulty":"L2","source_id":"SRC-CN-MEE-GHG-POWER-2026","answer_basis":"核算报告指南关于参数、因子、单位及计算。","generatable_question_types":["calculation","error_spotting"],"status":"pilot"},{"knowledge_id":"KP-CN-GHG-007","module":"温室气体","title":"二氧化碳当量计算","practical_definition":"排放量通常由活动数据乘适用因子，并按需要换算为tCO2e。","work_scenario":"依据给定因子完成基础核算。","common_mistake":"忽略单位换算。","difficulty":"L2","source_id":"SRC-CN-MEE-GHG-POWER-2026","answer_basis":"核算报告指南的排放因子法及单位要求。","generatable_question_types":["calculation","data_interpretation"],"status":"pilot"},{"knowledge_id":"KP-CN-GHG-008","module":"气候管理","title":"转型计划","practical_definition":"气候转型计划应以可量化目标和具体行动衔接短期决策与长期目标。","work_scenario":"比较节能、能源替代和供应链措施的路线图。","common_mistake":"只有远期口号，没有近期行动和指标。","difficulty":"L3","source_id":"SRC-CN-MOF-CLIMATE-2025","answer_basis":"气候准则附录对气候转型计划的定义。","generatable_question_types":["decision","comprehensive_case"],"status":"pilot"},{"knowledge_id":"KP-CN-ENV-001","module":"环境管理","title":"污染防治主体责任","practical_definition":"企业应防止、减少环境污染和生态破坏，并对造成的损害依法承担责任。","work_scenario":"生产改造前识别污染风险并落实防治措施。","common_mistake":"认为取得营业执照即可免除环境责任。","difficulty":"L2","source_id":"SRC-CN-NPC-ENV-2014","answer_basis":"环境保护法第六条等规定。","generatable_question_types":["single_choice","decision"],"status":"pilot"},{"knowledge_id":"KP-CN-ENV-002","module":"环境披露","title":"披露责任与制度","practical_definition":"企业是环境信息依法披露责任主体，应建立制度、流程、职责和台账。","work_scenario":"明确环境、生产、法务与管理层职责。","common_mistake":"把披露责任完全交给外部咨询机构。","difficulty":"L2","source_id":"SRC-CN-MEE-ENV-DISC-2021","answer_basis":"管理办法第四条。","generatable_question_types":["process","error_spotting"],"status":"pilot"},{"knowledge_id":"KP-CN-ENV-003","module":"环境披露","title":"及时真实准确完整","practical_definition":"依法披露的环境信息应当及时、真实、准确、完整。","work_scenario":"发现数据错误时核实并按规定处理。","common_mistake":"删去不利信息让报告更美观。","difficulty":"L2","source_id":"SRC-CN-MEE-ENV-DISC-2021","answer_basis":"管理办法第五条。","generatable_question_types":["multiple_choice","error_spotting"],"status":"pilot"},{"knowledge_id":"KP-CN-ENV-004","module":"环境数据","title":"环境台账与原始记录","practical_definition":"企业应建立准确台账并妥善保存相关原始记录。","work_scenario":"将监测数据、排污许可执行数据与凭证关联。","common_mistake":"只保存PPT中的汇总图。","difficulty":"L2","source_id":"SRC-CN-MEE-ENV-DISC-2021","answer_basis":"管理办法第四条及数据规范要求。","generatable_question_types":["data_interpretation","process"],"status":"pilot"},{"knowledge_id":"KP-CN-ENV-005","module":"环境管理","title":"资源与生态议题","practical_definition":"能源、水、废弃物、污染物和生物多样性应按企业实际影响管理。","work_scenario":"制造企业根据排放热点设定环境措施。","common_mistake":"所有企业采用完全相同的环境优先级。","difficulty":"L3","source_id":"SRC-CN-SSE-ESG-2024","answer_basis":"上交所指引环境议题及第二十九条等要求。","generatable_question_types":["decision","comprehensive_case"],"status":"pilot"},{"knowledge_id":"KP-CN-SOC-001","module":"劳动用工","title":"书面劳动合同","practical_definition":"建立劳动关系应依法订立书面劳动合同并明确双方权利义务。","work_scenario":"新员工入职与合同管理。","common_mistake":"长期先用工，认为口头约定即可替代书面合同。","difficulty":"L1","source_id":"SRC-CN-MOHRSS-LABOR-2012","answer_basis":"劳动合同法第十条等规定。","generatable_question_types":["single_choice","error_spotting"],"status":"pilot"},{"knowledge_id":"KP-CN-SOC-002","module":"劳动用工","title":"合同变更与协商","practical_definition":"劳动合同的订立、履行、变更、解除或终止应依法办理并重视协商和记录。","work_scenario":"调整岗位或薪酬时履行合规流程。","common_mistake":"单方面口头变更关键条款且不留记录。","difficulty":"L2","source_id":"SRC-CN-MOHRSS-LABOR-2012","answer_basis":"劳动合同法关于履行和变更的规定。","generatable_question_types":["process","decision"],"status":"pilot"},{"knowledge_id":"KP-CN-SOC-003","module":"安全生产","title":"生产经营单位主体责任","practical_definition":"生产经营单位应建立健全全员安全生产责任制并落实安全管理。","work_scenario":"确定负责人、岗位责任和检查机制。","common_mistake":"把安全生产全部外包后不再管理。","difficulty":"L2","source_id":"SRC-CN-NPC-SAFE-2021","answer_basis":"安全生产法关于主体责任与全员责任制的规定。","generatable_question_types":["single_choice","multiple_choice"],"status":"pilot"},{"knowledge_id":"KP-CN-SOC-004","module":"安全生产","title":"风险分级与隐患治理","practical_definition":"企业应建立安全风险分级管控和事故隐患排查治理机制。","work_scenario":"识别重大风险、整改隐患并闭环跟踪。","common_mistake":"事故发生后才首次检查风险。","difficulty":"L3","source_id":"SRC-CN-NPC-SAFE-2021","answer_basis":"安全生产法关于双重预防机制的规定。","generatable_question_types":["process","decision"],"status":"pilot"},{"knowledge_id":"KP-CN-SOC-005","module":"安全生产","title":"培训与应急","practical_definition":"企业应开展安全教育培训并制定、演练和衔接应急措施。","work_scenario":"新员工培训、特殊作业管理和应急演练。","common_mistake":"用签名代替实际培训和演练。","difficulty":"L2","source_id":"SRC-CN-NPC-SAFE-2021","answer_basis":"安全生产法关于教育培训和应急管理的规定。","generatable_question_types":["multiple_choice","error_spotting"],"status":"pilot"},{"knowledge_id":"KP-CN-GOV-001","module":"公司治理","title":"章程与治理机构","practical_definition":"公司章程对公司、股东、董事、监事和高级管理人员具有约束力。","work_scenario":"判断重大事项由何种治理机构依法依章程决策。","common_mistake":"重大事项仅靠非正式口头指示。","difficulty":"L2","source_id":"SRC-CN-NPC-COMPANY-2023","answer_basis":"公司法第五条及公司治理相关规定。","generatable_question_types":["single_choice","decision"],"status":"pilot"},{"knowledge_id":"KP-CN-GOV-002","module":"公司治理","title":"董监高忠实勤勉义务","practical_definition":"董事、监事、高级管理人员应依法履行忠实和勤勉义务，避免利益冲突。","work_scenario":"处理关联交易和个人利益冲突。","common_mistake":"未披露利益冲突仍参与决策。","difficulty":"L3","source_id":"SRC-CN-NPC-COMPANY-2023","answer_basis":"公司法第八章相关规定。","generatable_question_types":["error_spotting","comprehensive_case"],"status":"pilot"},{"knowledge_id":"KP-CN-GOV-003","module":"数据治理","title":"个人信息最小必要","practical_definition":"处理个人信息应有明确合理目的，并限于实现目的的最小范围。","work_scenario":"设计员工或客户资料收集表。","common_mistake":"为了以后可能使用而无限收集。","difficulty":"L2","source_id":"SRC-CN-NPC-PIPL-2021","answer_basis":"个人信息保护法关于目的明确、最小必要等原则。","generatable_question_types":["single_choice","multiple_choice"],"status":"pilot"},{"knowledge_id":"KP-CN-GOV-004","module":"数据治理","title":"个人信息安全与权益","practical_definition":"处理者应采取安全措施并保障个人依法行使相关权利。","work_scenario":"建立访问控制、留痕和请求处理机制。","common_mistake":"所有员工共享完整个人信息表格。","difficulty":"L3","source_id":"SRC-CN-NPC-PIPL-2021","answer_basis":"个人信息保护法关于处理者义务与个人权利。","generatable_question_types":["decision","error_spotting"],"status":"pilot"},{"knowledge_id":"KP-CN-GOV-005","module":"商业道德","title":"公平竞争与诚信经营","practical_definition":"经营者应遵循公平诚信原则，不实施商业贿赂、虚假宣传或侵犯商业秘密等行为。","work_scenario":"审核采购、营销和竞争情报流程。","common_mistake":"把虚假环保宣传当成普通营销夸张。","difficulty":"L3","source_id":"SRC-CN-NPC-AUCL-2025","answer_basis":"反不正当竞争法第二条及不正当竞争行为规定。","generatable_question_types":["multiple_choice","decision","comprehensive_case"],"status":"pilot"},{"knowledge_id":"KP-CN-ESG-006","module":"可持续披露","title":"利益相关方沟通","practical_definition":"企业应结合重要议题识别相关利益方，并以适当方式了解其合理关注。","work_scenario":"规划员工、客户、供应商和社区沟通安排。","common_mistake":"只与管理层沟通并代表所有利益方作结论。","difficulty":"L2","source_id":"SRC-CN-MOF-BASE-2024","answer_basis":"基本准则关于企业活动、资源和关系及重要信息的要求。","generatable_question_types":["decision","comprehensive_case"],"status":"pilot"},{"knowledge_id":"KP-CN-ESG-007","module":"可持续披露","title":"报告边界","practical_definition":"披露边界应与重要影响、风险和机遇的识别范围相衔接，并说明重大差异。","work_scenario":"确定集团、子公司和价值链信息纳入范围。","common_mistake":"只纳入表现较好的单位。","difficulty":"L3","source_id":"SRC-CN-MOF-BASE-2024","answer_basis":"基本准则关于报告主体、范围和重要信息的要求。","generatable_question_types":["decision","error_spotting"],"status":"pilot"},{"knowledge_id":"KP-CN-ESG-008","module":"可持续披露","title":"报告期间与比较信息","practical_definition":"指标应明确报告期间，并在适用时提供可比信息和口径变化说明。","work_scenario":"复核年度数据及上年比较数据。","common_mistake":"不同期间采用不同口径但不解释。","difficulty":"L2","source_id":"SRC-CN-MOF-BASE-2024","answer_basis":"基本准则关于可比性和一致性的要求。","generatable_question_types":["data_interpretation","error_spotting"],"status":"pilot"},{"knowledge_id":"KP-CN-ESG-009","module":"可持续披露","title":"估计与不确定性","practical_definition":"使用估计值时应说明方法、关键假设和不确定性，避免将估计表述为精确事实。","work_scenario":"原始数据缺失时记录估算方法。","common_mistake":"用未说明的方法补齐数据并当成实测值。","difficulty":"L3","source_id":"SRC-CN-MOF-BASE-2024","answer_basis":"基本准则关于如实反映、可验证性和信息披露的要求。","generatable_question_types":["data_interpretation","decision"],"status":"pilot"},{"knowledge_id":"KP-CN-ESG-010","module":"可持续披露","title":"信息关联性","practical_definition":"治理、战略、风险管理和指标目标信息应相互衔接，支持使用者理解因果关系。","work_scenario":"检查风险是否对应行动、指标和目标。","common_mistake":"报告各章节互不关联。","difficulty":"L3","source_id":"SRC-CN-MOF-BASE-2024","answer_basis":"基本准则关于信息完整性和可理解性的要求。","generatable_question_types":["comprehensive_case","error_spotting"],"status":"pilot"},{"knowledge_id":"KP-CN-ESG-011","module":"可持续披露","title":"治理监督职责","practical_definition":"企业应说明治理机构对重要可持续议题的监督职责、信息获取和决策参与。","work_scenario":"设计董事会或专门委员会监督流程。","common_mistake":"只写管理层重视但没有职责和会议记录。","difficulty":"L3","source_id":"SRC-CN-SSE-ESG-2024","answer_basis":"上交所指引关于可持续发展治理的要求。","generatable_question_types":["process","decision"],"status":"pilot"},{"knowledge_id":"KP-CN-ESG-012","module":"可持续披露","title":"风险管理流程","practical_definition":"重要可持续风险和机遇应纳入识别、评估、排序、监测和应对流程。","work_scenario":"把气候和环境风险纳入企业风险台账。","common_mistake":"仅在编报告时临时填写风险。","difficulty":"L3","source_id":"SRC-CN-SSE-ESG-2024","answer_basis":"上交所指引关于影响、风险和机遇管理的要求。","generatable_question_types":["process","comprehensive_case"],"status":"pilot"},{"knowledge_id":"KP-CN-ESG-013","module":"可持续披露","title":"指标目标跟踪","practical_definition":"企业应定期监测指标与目标进展，分析偏差并采取纠正措施。","work_scenario":"季度复核能耗、事故率和治理整改进度。","common_mistake":"年度只公布目标，不监测执行。","difficulty":"L2","source_id":"SRC-CN-SSE-ESG-2024","answer_basis":"上交所指引关于指标、目标和进展的要求。","generatable_question_types":["data_interpretation","decision"],"status":"pilot"},{"knowledge_id":"KP-CN-CLM-003","module":"气候管理","title":"情景分析","practical_definition":"企业可通过合理情景分析评估不同气候路径下风险、机遇和战略韧性。","work_scenario":"比较不同升温或政策情景对业务的影响。","common_mistake":"只采用最乐观情景证明没有风险。","difficulty":"L4","source_id":"SRC-CN-MOF-CLIMATE-2025","answer_basis":"气候准则关于情景分析和气候韧性的要求。","generatable_question_types":["data_interpretation","comprehensive_case"],"status":"pilot"},{"knowledge_id":"KP-CN-CLM-004","module":"气候管理","title":"时间范围","practical_definition":"气候风险和机遇应结合企业实际界定短期、中期和长期范围。","work_scenario":"评估厂房洪涝、能源合同和技术替代时点。","common_mistake":"所有风险都只看下一年度。","difficulty":"L3","source_id":"SRC-CN-MOF-CLIMATE-2025","answer_basis":"气候准则关于短中长期气候风险和机遇的要求。","generatable_question_types":["decision","data_interpretation"],"status":"pilot"},{"knowledge_id":"KP-CN-CLM-005","module":"气候管理","title":"财务影响","practical_definition":"应分析重要气候风险和机遇对财务状况、经营成果和现金流的当前及预期影响。","work_scenario":"评估碳成本、停产和节能投资的财务影响。","common_mistake":"只描述气候事件，不分析经营影响。","difficulty":"L4","source_id":"SRC-CN-MOF-CLIMATE-2025","answer_basis":"气候准则关于当前和预期财务影响的要求。","generatable_question_types":["comprehensive_case","data_interpretation"],"status":"pilot"},{"knowledge_id":"KP-CN-CLM-006","module":"气候管理","title":"气候韧性","practical_definition":"企业应评估战略和业务模式在不同气候条件下调整和承受影响的能力。","work_scenario":"检验关键供应、设施和产品组合的适应能力。","common_mistake":"把韧性等同于购买保险。","difficulty":"L4","source_id":"SRC-CN-MOF-CLIMATE-2025","answer_basis":"气候准则关于气候韧性的要求。","generatable_question_types":["decision","comprehensive_case"],"status":"pilot"},{"knowledge_id":"KP-CN-CLM-007","module":"气候管理","title":"转型行动计划","practical_definition":"转型计划应连接目标、行动、资源、责任和阶段性进度。","work_scenario":"安排设备改造、能源替代和供应链协作。","common_mistake":"只有远期净零口号。","difficulty":"L3","source_id":"SRC-CN-MOF-CLIMATE-2025","answer_basis":"气候准则关于气候转型计划的要求。","generatable_question_types":["process","decision"],"status":"pilot"},{"knowledge_id":"KP-CN-CLM-008","module":"气候管理","title":"气候指标","practical_definition":"气候指标应与重要风险机遇及管理行动相关，并保持口径一致。","work_scenario":"选择排放、能源、暴露资产和投入指标。","common_mistake":"只选容易下降但与风险无关的指标。","difficulty":"L3","source_id":"SRC-CN-MOF-CLIMATE-2025","answer_basis":"气候准则关于气候相关指标的要求。","generatable_question_types":["data_interpretation","decision"],"status":"pilot"},{"knowledge_id":"KP-CN-CLM-009","module":"气候管理","title":"内部碳价格","practical_definition":"使用内部碳价格时应说明用途、适用范围和计价假设。","work_scenario":"在投资决策中比较高碳与低碳方案。","common_mistake":"对外宣传内部碳价但决策从未使用。","difficulty":"L3","source_id":"SRC-CN-MOF-CLIMATE-2025","answer_basis":"气候准则关于内部碳价格信息的要求。","generatable_question_types":["calculation","decision"],"status":"pilot"},{"knowledge_id":"KP-CN-CLM-010","module":"气候管理","title":"价值链气候风险","practical_definition":"气候风险识别不应局限于自有运营，还应关注重要上下游依赖和影响。","work_scenario":"识别关键原料、物流和客户转型风险。","common_mistake":"认为供应商风险与本企业无关。","difficulty":"L3","source_id":"SRC-CN-MOF-CLIMATE-2025","answer_basis":"气候准则关于价值链气候风险和机遇的要求。","generatable_question_types":["comprehensive_case","multiple_choice"],"status":"pilot"},{"knowledge_id":"KP-CN-GHG-009","module":"温室气体","title":"基准年管理","practical_definition":"减排目标和趋势分析应明确基准年，并在重大边界或方法变化时评估是否重算。","work_scenario":"处理并购、剥离和核算方法变化。","common_mistake":"每年选择排放最高年份作基准。","difficulty":"L3","source_id":"SRC-CN-MOF-CLIMATE-2025","answer_basis":"气候准则关于温室气体目标、方法和可比信息的要求。","generatable_question_types":["decision","data_interpretation"],"status":"pilot"},{"knowledge_id":"KP-CN-GHG-010","module":"温室气体","title":"排放源清单","practical_definition":"核算前应系统识别各运营地点的固定燃烧、移动燃烧、逸散和外购能源等排放源。","work_scenario":"建立厂区排放源清单并指定数据责任人。","common_mistake":"只统计金额最大的能源账单。","difficulty":"L2","source_id":"SRC-CN-MEE-GHG-POWER-2026","answer_basis":"核算报告指南关于排放源识别和数据收集的要求。","generatable_question_types":["process","multiple_choice"],"status":"pilot"},{"knowledge_id":"KP-CN-GHG-011","module":"温室气体","title":"数据质量控制","practical_definition":"活动数据和参数应经过完整性、准确性、单位及异常波动检查。","work_scenario":"月度核对仪表、账单和台账差异。","common_mistake":"汇总后不再检查异常值。","difficulty":"L3","source_id":"SRC-CN-MEE-GHG-POWER-2026","answer_basis":"核算报告指南关于数据质量管理的要求。","generatable_question_types":["data_interpretation","error_spotting"],"status":"pilot"},{"knowledge_id":"KP-CN-GHG-012","module":"温室气体","title":"缺失数据处理","practical_definition":"数据缺失时应采用有依据的方法估算、记录原因并保留复核痕迹。","work_scenario":"处理仪表故障期间的燃料或用电数据。","common_mistake":"直接填入上月数字且不说明。","difficulty":"L3","source_id":"SRC-CN-MEE-GHG-POWER-2026","answer_basis":"核算报告指南关于缺失数据和质量控制的要求。","generatable_question_types":["decision","data_interpretation"],"status":"pilot"},{"knowledge_id":"KP-CN-GHG-013","module":"温室气体","title":"因子版本管理","practical_definition":"排放因子应记录来源、版本、适用年份和单位，更新时评估可比影响。","work_scenario":"维护因子台账并锁定报告版本。","common_mistake":"从网络搜索任意因子且不记录来源。","difficulty":"L3","source_id":"SRC-CN-MEE-GHG-POWER-2026","answer_basis":"核算报告指南关于参数和排放因子的要求。","generatable_question_types":["error_spotting","process"],"status":"pilot"},{"knowledge_id":"KP-CN-GHG-014","module":"温室气体","title":"边界变化重算","practical_definition":"重大组织边界变化可能影响趋势，应评估基准和比较数据是否需要重算。","work_scenario":"处理收购新工厂后的排放趋势。","common_mistake":"并购后直接与旧边界数字比较。","difficulty":"L4","source_id":"SRC-CN-MOF-CLIMATE-2025","answer_basis":"气候准则关于核算范围、方法和可比性的要求。","generatable_question_types":["data_interpretation","decision"],"status":"pilot"},{"knowledge_id":"KP-CN-GHG-015","module":"温室气体","title":"减排与抵销区分","practical_definition":"企业自身减排、价值链减排和碳抵销应清楚区分，避免将抵销替代实际减排行动。","work_scenario":"编制目标进展和抵销使用说明。","common_mistake":"购买抵销后宣称运营已无排放。","difficulty":"L3","source_id":"SRC-CN-MEE-GHG-DISC-2025","answer_basis":"温室气体自愿披露意见关于规范、真实和透明披露的要求。","generatable_question_types":["error_spotting","decision"],"status":"pilot"},{"knowledge_id":"KP-CN-GHG-016","module":"温室气体","title":"核查证据准备","practical_definition":"核算工作底稿应能追溯排放源、活动数据、参数、计算和复核责任。","work_scenario":"为内部复核或第三方核查准备资料。","common_mistake":"只提供最终总量截图。","difficulty":"L3","source_id":"SRC-CN-MEE-GHG-DISC-2025","answer_basis":"温室气体自愿披露意见关于数据质量和可信度的要求。","generatable_question_types":["process","comprehensive_case"],"status":"pilot"},{"knowledge_id":"KP-CN-ENV-006","module":"环境管理","title":"环境合规清单","practical_definition":"企业应识别适用环境法律、许可、标准和报告义务并持续更新。","work_scenario":"建立适用法规和许可证到期清单。","common_mistake":"仅在被检查时查询要求。","difficulty":"L2","source_id":"SRC-CN-NPC-ENV-2014","answer_basis":"环境保护法关于企业污染防治和守法责任的规定。","generatable_question_types":["process","decision"],"status":"pilot"},{"knowledge_id":"KP-CN-ENV-007","module":"环境数据","title":"污染物监测","practical_definition":"污染物监测应按适用规范、点位、频次和方法执行并保存记录。","work_scenario":"复核废水和废气监测计划。","common_mistake":"只在排放较低时安排采样。","difficulty":"L3","source_id":"SRC-CN-MEE-ENV-DISC-2021","answer_basis":"环境信息依法披露管理办法关于环境数据和记录的要求。","generatable_question_types":["data_interpretation","error_spotting"],"status":"pilot"},{"knowledge_id":"KP-CN-ENV-008","module":"环境管理","title":"突发环境事件应急","practical_definition":"企业应识别环境事件风险，准备应急措施并在事件发生时依法报告和处置。","work_scenario":"开展泄漏风险演练和物资检查。","common_mistake":"发生泄漏后先删除监控记录。","difficulty":"L3","source_id":"SRC-CN-NPC-ENV-2014","answer_basis":"环境保护法关于突发环境事件应急管理的规定。","generatable_question_types":["process","comprehensive_case"],"status":"pilot"},{"knowledge_id":"KP-CN-ENV-009","module":"环境管理","title":"危险废物管理","practical_definition":"危险废物应按适用要求识别、分类、储存、转移并保留台账。","work_scenario":"管理废溶剂、废油和含污染物包装。","common_mistake":"将危险废物混入一般垃圾。","difficulty":"L3","source_id":"SRC-CN-SSE-ESG-2024","answer_basis":"上交所指引关于废弃物和污染物管理的议题要求。","generatable_question_types":["process","error_spotting"],"status":"pilot"},{"knowledge_id":"KP-CN-ENV-010","module":"环境管理","title":"水资源风险","practical_definition":"企业应结合所在地和业务依赖识别取水、用水、排水及缺水风险。","work_scenario":"评估高耗水工序和缺水地区运营点。","common_mistake":"只比较总用水量，不看地区风险。","difficulty":"L3","source_id":"SRC-CN-SSE-ESG-2024","answer_basis":"上交所指引关于水资源利用的议题要求。","generatable_question_types":["data_interpretation","decision"],"status":"pilot"},{"knowledge_id":"KP-CN-ENV-011","module":"环境管理","title":"能源效率管理","practical_definition":"企业应基于能源数据识别高耗能环节、制定措施并验证节能效果。","work_scenario":"比较设备改造前后单位产量能耗。","common_mistake":"只看总能耗下降，不考虑产量变化。","difficulty":"L3","source_id":"SRC-CN-SSE-ESG-2024","answer_basis":"上交所指引关于能源利用和资源效率的要求。","generatable_question_types":["calculation","data_interpretation"],"status":"pilot"},{"knowledge_id":"KP-CN-ENV-012","module":"环境管理","title":"生物多样性影响","practical_definition":"涉及敏感区域或生态依赖时，应识别、避免、减缓和修复重要影响。","work_scenario":"项目选址和供应链原料风险评估。","common_mistake":"认为厂区绿化等同全部生物多样性管理。","difficulty":"L4","source_id":"SRC-CN-SSE-ESG-2024","answer_basis":"上交所指引关于生态系统和生物多样性的议题要求。","generatable_question_types":["decision","comprehensive_case"],"status":"pilot"},{"knowledge_id":"KP-CN-ENV-013","module":"环境披露","title":"环境信息更正","practical_definition":"发现已披露环境信息存在重要错误时，应及时核实并按适用要求更正说明。","work_scenario":"处理监测数据录入错误。","common_mistake":"静默修改网页且不保留更正记录。","difficulty":"L3","source_id":"SRC-CN-MEE-ENV-DISC-2021","answer_basis":"管理办法关于环境信息真实、准确、完整和及时的要求。","generatable_question_types":["process","error_spotting"],"status":"pilot"},{"knowledge_id":"KP-CN-SOC-006","module":"劳动用工","title":"劳动合同必备管理","practical_definition":"书面劳动合同应依法明确工作内容、报酬、期限、社会保险等重要事项。","work_scenario":"复核标准劳动合同模板和签署记录。","common_mistake":"合同只写岗位名称，不明确关键权利义务。","difficulty":"L2","source_id":"SRC-CN-MOHRSS-LABOR-2012","answer_basis":"劳动合同法关于劳动合同内容的规定。","generatable_question_types":["multiple_choice","error_spotting"],"status":"pilot"},{"knowledge_id":"KP-CN-SOC-007","module":"劳动用工","title":"工时休息管理","practical_definition":"用工安排应依法管理工作时间、休息休假和加班记录。","work_scenario":"排班、考勤和加班审批管理。","common_mistake":"长期口头要求加班且不留记录。","difficulty":"L2","source_id":"SRC-CN-MOHRSS-LABOR-2012","answer_basis":"劳动合同法关于劳动条件和劳动者权益的相关规定。","generatable_question_types":["decision","error_spotting"],"status":"pilot"},{"knowledge_id":"KP-CN-SOC-008","module":"劳动用工","title":"薪酬与社会保障","practical_definition":"企业应依法及时足额支付劳动报酬并履行相关社会保障义务。","work_scenario":"复核工资发放和入离职衔接。","common_mistake":"以内部规定单方面免除法定义务。","difficulty":"L2","source_id":"SRC-CN-MOHRSS-LABOR-2012","answer_basis":"劳动合同法关于劳动报酬和社会保险的规定。","generatable_question_types":["single_choice","decision"],"status":"pilot"},{"knowledge_id":"KP-CN-SOC-009","module":"劳动用工","title":"员工申诉与协商记录","practical_definition":"劳动关系争议和重大调整应建立沟通、受理、协商和留痕机制。","work_scenario":"处理岗位调整和员工申诉。","common_mistake":"只接受口头投诉并立即删除记录。","difficulty":"L3","source_id":"SRC-CN-MOHRSS-LABOR-2012","answer_basis":"劳动合同法关于协商、履行和变更的规定。","generatable_question_types":["process","comprehensive_case"],"status":"pilot"},{"knowledge_id":"KP-CN-SOC-010","module":"安全生产","title":"危险源辨识","practical_definition":"企业应持续辨识危险源、评估风险并落实分级控制措施。","work_scenario":"设备、动火、有限空间和承包商作业评估。","common_mistake":"只在事故后补做危险源辨识。","difficulty":"L3","source_id":"SRC-CN-NPC-SAFE-2021","answer_basis":"安全生产法关于风险分级管控的规定。","generatable_question_types":["process","decision"],"status":"pilot"},{"knowledge_id":"KP-CN-SOC-011","module":"安全生产","title":"事故报告与应急处置","practical_definition":"事故发生后应立即组织救援、依法报告并保护相关记录。","work_scenario":"处理人员受伤或重大险情。","common_mistake":"先隐瞒事故，等内部统一口径后再处理。","difficulty":"L3","source_id":"SRC-CN-NPC-SAFE-2021","answer_basis":"安全生产法关于事故应急救援和报告的规定。","generatable_question_types":["process","comprehensive_case"],"status":"pilot"},{"knowledge_id":"KP-CN-GOV-006","module":"公司治理","title":"董事会职责落实","practical_definition":"董事会及相关治理机构应依法依章程履行决策、监督和记录职责。","work_scenario":"审议重大投资和可持续风险事项。","common_mistake":"管理层决定后再让董事会补签。","difficulty":"L3","source_id":"SRC-CN-NPC-COMPANY-2023","answer_basis":"公司法关于公司治理机构职责的规定。","generatable_question_types":["process","decision"],"status":"pilot"},{"knowledge_id":"KP-CN-GOV-007","module":"公司治理","title":"关联交易与回避","practical_definition":"存在关联关系或利益冲突时，应披露关系并依规定履行审议和回避程序。","work_scenario":"审查关联采购和董事利益关系。","common_mistake":"关联董事参与表决且不披露。","difficulty":"L4","source_id":"SRC-CN-NPC-COMPANY-2023","answer_basis":"公司法关于董监高忠实义务和利益冲突的规定。","generatable_question_types":["comprehensive_case","error_spotting"],"status":"pilot"},{"knowledge_id":"KP-CN-GOV-008","module":"公司治理","title":"授权与决策留痕","practical_definition":"重大事项应按权限矩阵和章程履行审批，并保存会议、决议和执行记录。","work_scenario":"复核重大合同和投资审批链。","common_mistake":"仅凭即时通讯口头同意执行。","difficulty":"L3","source_id":"SRC-CN-NPC-COMPANY-2023","answer_basis":"公司法关于公司治理和章程约束的规定。","generatable_question_types":["process","error_spotting"],"status":"pilot"},{"knowledge_id":"KP-CN-GOV-009","module":"公司治理","title":"股东和利益相关者权益","practical_definition":"治理决策应依法保护股东权利并关注对员工、债权人等相关方的影响。","work_scenario":"重大重组前评估权利义务和沟通。","common_mistake":"只考虑控股股东短期利益。","difficulty":"L3","source_id":"SRC-CN-NPC-COMPANY-2023","answer_basis":"公司法关于股东权利和公司社会责任的规定。","generatable_question_types":["decision","comprehensive_case"],"status":"pilot"},{"knowledge_id":"KP-CN-DAT-003","module":"数据治理","title":"个人信息处理基础","practical_definition":"处理个人信息应具备合法处理基础，并以显著方式告知必要事项。","work_scenario":"设计客户注册和员工信息流程。","common_mistake":"默认勾选同意且不提供告知。","difficulty":"L3","source_id":"SRC-CN-NPC-PIPL-2021","answer_basis":"个人信息保护法关于处理规则和告知同意的规定。","generatable_question_types":["process","error_spotting"],"status":"pilot"},{"knowledge_id":"KP-CN-DAT-004","module":"数据治理","title":"最小必要与保存期限","practical_definition":"收集字段和保存期限应限于实现明确目的所必需。","work_scenario":"清理长期闲置的客户资料。","common_mistake":"为了以后可能使用而永久保存全部字段。","difficulty":"L3","source_id":"SRC-CN-NPC-PIPL-2021","answer_basis":"个人信息保护法关于最小必要和保存期限的规定。","generatable_question_types":["decision","data_interpretation"],"status":"pilot"},{"knowledge_id":"KP-CN-DAT-005","module":"数据治理","title":"敏感个人信息","practical_definition":"处理敏感个人信息应具有特定目的和充分必要性，并采取严格保护措施。","work_scenario":"处理身份证、生物识别和健康信息。","common_mistake":"将敏感信息通过公开表格共享。","difficulty":"L4","source_id":"SRC-CN-NPC-PIPL-2021","answer_basis":"个人信息保护法关于敏感个人信息的规定。","generatable_question_types":["multiple_choice","comprehensive_case"],"status":"pilot"},{"knowledge_id":"KP-CN-DAT-006","module":"数据治理","title":"安全事件与权利请求","practical_definition":"处理者应建立安全事件响应和个人权利请求处理机制。","work_scenario":"处置数据泄露及查阅、更正、删除请求。","common_mistake":"收到请求或泄露报告后不登记不响应。","difficulty":"L3","source_id":"SRC-CN-NPC-PIPL-2021","answer_basis":"个人信息保护法关于安全义务和个人权利的规定。","generatable_question_types":["process","decision"],"status":"pilot"},{"knowledge_id":"KP-CN-ETH-003","module":"商业道德","title":"商业贿赂防控","practical_definition":"企业应识别交易中的不当利益输送风险并建立审批、记录和调查机制。","work_scenario":"管理礼品招待、返利和中介费用。","common_mistake":"把回扣记为市场推广费即可。","difficulty":"L3","source_id":"SRC-CN-NPC-AUCL-2025","answer_basis":"反不正当竞争法关于商业贿赂的规定。","generatable_question_types":["error_spotting","comprehensive_case"],"status":"pilot"},{"knowledge_id":"KP-CN-ETH-004","module":"商业道德","title":"真实环境宣称","practical_definition":"产品环保和减排宣称应有边界、方法和证据，不得虚假或引人误解。","work_scenario":"审核零碳、可降解和节能广告。","common_mistake":"没有依据仍使用绝对化绿色宣称。","difficulty":"L3","source_id":"SRC-CN-NPC-AUCL-2025","answer_basis":"反不正当竞争法关于虚假或引人误解宣传的规定。","generatable_question_types":["decision","error_spotting"],"status":"pilot"},{"knowledge_id":"KP-CN-ETH-005","module":"商业道德","title":"商业秘密保护","practical_definition":"获取和使用竞争信息应遵循合法方式并保护合作方商业秘密。","work_scenario":"开展供应商接触和竞争情报收集。","common_mistake":"诱导对方员工提供保密技术资料。","difficulty":"L3","source_id":"SRC-CN-NPC-AUCL-2025","answer_basis":"反不正当竞争法关于商业秘密保护的规定。","generatable_question_types":["decision","comprehensive_case"],"status":"pilot"},{"knowledge_id":"KP-CN-ETH-006","module":"商业道德","title":"举报调查与纠正","practical_definition":"企业应建立举报受理、独立调查、证据留存和纠正问责机制。","work_scenario":"处理采购回扣和虚假宣传举报。","common_mistake":"收到举报后通知被举报人删除资料。","difficulty":"L4","source_id":"SRC-CN-NPC-AUCL-2025","answer_basis":"反不正当竞争法相关风险与公司诚信治理要求。","generatable_question_types":["process","comprehensive_case"],"status":"pilot"}];
+const OFFICIAL_QUESTION_ROWS=[{"question_id":"CNQ001","knowledge_id":"KP-CN-ESG-001","source_id":"SRC-CN-SSE-ESG-2024","question_type":"single_choice","difficulty":"L1","question_text":"企业自有锅炉的碳排放主要属于ESG哪一维度？","options":[{"key":"A","text":"环境E"},{"key":"B","text":"社会S"},{"key":"C","text":"治理G"},{"key":"D","text":"不属于ESG"}],"correct_answers":["A"],"explanation":"温室气体排放属于环境维度。","practical_use":"ESG议题分类","answer_basis":"上交所可持续发展报告指引的环境议题","status":"pilot","is_prototype":true,"display_order":1,"knowledge_points":{"module":"ESG基础","title":"ESG三维度"}},{"question_id":"CNQ002","knowledge_id":"KP-CN-ESG-001","source_id":"SRC-CN-SSE-ESG-2024","question_type":"multiple_choice","difficulty":"L1","question_text":"下列哪些配对正确？","options":[{"key":"A","text":"碳排放—E"},{"key":"B","text":"员工安全—S"},{"key":"C","text":"董事利益冲突—G"},{"key":"D","text":"员工安全—G"}],"correct_answers":["A","B","C"],"explanation":"碳排属于环境，员工安全属于社会，公司治理和利益冲突属于治理。","practical_use":"ESG议题分类","answer_basis":"上交所可持续发展报告指引","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"ESG基础","title":"ESG三维度"}},{"question_id":"CNQ003","knowledge_id":"KP-CN-ESG-002","source_id":"SRC-CN-MOF-BASE-2024","question_type":"decision","difficulty":"L2","question_text":"公司只因某议题近期热门，就直接列为最高重要议题。首先应补做什么？","options":[{"key":"A","text":"结合业务、影响、风险和机遇重新评估"},{"key":"B","text":"增加宣传预算"},{"key":"C","text":"删除其他议题"},{"key":"D","text":"由AI随机选择"}],"correct_answers":["A"],"explanation":"重要性应结合企业活动、资源、关系以及相关影响、风险和机遇判断。","practical_use":"重要性评估","answer_basis":"企业可持续披露准则——基本准则（试行）","status":"pilot","is_prototype":true,"display_order":2,"knowledge_points":{"module":"可持续披露","title":"重要性判断"}},{"question_id":"CNQ004","knowledge_id":"KP-CN-ESG-002","source_id":"SRC-CN-MOF-BASE-2024","question_type":"error_spotting","difficulty":"L2","question_text":"某公司将所有30项议题都评为最高重要性。最大的问题是？","options":[{"key":"A","text":"未形成有区分度的优先判断"},{"key":"B","text":"议题数量不能超过10项"},{"key":"C","text":"必须只选环境议题"},{"key":"D","text":"必须由交易所代选"}],"correct_answers":["A"],"explanation":"重要性分析需要支持资源与披露优先级，全部最高通常说明判断缺乏区分。","practical_use":"评估质量检查","answer_basis":"基本准则的重要性要求","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"可持续披露","title":"重要性判断"}},{"question_id":"CNQ005","knowledge_id":"KP-CN-ESG-003","source_id":"SRC-CN-MOF-BASE-2024","question_type":"multiple_choice","difficulty":"L2","question_text":"哪些做法有助于提高可持续信息质量？","options":[{"key":"A","text":"披露口径和边界"},{"key":"B","text":"保存数据来源"},{"key":"C","text":"保持方法前后一致"},{"key":"D","text":"只保留有利数据"}],"correct_answers":["A","B","C"],"explanation":"口径、证据和一致性支持完整、可比和可验证。","practical_use":"资料复核","answer_basis":"基本准则的信息质量特征","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"可持续披露","title":"信息质量"}},{"question_id":"CNQ006","knowledge_id":"KP-CN-ESG-003","source_id":"SRC-CN-MOF-BASE-2024","question_type":"data_interpretation","difficulty":"L3","question_text":"同一能耗指标今年按平方米计算、去年按员工人数计算，报告未解释变化。最主要影响是？","options":[{"key":"A","text":"可比性下降"},{"key":"B","text":"真实性必然提高"},{"key":"C","text":"无需说明"},{"key":"D","text":"只影响版面"}],"correct_answers":["A"],"explanation":"口径变化未解释会削弱跨期可比性。","practical_use":"指标判读","answer_basis":"基本准则的信息质量特征","status":"pilot","is_prototype":true,"display_order":3,"knowledge_points":{"module":"可持续披露","title":"信息质量"}},{"question_id":"CNQ007","knowledge_id":"KP-CN-ESG-004","source_id":"SRC-CN-SSE-ESG-2024","question_type":"process","difficulty":"L2","question_text":"编制重要气候议题披露时，哪组结构最完整？","options":[{"key":"A","text":"治理→战略→风险和机遇管理→指标与目标"},{"key":"B","text":"宣传→海报→口号→奖项"},{"key":"C","text":"数据→删除不利项→发布"},{"key":"D","text":"只列一个总指标"}],"correct_answers":["A"],"explanation":"四支柱能系统呈现管理责任、影响、流程和绩效。","practical_use":"报告编制","answer_basis":"上交所指引四项核心内容","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"可持续披露","title":"四支柱披露框架"}},{"question_id":"CNQ008","knowledge_id":"KP-CN-ESG-005","source_id":"SRC-CN-SSE-ESG-2024","question_type":"error_spotting","difficulty":"L2","question_text":"目标写成“未来持续节能”，最大缺口是？","options":[{"key":"A","text":"缺少基准、量化指标和期间"},{"key":"B","text":"字数太少"},{"key":"C","text":"没有英文版本"},{"key":"D","text":"没有绿色字体"}],"correct_answers":["A"],"explanation":"可管理目标需有基准、口径、指标和期限。","practical_use":"目标设计","answer_basis":"上交所指引第十九条及指标目标要求","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"可持续披露","title":"目标与进展"}},{"question_id":"CNQ009","knowledge_id":"KP-CN-CLM-001","source_id":"SRC-CN-MOF-CLIMATE-2025","question_type":"single_choice","difficulty":"L2","question_text":"洪水导致仓库停运，通常属于哪类气候风险？","options":[{"key":"A","text":"物理风险"},{"key":"B","text":"转型风险"},{"key":"C","text":"劳动合同风险"},{"key":"D","text":"公司登记风险"}],"correct_answers":["A"],"explanation":"极端天气造成的直接影响属于物理风险。","practical_use":"气候风险分类","answer_basis":"气候准则术语定义","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"气候管理","title":"物理风险与转型风险"}},{"question_id":"CNQ010","knowledge_id":"KP-CN-CLM-001","source_id":"SRC-CN-MOF-CLIMATE-2025","question_type":"multiple_choice","difficulty":"L2","question_text":"哪些通常属于气候转型风险？","options":[{"key":"A","text":"碳成本上升"},{"key":"B","text":"低碳技术替代"},{"key":"C","text":"客户偏好转向低碳产品"},{"key":"D","text":"台风直接损坏厂房"}],"correct_answers":["A","B","C"],"explanation":"政策、技术和市场变化属于转型风险；台风直接损坏属于物理风险。","practical_use":"气候风险分类","answer_basis":"企业可持续披露准则第1号——气候（试行）","status":"pilot","is_prototype":true,"display_order":4,"knowledge_points":{"module":"气候管理","title":"物理风险与转型风险"}},{"question_id":"CNQ011","knowledge_id":"KP-CN-CLM-002","source_id":"SRC-CN-MOF-CLIMATE-2025","question_type":"decision","difficulty":"L2","question_text":"企业发现高耗能设备成本持续上升，哪项最可能同时构成气候机遇？","options":[{"key":"A","text":"评估高效设备改造并量化节能收益"},{"key":"B","text":"停止收集能耗数据"},{"key":"C","text":"只修改宣传语"},{"key":"D","text":"忽略能源价格"}],"correct_answers":["A"],"explanation":"能源效率提升可能降低成本并形成转型机遇。","practical_use":"气候机会评估","answer_basis":"气候准则关于气候相关机遇","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"气候管理","title":"气候机遇"}},{"question_id":"CNQ012","knowledge_id":"KP-CN-GHG-001","source_id":"SRC-CN-SSE-ESG-2024","question_type":"single_choice","difficulty":"L1","question_text":"自有公务车燃油产生的排放通常属于？","options":[{"key":"A","text":"范围一"},{"key":"B","text":"范围二"},{"key":"C","text":"范围三"},{"key":"D","text":"不属于温室气体"}],"correct_answers":["A"],"explanation":"企业拥有或控制的移动燃烧源通常为直接排放。","practical_use":"排放范围分类","answer_basis":"上交所指引附录范围一定义","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"温室气体","title":"范围一排放"}},{"question_id":"CNQ013","knowledge_id":"KP-CN-GHG-001","source_id":"SRC-CN-SSE-ESG-2024","question_type":"multiple_choice","difficulty":"L2","question_text":"哪些通常可能属于范围一？","options":[{"key":"A","text":"自有锅炉燃料"},{"key":"B","text":"自有车辆燃油"},{"key":"C","text":"受控设备冷媒逸散"},{"key":"D","text":"外购电力"}],"correct_answers":["A","B","C"],"explanation":"自有或受控排放源为直接排放；外购电力通常为范围二。","practical_use":"排放源盘点","answer_basis":"上交所指引附录范围一定义","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"温室气体","title":"范围一排放"}},{"question_id":"CNQ014","knowledge_id":"KP-CN-GHG-002","source_id":"SRC-CN-SSE-ESG-2024","question_type":"single_choice","difficulty":"L1","question_text":"工厂使用外购电力对应的间接排放通常属于？","options":[{"key":"A","text":"范围一"},{"key":"B","text":"范围二"},{"key":"C","text":"范围三"},{"key":"D","text":"社会维度"}],"correct_answers":["B"],"explanation":"外购能源产生的间接排放通常为范围二。","practical_use":"排放范围分类","answer_basis":"上交所指引附录范围二定义","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"温室气体","title":"范围二排放"}},{"question_id":"CNQ015","knowledge_id":"KP-CN-GHG-003","source_id":"SRC-CN-SSE-ESG-2024","question_type":"multiple_choice","difficulty":"L2","question_text":"哪些通常可能属于范围三？","options":[{"key":"A","text":"采购的商品与服务"},{"key":"B","text":"第三方运输"},{"key":"C","text":"员工通勤"},{"key":"D","text":"自有锅炉燃气"}],"correct_answers":["A","B","C"],"explanation":"前三项属于价值链其他间接排放，自有锅炉燃气通常为范围一。","practical_use":"价值链排放辨识","answer_basis":"上交所指引附录范围三来源","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"温室气体","title":"范围三排放"}},{"question_id":"CNQ016","knowledge_id":"KP-CN-GHG-003","source_id":"SRC-CN-SSE-ESG-2024","question_type":"comprehensive_case","difficulty":"L3","question_text":"企业有自有锅炉、外购电力、员工通勤和第三方物流，合理分类是？","options":[{"key":"A","text":"锅炉S1／电力S2／通勤S3／物流S3"},{"key":"B","text":"全部S1"},{"key":"C","text":"锅炉S2／电力S1／其余S2"},{"key":"D","text":"全部S3"}],"correct_answers":["A"],"explanation":"直接燃烧为范围一，外购电力为范围二，通勤与第三方物流通常为范围三。","practical_use":"综合盘查","answer_basis":"上交所指引附录范围1、2、3定义","status":"pilot","is_prototype":true,"display_order":5,"knowledge_points":{"module":"温室气体","title":"范围三排放"}},{"question_id":"CNQ017","knowledge_id":"KP-CN-GHG-004","source_id":"SRC-CN-MOF-CLIMATE-2025","question_type":"process","difficulty":"L2","question_text":"集团首次核算温室气体，在收集数据前最应先完成什么？","options":[{"key":"A","text":"明确组织、运营地点、排放源和期间"},{"key":"B","text":"先发布减排比例"},{"key":"C","text":"先选择最好看的结果"},{"key":"D","text":"先删除高排放子公司"}],"correct_answers":["A"],"explanation":"边界决定后续应收集哪些数据并防止遗漏或选择性纳入。","practical_use":"核算启动","answer_basis":"气候准则关于核算方法、范围与假设","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"温室气体","title":"核算边界"}},{"question_id":"CNQ018","knowledge_id":"KP-CN-GHG-005","source_id":"SRC-CN-MEE-GHG-POWER-2026","question_type":"data_interpretation","difficulty":"L2","question_text":"哪条证据链最完整？","options":[{"key":"A","text":"用电量→电费单/电表记录→因子来源→计算结果"},{"key":"B","text":"总排放量→无来源"},{"key":"C","text":"口头说明→结果"},{"key":"D","text":"宣传稿→估算值"}],"correct_answers":["A"],"explanation":"完整证据链能追溯活动数据、原始记录、参数和结果。","practical_use":"盘查复核","answer_basis":"生态环境部核算报告指南的数据质量要求","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"温室气体","title":"活动数据与证据链"}},{"question_id":"CNQ019","knowledge_id":"KP-CN-GHG-005","source_id":"SRC-CN-MEE-GHG-POWER-2026","question_type":"error_spotting","difficulty":"L2","question_text":"台账只写“柴油3000”，没有单位、设备和凭证。最大问题是？","options":[{"key":"A","text":"无法可靠追溯和重现计算"},{"key":"B","text":"数字必须大于3000"},{"key":"C","text":"只能使用英文"},{"key":"D","text":"柴油不能核算"}],"correct_answers":["A"],"explanation":"缺少单位、来源和排放源信息会使数据不可验证。","practical_use":"数据质量检查","answer_basis":"生态环境部核算报告指南","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"温室气体","title":"活动数据与证据链"}},{"question_id":"CNQ020","knowledge_id":"KP-CN-GHG-006","source_id":"SRC-CN-MEE-GHG-POWER-2026","question_type":"error_spotting","difficulty":"L2","question_text":"排放因子单位为kgCO2e/L，活动数据却填采购金额“元”。问题是？","options":[{"key":"A","text":"活动数据与因子单位不匹配"},{"key":"B","text":"金额一定更准确"},{"key":"C","text":"只能算范围二"},{"key":"D","text":"应换成美元"}],"correct_answers":["A"],"explanation":"活动数据必须与排放因子单位匹配或有可靠换算。","practical_use":"计算复核","answer_basis":"生态环境部核算报告指南","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"温室气体","title":"排放因子与单位"}},{"question_id":"CNQ021","knowledge_id":"KP-CN-GHG-007","source_id":"SRC-CN-MEE-GHG-POWER-2026","question_type":"calculation","difficulty":"L2","question_text":"某活动数据为10,000 kWh，给定因子0.50 kgCO2e/kWh。排放量是多少？","options":[{"key":"A","text":"0.5 tCO2e"},{"key":"B","text":"5 tCO2e"},{"key":"C","text":"50 tCO2e"},{"key":"D","text":"5,000 tCO2e"}],"correct_answers":["B"],"explanation":"10,000×0.50=5,000 kgCO2e=5 tCO2e。","practical_use":"基础排放计算","answer_basis":"生态环境部核算报告指南的排放因子法","status":"pilot","is_prototype":true,"display_order":6,"knowledge_points":{"module":"温室气体","title":"二氧化碳当量计算"}},{"question_id":"CNQ022","knowledge_id":"KP-CN-GHG-007","source_id":"SRC-CN-MEE-GHG-POWER-2026","question_type":"single_choice","difficulty":"L1","question_text":"关于“二氧化碳当量计算”，以下哪项表述最符合官方依据？","options":[{"key":"A","text":"排放量通常由活动数据乘适用因子，并按需要换算为tCO2e。"},{"key":"B","text":"忽略单位换算。"},{"key":"C","text":"只要对外宣传即可，不需要内部记录"},{"key":"D","text":"发生问题后再决定是否管理"}],"correct_answers":["A"],"explanation":"“二氧化碳当量计算”的基础要求是：排放量通常由活动数据乘适用因子，并按需要换算为tCO2e。","practical_use":"识别“二氧化碳当量计算”的基本要求并排除明显错误做法。","answer_basis":"核算报告指南的排放因子法及单位要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"温室气体","title":"二氧化碳当量计算"}},{"question_id":"CNQ023","knowledge_id":"KP-CN-GHG-006","source_id":"SRC-CN-MEE-GHG-POWER-2026","question_type":"calculation","difficulty":"L2","question_text":"计算结果为8,500 kgCO2e，换算为tCO2e是多少？","options":[{"key":"A","text":"0.85"},{"key":"B","text":"8.5"},{"key":"C","text":"85"},{"key":"D","text":"8,500"}],"correct_answers":["B"],"explanation":"1 t=1,000 kg，因此8,500 kgCO2e=8.5 tCO2e。","practical_use":"单位换算","answer_basis":"生态环境部核算报告指南单位要求","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"温室气体","title":"排放因子与单位"}},{"question_id":"CNQ024","knowledge_id":"KP-CN-GHG-008","source_id":"SRC-CN-MOF-CLIMATE-2025","question_type":"single_choice","difficulty":"L1","question_text":"关于“转型计划”，以下哪项表述最符合官方依据？","options":[{"key":"A","text":"气候转型计划应以可量化目标和具体行动衔接短期决策与长期目标。"},{"key":"B","text":"只有远期口号，没有近期行动和指标。"},{"key":"C","text":"只要对外宣传即可，不需要内部记录"},{"key":"D","text":"发生问题后再决定是否管理"}],"correct_answers":["A"],"explanation":"“转型计划”的基础要求是：气候转型计划应以可量化目标和具体行动衔接短期决策与长期目标。","practical_use":"识别“转型计划”的基本要求并排除明显错误做法。","answer_basis":"气候准则附录对气候转型计划的定义。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"气候管理","title":"转型计划"}},{"question_id":"CNQ025","knowledge_id":"KP-CN-GHG-008","source_id":"SRC-CN-MOF-CLIMATE-2025","question_type":"comprehensive_case","difficulty":"L4","question_text":"公司承诺五年减排30%，但没有基准年、预算、责任部门和年度里程碑。首要改进是？","options":[{"key":"A","text":"补齐基准、路线、资源、责任和阶段指标"},{"key":"B","text":"只增加宣传频率"},{"key":"C","text":"删除目标"},{"key":"D","text":"把目标改成无法衡量的口号"}],"correct_answers":["A"],"explanation":"转型计划需以可量化目标和具体行动衔接经营决策。","practical_use":"气候治理实战","answer_basis":"气候准则关于转型计划、指标与目标","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"气候管理","title":"转型计划"}},{"question_id":"CNQ026","knowledge_id":"KP-CN-ENV-001","source_id":"SRC-CN-NPC-ENV-2014","question_type":"decision","difficulty":"L2","question_text":"生产线改造可能增加废水污染风险，合理做法是？","options":[{"key":"A","text":"事前识别影响并落实防治措施和监测"},{"key":"B","text":"先投产再考虑"},{"key":"C","text":"只在宣传材料写绿色"},{"key":"D","text":"将责任全部转给供应商"}],"correct_answers":["A"],"explanation":"企业应预防和减少污染及生态破坏。","practical_use":"环境风险管理","answer_basis":"环境保护法第六条等","status":"pilot","is_prototype":true,"display_order":7,"knowledge_points":{"module":"环境管理","title":"污染防治主体责任"}},{"question_id":"CNQ027","knowledge_id":"KP-CN-ENV-002","source_id":"SRC-CN-MEE-ENV-DISC-2021","question_type":"single_choice","difficulty":"L2","question_text":"环境信息依法披露的责任主体是谁？","options":[{"key":"A","text":"企业"},{"key":"B","text":"外部咨询机构"},{"key":"C","text":"媒体"},{"key":"D","text":"任意员工个人"}],"correct_answers":["A"],"explanation":"企业是环境信息依法披露的责任主体。","practical_use":"职责判断","answer_basis":"企业环境信息依法披露管理办法第四条","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"环境披露","title":"披露责任与制度"}},{"question_id":"CNQ028","knowledge_id":"KP-CN-ENV-002","source_id":"SRC-CN-MEE-ENV-DISC-2021","question_type":"process","difficulty":"L2","question_text":"哪项环境披露流程最合理？","options":[{"key":"A","text":"定职责→建台账→保存原始记录→复核披露"},{"key":"B","text":"先发布→后补数据"},{"key":"C","text":"咨询机构独立决定全部内容"},{"key":"D","text":"只保存最终PPT"}],"correct_answers":["A"],"explanation":"制度、职责、台账、原始记录和复核构成基本管理链。","practical_use":"环境披露流程","answer_basis":"管理办法第四条","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"环境披露","title":"披露责任与制度"}},{"question_id":"CNQ029","knowledge_id":"KP-CN-ENV-003","source_id":"SRC-CN-MEE-ENV-DISC-2021","question_type":"multiple_choice","difficulty":"L2","question_text":"依法披露的环境信息应满足哪些基本要求？","options":[{"key":"A","text":"及时"},{"key":"B","text":"真实"},{"key":"C","text":"准确完整"},{"key":"D","text":"只披露正面内容"}],"correct_answers":["A","B","C"],"explanation":"管理办法要求及时、真实、准确、完整。","practical_use":"披露质量复核","answer_basis":"管理办法第五条","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"环境披露","title":"及时真实准确完整"}},{"question_id":"CNQ030","knowledge_id":"KP-CN-ENV-004","source_id":"SRC-CN-MEE-ENV-DISC-2021","question_type":"single_choice","difficulty":"L1","question_text":"关于“环境台账与原始记录”，以下哪项表述最符合官方依据？","options":[{"key":"A","text":"企业应建立准确台账并妥善保存相关原始记录。"},{"key":"B","text":"只保存PPT中的汇总图。"},{"key":"C","text":"只要对外宣传即可，不需要内部记录"},{"key":"D","text":"发生问题后再决定是否管理"}],"correct_answers":["A"],"explanation":"“环境台账与原始记录”的基础要求是：企业应建立准确台账并妥善保存相关原始记录。","practical_use":"识别“环境台账与原始记录”的基本要求并排除明显错误做法。","answer_basis":"管理办法第四条及数据规范要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"环境数据","title":"环境台账与原始记录"}},{"question_id":"CNQ031","knowledge_id":"KP-CN-ENV-005","source_id":"SRC-CN-SSE-ESG-2024","question_type":"decision","difficulty":"L3","question_text":"制造企业用水量不高但危险废物风险突出，环境管理优先级应如何设定？","options":[{"key":"A","text":"结合实际影响优先管理危险废物风险"},{"key":"B","text":"所有议题平均投入"},{"key":"C","text":"只管理用水"},{"key":"D","text":"按其他公司报告照抄"}],"correct_answers":["A"],"explanation":"环境管理应结合自身生产经营特点和实际影响。","practical_use":"环境优先级","answer_basis":"上交所指引环境议题要求","status":"pilot","is_prototype":true,"display_order":8,"knowledge_points":{"module":"环境管理","title":"资源与生态议题"}},{"question_id":"CNQ032","knowledge_id":"KP-CN-SOC-001","source_id":"SRC-CN-MOHRSS-LABOR-2012","question_type":"single_choice","difficulty":"L1","question_text":"企业与劳动者建立劳动关系后，合规管理首先应重视什么？","options":[{"key":"A","text":"依法订立书面劳动合同"},{"key":"B","text":"只保留口头约定"},{"key":"C","text":"让员工放弃法定权利"},{"key":"D","text":"不保存任何记录"}],"correct_answers":["A"],"explanation":"劳动合同法要求依法订立书面劳动合同。","practical_use":"入职管理","answer_basis":"劳动合同法第十条等","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"劳动用工","title":"书面劳动合同"}},{"question_id":"CNQ033","knowledge_id":"KP-CN-SOC-001","source_id":"SRC-CN-MOHRSS-LABOR-2012","question_type":"error_spotting","difficulty":"L2","question_text":"员工已工作数月，企业仍以“试试看”为由不签书面合同。主要问题是？","options":[{"key":"A","text":"未依法及时订立书面劳动合同"},{"key":"B","text":"员工人数太少"},{"key":"C","text":"合同只能年末签"},{"key":"D","text":"口头约定必然更有效"}],"correct_answers":["A"],"explanation":"建立劳动关系应依法及时订立书面劳动合同。","practical_use":"用工合规检查","answer_basis":"劳动合同法","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"劳动用工","title":"书面劳动合同"}},{"question_id":"CNQ034","knowledge_id":"KP-CN-SOC-002","source_id":"SRC-CN-MOHRSS-LABOR-2012","question_type":"process","difficulty":"L2","question_text":"企业拟调整员工关键岗位和薪酬，较妥当的流程是？","options":[{"key":"A","text":"依法协商→形成书面变更→双方留存"},{"key":"B","text":"主管口头宣布即完成"},{"key":"C","text":"先停薪再沟通"},{"key":"D","text":"删除原合同"}],"correct_answers":["A"],"explanation":"合同变更应依法协商并采用可留痕的书面方式。","practical_use":"合同变更","answer_basis":"劳动合同法关于变更的规定","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"劳动用工","title":"合同变更与协商"}},{"question_id":"CNQ035","knowledge_id":"KP-CN-SOC-003","source_id":"SRC-CN-NPC-SAFE-2021","question_type":"single_choice","difficulty":"L2","question_text":"将安全生产工作外包后，企业是否可以不再承担管理责任？","options":[{"key":"A","text":"不可以，主体责任不能因外包而消失"},{"key":"B","text":"可以，签合同即可"},{"key":"C","text":"只有发生事故才管理"},{"key":"D","text":"由员工自行负责"}],"correct_answers":["A"],"explanation":"生产经营单位仍应落实安全生产主体责任。","practical_use":"承包商安全管理","answer_basis":"安全生产法","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"安全生产","title":"生产经营单位主体责任"}},{"question_id":"CNQ036","knowledge_id":"KP-CN-SOC-003","source_id":"SRC-CN-NPC-SAFE-2021","question_type":"multiple_choice","difficulty":"L2","question_text":"安全生产责任体系通常应包括哪些内容？","options":[{"key":"A","text":"全员责任制"},{"key":"B","text":"岗位职责"},{"key":"C","text":"监督检查"},{"key":"D","text":"只由安全员负责"}],"correct_answers":["A","B","C"],"explanation":"安全生产需要全员责任、明确职责和落实检查，不能只依赖单一岗位。","practical_use":"安全责任体系","answer_basis":"安全生产法","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"安全生产","title":"生产经营单位主体责任"}},{"question_id":"CNQ037","knowledge_id":"KP-CN-SOC-004","source_id":"SRC-CN-NPC-SAFE-2021","question_type":"single_choice","difficulty":"L1","question_text":"关于“风险分级与隐患治理”，以下哪项表述最符合官方依据？","options":[{"key":"A","text":"企业应建立安全风险分级管控和事故隐患排查治理机制。"},{"key":"B","text":"事故发生后才首次检查风险。"},{"key":"C","text":"只要对外宣传即可，不需要内部记录"},{"key":"D","text":"发生问题后再决定是否管理"}],"correct_answers":["A"],"explanation":"“风险分级与隐患治理”的基础要求是：企业应建立安全风险分级管控和事故隐患排查治理机制。","practical_use":"识别“风险分级与隐患治理”的基本要求并排除明显错误做法。","answer_basis":"安全生产法关于双重预防机制的规定。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"安全生产","title":"风险分级与隐患治理"}},{"question_id":"CNQ038","knowledge_id":"KP-CN-SOC-004","source_id":"SRC-CN-NPC-SAFE-2021","question_type":"single_choice","difficulty":"L1","question_text":"关于“风险分级与隐患治理”，以下哪项表述最符合官方依据？","options":[{"key":"A","text":"企业应建立安全风险分级管控和事故隐患排查治理机制。"},{"key":"B","text":"事故发生后才首次检查风险。"},{"key":"C","text":"只要对外宣传即可，不需要内部记录"},{"key":"D","text":"发生问题后再决定是否管理"}],"correct_answers":["A"],"explanation":"“风险分级与隐患治理”的基础要求是：企业应建立安全风险分级管控和事故隐患排查治理机制。","practical_use":"识别“风险分级与隐患治理”的基本要求并排除明显错误做法。","answer_basis":"安全生产法关于双重预防机制的规定。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"安全生产","title":"风险分级与隐患治理"}},{"question_id":"CNQ039","knowledge_id":"KP-CN-SOC-005","source_id":"SRC-CN-NPC-SAFE-2021","question_type":"multiple_choice","difficulty":"L2","question_text":"哪些做法有助于落实安全培训和应急管理？","options":[{"key":"A","text":"新员工实际培训"},{"key":"B","text":"针对性应急演练"},{"key":"C","text":"保留培训记录并验证效果"},{"key":"D","text":"只让员工签名不培训"}],"correct_answers":["A","B","C"],"explanation":"培训应真实有效，应急准备需要演练和记录。","practical_use":"安全能力建设","answer_basis":"安全生产法","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"安全生产","title":"培训与应急"}},{"question_id":"CNQ040","knowledge_id":"KP-CN-SOC-005","source_id":"SRC-CN-NPC-SAFE-2021","question_type":"error_spotting","difficulty":"L2","question_text":"企业每年只让员工在培训表上签名，从未授课或演练。最大问题是？","options":[{"key":"A","text":"形式记录不能替代实际教育培训和应急准备"},{"key":"B","text":"签名字数不足"},{"key":"C","text":"培训只能在线完成"},{"key":"D","text":"演练与安全无关"}],"correct_answers":["A"],"explanation":"安全教育培训和应急准备应当实际落实。","practical_use":"培训有效性","answer_basis":"安全生产法","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"安全生产","title":"培训与应急"}},{"question_id":"CNQ041","knowledge_id":"KP-CN-GOV-001","source_id":"SRC-CN-NPC-COMPANY-2023","question_type":"decision","difficulty":"L2","question_text":"重大投资事项仅凭董事长口头指示执行，未按章程履行决策程序。主要治理缺口是？","options":[{"key":"A","text":"未依法律和章程落实治理程序"},{"key":"B","text":"投资金额太小"},{"key":"C","text":"必须由媒体批准"},{"key":"D","text":"只需事后补宣传"}],"correct_answers":["A"],"explanation":"公司治理事项应依法律和章程由相应机构履行程序。","practical_use":"公司决策治理","answer_basis":"公司法第五条及治理规定","status":"pilot","is_prototype":true,"display_order":9,"knowledge_points":{"module":"公司治理","title":"章程与治理机构"}},{"question_id":"CNQ042","knowledge_id":"KP-CN-GOV-002","source_id":"SRC-CN-NPC-COMPANY-2023","question_type":"single_choice","difficulty":"L1","question_text":"关于“董监高忠实勤勉义务”，以下哪项表述最符合官方依据？","options":[{"key":"A","text":"董事、监事、高级管理人员应依法履行忠实和勤勉义务，避免利益冲突。"},{"key":"B","text":"未披露利益冲突仍参与决策。"},{"key":"C","text":"只要对外宣传即可，不需要内部记录"},{"key":"D","text":"发生问题后再决定是否管理"}],"correct_answers":["A"],"explanation":"“董监高忠实勤勉义务”的基础要求是：董事、监事、高级管理人员应依法履行忠实和勤勉义务，避免利益冲突。","practical_use":"识别“董监高忠实勤勉义务”的基本要求并排除明显错误做法。","answer_basis":"公司法第八章相关规定。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"公司治理","title":"董监高忠实勤勉义务"}},{"question_id":"CNQ043","knowledge_id":"KP-CN-GOV-002","source_id":"SRC-CN-NPC-COMPANY-2023","question_type":"comprehensive_case","difficulty":"L4","question_text":"关联交易价格明显异常，相关董事未回避且会议记录不完整。首要改进组合是？","options":[{"key":"A","text":"披露利益冲突、依法审议回避并完整留痕"},{"key":"B","text":"删除交易记录"},{"key":"C","text":"只调整报告字体"},{"key":"D","text":"由供应商自行批准"}],"correct_answers":["A"],"explanation":"治理应处理利益冲突、履行决策程序并保留记录。","practical_use":"董事会治理实战","answer_basis":"公司法关于董监高义务和公司治理","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"公司治理","title":"董监高忠实勤勉义务"}},{"question_id":"CNQ044","knowledge_id":"KP-CN-GOV-003","source_id":"SRC-CN-NPC-PIPL-2021","question_type":"single_choice","difficulty":"L2","question_text":"报名活动只需姓名和联系方式，却要求身份证、婚姻、家庭收入等大量信息。主要问题是？","options":[{"key":"A","text":"可能违反目的明确和最小必要原则"},{"key":"B","text":"信息越多必然越合规"},{"key":"C","text":"只要免费就可收集"},{"key":"D","text":"数据与治理无关"}],"correct_answers":["A"],"explanation":"处理个人信息应限于实现明确目的的最小范围。","practical_use":"表单设计","answer_basis":"个人信息保护法处理原则","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"数据治理","title":"个人信息最小必要"}},{"question_id":"CNQ045","knowledge_id":"KP-CN-GOV-003","source_id":"SRC-CN-NPC-PIPL-2021","question_type":"multiple_choice","difficulty":"L2","question_text":"设计个人信息收集流程时应重点确认哪些事项？","options":[{"key":"A","text":"处理目的"},{"key":"B","text":"必要字段范围"},{"key":"C","text":"保存和安全措施"},{"key":"D","text":"先收集再决定用途"}],"correct_answers":["A","B","C"],"explanation":"应在处理前明确目的、最小范围和安全安排。","practical_use":"隐私流程设计","answer_basis":"个人信息保护法","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"数据治理","title":"个人信息最小必要"}},{"question_id":"CNQ046","knowledge_id":"KP-CN-GOV-004","source_id":"SRC-CN-NPC-PIPL-2021","question_type":"single_choice","difficulty":"L1","question_text":"关于“个人信息安全与权益”，以下哪项表述最符合官方依据？","options":[{"key":"A","text":"处理者应采取安全措施并保障个人依法行使相关权利。"},{"key":"B","text":"所有员工共享完整个人信息表格。"},{"key":"C","text":"只要对外宣传即可，不需要内部记录"},{"key":"D","text":"发生问题后再决定是否管理"}],"correct_answers":["A"],"explanation":"“个人信息安全与权益”的基础要求是：处理者应采取安全措施并保障个人依法行使相关权利。","practical_use":"识别“个人信息安全与权益”的基本要求并排除明显错误做法。","answer_basis":"个人信息保护法关于处理者义务与个人权利。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"数据治理","title":"个人信息安全与权益"}},{"question_id":"CNQ047","knowledge_id":"KP-CN-GOV-004","source_id":"SRC-CN-NPC-PIPL-2021","question_type":"single_choice","difficulty":"L1","question_text":"关于“个人信息安全与权益”，以下哪项表述最符合官方依据？","options":[{"key":"A","text":"处理者应采取安全措施并保障个人依法行使相关权利。"},{"key":"B","text":"所有员工共享完整个人信息表格。"},{"key":"C","text":"只要对外宣传即可，不需要内部记录"},{"key":"D","text":"发生问题后再决定是否管理"}],"correct_answers":["A"],"explanation":"“个人信息安全与权益”的基础要求是：处理者应采取安全措施并保障个人依法行使相关权利。","practical_use":"识别“个人信息安全与权益”的基本要求并排除明显错误做法。","answer_basis":"个人信息保护法关于处理者义务与个人权利。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"数据治理","title":"个人信息安全与权益"}},{"question_id":"CNQ048","knowledge_id":"KP-CN-GOV-005","source_id":"SRC-CN-NPC-AUCL-2025","question_type":"single_choice","difficulty":"L1","question_text":"关于“公平竞争与诚信经营”，以下哪项表述最符合官方依据？","options":[{"key":"A","text":"经营者应遵循公平诚信原则，不实施商业贿赂、虚假宣传或侵犯商业秘密等行为。"},{"key":"B","text":"把虚假环保宣传当成普通营销夸张。"},{"key":"C","text":"只要对外宣传即可，不需要内部记录"},{"key":"D","text":"发生问题后再决定是否管理"}],"correct_answers":["A"],"explanation":"“公平竞争与诚信经营”的基础要求是：经营者应遵循公平诚信原则，不实施商业贿赂、虚假宣传或侵犯商业秘密等行为。","practical_use":"识别“公平竞争与诚信经营”的基本要求并排除明显错误做法。","answer_basis":"反不正当竞争法第二条及不正当竞争行为规定。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"商业道德","title":"公平竞争与诚信经营"}},{"question_id":"CNQ049","knowledge_id":"KP-CN-GOV-005","source_id":"SRC-CN-NPC-AUCL-2025","question_type":"single_choice","difficulty":"L1","question_text":"关于“公平竞争与诚信经营”，以下哪项表述最符合官方依据？","options":[{"key":"A","text":"经营者应遵循公平诚信原则，不实施商业贿赂、虚假宣传或侵犯商业秘密等行为。"},{"key":"B","text":"把虚假环保宣传当成普通营销夸张。"},{"key":"C","text":"只要对外宣传即可，不需要内部记录"},{"key":"D","text":"发生问题后再决定是否管理"}],"correct_answers":["A"],"explanation":"“公平竞争与诚信经营”的基础要求是：经营者应遵循公平诚信原则，不实施商业贿赂、虚假宣传或侵犯商业秘密等行为。","practical_use":"识别“公平竞争与诚信经营”的基本要求并排除明显错误做法。","answer_basis":"反不正当竞争法第二条及不正当竞争行为规定。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"商业道德","title":"公平竞争与诚信经营"}},{"question_id":"CNQ050","knowledge_id":"KP-CN-GOV-005","source_id":"SRC-CN-NPC-AUCL-2025","question_type":"comprehensive_case","difficulty":"L4","question_text":"采购人员收受供应商回扣，营销又夸大环保性能。企业应优先采取哪组措施？","options":[{"key":"A","text":"停止问题行为、调查留痕、处理利益冲突并纠正披露"},{"key":"B","text":"只更换广告颜色"},{"key":"C","text":"仅要求供应商保密"},{"key":"D","text":"删除投诉"}],"correct_answers":["A"],"explanation":"应同时处理商业贿赂、诚信经营和虚假宣传风险，并保留治理记录。","practical_use":"治理综合实战","answer_basis":"反不正当竞争法及公司治理要求","status":"pilot","is_prototype":true,"display_order":10,"knowledge_points":{"module":"商业道德","title":"公平竞争与诚信经营"}},{"question_id":"CNQ051","knowledge_id":"KP-CN-ESG-006","source_id":"SRC-CN-MOF-BASE-2024","question_type":"decision","difficulty":"L2","question_text":"在“规划员工、客户、供应商和社区沟通安排。”的工作情境中，哪项做法最符合“利益相关方沟通”要求？","options":[{"key":"A","text":"企业应结合重要议题识别相关利益方，并以适当方式了解其合理关注。"},{"key":"B","text":"只与管理层沟通并代表所有利益方作结论。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"企业应结合重要议题识别相关利益方，并以适当方式了解其合理关注。","practical_use":"规划员工、客户、供应商和社区沟通安排。","answer_basis":"基本准则关于企业活动、资源和关系及重要信息的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"可持续披露","title":"利益相关方沟通"}},{"question_id":"CNQ052","knowledge_id":"KP-CN-ESG-007","source_id":"SRC-CN-MOF-BASE-2024","question_type":"single_choice","difficulty":"L1","question_text":"关于“报告边界”，以下哪项表述最符合官方依据？","options":[{"key":"A","text":"披露边界应与重要影响、风险和机遇的识别范围相衔接，并说明重大差异。"},{"key":"B","text":"只纳入表现较好的单位。"},{"key":"C","text":"只要对外宣传即可，不需要内部记录"},{"key":"D","text":"发生问题后再决定是否管理"}],"correct_answers":["A"],"explanation":"“报告边界”的基础要求是：披露边界应与重要影响、风险和机遇的识别范围相衔接，并说明重大差异。","practical_use":"识别“报告边界”的基本要求并排除明显错误做法。","answer_basis":"基本准则关于报告主体、范围和重要信息的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"可持续披露","title":"报告边界"}},{"question_id":"CNQ053","knowledge_id":"KP-CN-ESG-008","source_id":"SRC-CN-MOF-BASE-2024","question_type":"process","difficulty":"L2","question_text":"在“复核年度数据及上年比较数据。”的工作情境中，哪项做法最符合“报告期间与比较信息”要求？","options":[{"key":"A","text":"指标应明确报告期间，并在适用时提供可比信息和口径变化说明。"},{"key":"B","text":"不同期间采用不同口径但不解释。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"指标应明确报告期间，并在适用时提供可比信息和口径变化说明。","practical_use":"复核年度数据及上年比较数据。","answer_basis":"基本准则关于可比性和一致性的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"可持续披露","title":"报告期间与比较信息"}},{"question_id":"CNQ054","knowledge_id":"KP-CN-ESG-009","source_id":"SRC-CN-MOF-BASE-2024","question_type":"single_choice","difficulty":"L1","question_text":"关于“估计与不确定性”，以下哪项表述最符合官方依据？","options":[{"key":"A","text":"使用估计值时应说明方法、关键假设和不确定性，避免将估计表述为精确事实。"},{"key":"B","text":"用未说明的方法补齐数据并当成实测值。"},{"key":"C","text":"只要对外宣传即可，不需要内部记录"},{"key":"D","text":"发生问题后再决定是否管理"}],"correct_answers":["A"],"explanation":"“估计与不确定性”的基础要求是：使用估计值时应说明方法、关键假设和不确定性，避免将估计表述为精确事实。","practical_use":"识别“估计与不确定性”的基本要求并排除明显错误做法。","answer_basis":"基本准则关于如实反映、可验证性和信息披露的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"可持续披露","title":"估计与不确定性"}},{"question_id":"CNQ055","knowledge_id":"KP-CN-ESG-010","source_id":"SRC-CN-MOF-BASE-2024","question_type":"single_choice","difficulty":"L1","question_text":"关于“信息关联性”，以下哪项表述最符合官方依据？","options":[{"key":"A","text":"治理、战略、风险管理和指标目标信息应相互衔接，支持使用者理解因果关系。"},{"key":"B","text":"报告各章节互不关联。"},{"key":"C","text":"只要对外宣传即可，不需要内部记录"},{"key":"D","text":"发生问题后再决定是否管理"}],"correct_answers":["A"],"explanation":"“信息关联性”的基础要求是：治理、战略、风险管理和指标目标信息应相互衔接，支持使用者理解因果关系。","practical_use":"识别“信息关联性”的基本要求并排除明显错误做法。","answer_basis":"基本准则关于信息完整性和可理解性的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"可持续披露","title":"信息关联性"}},{"question_id":"CNQ056","knowledge_id":"KP-CN-ESG-011","source_id":"SRC-CN-SSE-ESG-2024","question_type":"process","difficulty":"L2","question_text":"在“设计董事会或专门委员会监督流程。”的单一工作场景中，最先应采取哪项做法？","options":[{"key":"A","text":"先按“治理监督职责”要求明确责任、范围和记录"},{"key":"B","text":"只写管理层重视但没有职责和会议记录。"},{"key":"C","text":"先发布结果，再补齐工作底稿"},{"key":"D","text":"将全部责任交给外部机构"}],"correct_answers":["A"],"explanation":"L2要求能把“治理监督职责”应用到明确的工作场景：企业应说明治理机构对重要可持续议题的监督职责、信息获取和决策参与。","practical_use":"设计董事会或专门委员会监督流程。","answer_basis":"上交所指引关于可持续发展治理的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"可持续披露","title":"治理监督职责"}},{"question_id":"CNQ057","knowledge_id":"KP-CN-ESG-012","source_id":"SRC-CN-SSE-ESG-2024","question_type":"comprehensive_case","difficulty":"L4","question_text":"某集团在“把气候和环境风险纳入企业风险台账。”中同时出现“仅在编报告时临时填写风险。”、资料缺口、责任不清和跨部门口径冲突。以下哪项综合处置最恰当？","options":[{"key":"A","text":"依据官方要求界定范围和责任，补齐证据，统一口径，完成复核、纠正与留痕"},{"key":"B","text":"只修改对外报告措辞，不处理内部流程"},{"key":"C","text":"删除异常数据后直接发布"},{"key":"D","text":"等待监管检查后再统一处理"}],"correct_answers":["A"],"explanation":"L4要求统筹边界、职责、证据、复核和纠正闭环；核心依据为：上交所指引关于影响、风险和机遇管理的要求。","practical_use":"跨部门综合处理：把气候和环境风险纳入企业风险台账。","answer_basis":"上交所指引关于影响、风险和机遇管理的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"可持续披露","title":"风险管理流程"}},{"question_id":"CNQ058","knowledge_id":"KP-CN-ESG-013","source_id":"SRC-CN-SSE-ESG-2024","question_type":"error_spotting","difficulty":"L2","question_text":"在“季度复核能耗、事故率和治理整改进度。”的工作情境中，哪项做法最符合“指标目标跟踪”要求？","options":[{"key":"A","text":"企业应定期监测指标与目标进展，分析偏差并采取纠正措施。"},{"key":"B","text":"年度只公布目标，不监测执行。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"企业应定期监测指标与目标进展，分析偏差并采取纠正措施。","practical_use":"季度复核能耗、事故率和治理整改进度。","answer_basis":"上交所指引关于指标、目标和进展的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"可持续披露","title":"指标目标跟踪"}},{"question_id":"CNQ059","knowledge_id":"KP-CN-CLM-003","source_id":"SRC-CN-MOF-CLIMATE-2025","question_type":"process","difficulty":"L4","question_text":"在“比较不同升温或政策情景对业务的影响。”的工作情境中，哪项做法最符合“情景分析”要求？","options":[{"key":"A","text":"企业可通过合理情景分析评估不同气候路径下风险、机遇和战略韧性。"},{"key":"B","text":"只采用最乐观情景证明没有风险。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"企业可通过合理情景分析评估不同气候路径下风险、机遇和战略韧性。","practical_use":"比较不同升温或政策情景对业务的影响。","answer_basis":"气候准则关于情景分析和气候韧性的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"气候管理","title":"情景分析"}},{"question_id":"CNQ060","knowledge_id":"KP-CN-CLM-004","source_id":"SRC-CN-MOF-CLIMATE-2025","question_type":"comprehensive_case","difficulty":"L4","question_text":"某集团在“评估厂房洪涝、能源合同和技术替代时点。”中同时出现“所有风险都只看下一年度。”、资料缺口、责任不清和跨部门口径冲突。以下哪项综合处置最恰当？","options":[{"key":"A","text":"依据官方要求界定范围和责任，补齐证据，统一口径，完成复核、纠正与留痕"},{"key":"B","text":"只修改对外报告措辞，不处理内部流程"},{"key":"C","text":"删除异常数据后直接发布"},{"key":"D","text":"等待监管检查后再统一处理"}],"correct_answers":["A"],"explanation":"L4要求统筹边界、职责、证据、复核和纠正闭环；核心依据为：气候准则关于短中长期气候风险和机遇的要求。","practical_use":"跨部门综合处理：评估厂房洪涝、能源合同和技术替代时点。","answer_basis":"气候准则关于短中长期气候风险和机遇的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"气候管理","title":"时间范围"}},{"question_id":"CNQ061","knowledge_id":"KP-CN-CLM-005","source_id":"SRC-CN-MOF-CLIMATE-2025","question_type":"comprehensive_case","difficulty":"L4","question_text":"在“评估碳成本、停产和节能投资的财务影响。”的工作情境中，哪项做法最符合“财务影响”要求？","options":[{"key":"A","text":"应分析重要气候风险和机遇对财务状况、经营成果和现金流的当前及预期影响。"},{"key":"B","text":"只描述气候事件，不分析经营影响。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"应分析重要气候风险和机遇对财务状况、经营成果和现金流的当前及预期影响。","practical_use":"评估碳成本、停产和节能投资的财务影响。","answer_basis":"气候准则关于当前和预期财务影响的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"气候管理","title":"财务影响"}},{"question_id":"CNQ062","knowledge_id":"KP-CN-CLM-006","source_id":"SRC-CN-MOF-CLIMATE-2025","question_type":"single_choice","difficulty":"L4","question_text":"在“检验关键供应、设施和产品组合的适应能力。”的工作情境中，哪项做法最符合“气候韧性”要求？","options":[{"key":"A","text":"企业应评估战略和业务模式在不同气候条件下调整和承受影响的能力。"},{"key":"B","text":"把韧性等同于购买保险。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"企业应评估战略和业务模式在不同气候条件下调整和承受影响的能力。","practical_use":"检验关键供应、设施和产品组合的适应能力。","answer_basis":"气候准则关于气候韧性的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"气候管理","title":"气候韧性"}},{"question_id":"CNQ063","knowledge_id":"KP-CN-CLM-007","source_id":"SRC-CN-MOF-CLIMATE-2025","question_type":"comprehensive_case","difficulty":"L4","question_text":"某集团在“安排设备改造、能源替代和供应链协作。”中同时出现“只有远期净零口号。”、资料缺口、责任不清和跨部门口径冲突。以下哪项综合处置最恰当？","options":[{"key":"A","text":"依据官方要求界定范围和责任，补齐证据，统一口径，完成复核、纠正与留痕"},{"key":"B","text":"只修改对外报告措辞，不处理内部流程"},{"key":"C","text":"删除异常数据后直接发布"},{"key":"D","text":"等待监管检查后再统一处理"}],"correct_answers":["A"],"explanation":"L4要求统筹边界、职责、证据、复核和纠正闭环；核心依据为：气候准则关于气候转型计划的要求。","practical_use":"跨部门综合处理：安排设备改造、能源替代和供应链协作。","answer_basis":"气候准则关于气候转型计划的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"气候管理","title":"转型行动计划"}},{"question_id":"CNQ064","knowledge_id":"KP-CN-CLM-008","source_id":"SRC-CN-MOF-CLIMATE-2025","question_type":"comprehensive_case","difficulty":"L4","question_text":"某集团在“选择排放、能源、暴露资产和投入指标。”中同时出现“只选容易下降但与风险无关的指标。”、资料缺口、责任不清和跨部门口径冲突。以下哪项综合处置最恰当？","options":[{"key":"A","text":"依据官方要求界定范围和责任，补齐证据，统一口径，完成复核、纠正与留痕"},{"key":"B","text":"只修改对外报告措辞，不处理内部流程"},{"key":"C","text":"删除异常数据后直接发布"},{"key":"D","text":"等待监管检查后再统一处理"}],"correct_answers":["A"],"explanation":"L4要求统筹边界、职责、证据、复核和纠正闭环；核心依据为：气候准则关于气候相关指标的要求。","practical_use":"跨部门综合处理：选择排放、能源、暴露资产和投入指标。","answer_basis":"气候准则关于气候相关指标的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"气候管理","title":"气候指标"}},{"question_id":"CNQ065","knowledge_id":"KP-CN-CLM-009","source_id":"SRC-CN-MOF-CLIMATE-2025","question_type":"process","difficulty":"L3","question_text":"在“在投资决策中比较高碳与低碳方案。”的工作情境中，哪项做法最符合“内部碳价格”要求？","options":[{"key":"A","text":"使用内部碳价格时应说明用途、适用范围和计价假设。"},{"key":"B","text":"对外宣传内部碳价但决策从未使用。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"使用内部碳价格时应说明用途、适用范围和计价假设。","practical_use":"在投资决策中比较高碳与低碳方案。","answer_basis":"气候准则关于内部碳价格信息的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"气候管理","title":"内部碳价格"}},{"question_id":"CNQ066","knowledge_id":"KP-CN-CLM-010","source_id":"SRC-CN-MOF-CLIMATE-2025","question_type":"data_interpretation","difficulty":"L3","question_text":"在“识别关键原料、物流和客户转型风险。”的工作情境中，哪项做法最符合“价值链气候风险”要求？","options":[{"key":"A","text":"气候风险识别不应局限于自有运营，还应关注重要上下游依赖和影响。"},{"key":"B","text":"认为供应商风险与本企业无关。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"气候风险识别不应局限于自有运营，还应关注重要上下游依赖和影响。","practical_use":"识别关键原料、物流和客户转型风险。","answer_basis":"气候准则关于价值链气候风险和机遇的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"气候管理","title":"价值链气候风险"}},{"question_id":"CNQ067","knowledge_id":"KP-CN-GHG-009","source_id":"SRC-CN-MOF-CLIMATE-2025","question_type":"comprehensive_case","difficulty":"L3","question_text":"在“处理并购、剥离和核算方法变化。”的工作情境中，哪项做法最符合“基准年管理”要求？","options":[{"key":"A","text":"减排目标和趋势分析应明确基准年，并在重大边界或方法变化时评估是否重算。"},{"key":"B","text":"每年选择排放最高年份作基准。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"减排目标和趋势分析应明确基准年，并在重大边界或方法变化时评估是否重算。","practical_use":"处理并购、剥离和核算方法变化。","answer_basis":"气候准则关于温室气体目标、方法和可比信息的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"温室气体","title":"基准年管理"}},{"question_id":"CNQ068","knowledge_id":"KP-CN-GHG-010","source_id":"SRC-CN-MEE-GHG-POWER-2026","question_type":"single_choice","difficulty":"L2","question_text":"在“建立厂区排放源清单并指定数据责任人。”的工作情境中，哪项做法最符合“排放源清单”要求？","options":[{"key":"A","text":"核算前应系统识别各运营地点的固定燃烧、移动燃烧、逸散和外购能源等排放源。"},{"key":"B","text":"只统计金额最大的能源账单。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"核算前应系统识别各运营地点的固定燃烧、移动燃烧、逸散和外购能源等排放源。","practical_use":"建立厂区排放源清单并指定数据责任人。","answer_basis":"核算报告指南关于排放源识别和数据收集的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"温室气体","title":"排放源清单"}},{"question_id":"CNQ069","knowledge_id":"KP-CN-GHG-011","source_id":"SRC-CN-MEE-GHG-POWER-2026","question_type":"decision","difficulty":"L3","question_text":"在“月度核对仪表、账单和台账差异。”的工作情境中，哪项做法最符合“数据质量控制”要求？","options":[{"key":"A","text":"活动数据和参数应经过完整性、准确性、单位及异常波动检查。"},{"key":"B","text":"汇总后不再检查异常值。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"活动数据和参数应经过完整性、准确性、单位及异常波动检查。","practical_use":"月度核对仪表、账单和台账差异。","answer_basis":"核算报告指南关于数据质量管理的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"温室气体","title":"数据质量控制"}},{"question_id":"CNQ070","knowledge_id":"KP-CN-GHG-012","source_id":"SRC-CN-MEE-GHG-POWER-2026","question_type":"error_spotting","difficulty":"L3","question_text":"在“处理仪表故障期间的燃料或用电数据。”的工作情境中，哪项做法最符合“缺失数据处理”要求？","options":[{"key":"A","text":"数据缺失时应采用有依据的方法估算、记录原因并保留复核痕迹。"},{"key":"B","text":"直接填入上月数字且不说明。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"数据缺失时应采用有依据的方法估算、记录原因并保留复核痕迹。","practical_use":"处理仪表故障期间的燃料或用电数据。","answer_basis":"核算报告指南关于缺失数据和质量控制的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"温室气体","title":"缺失数据处理"}},{"question_id":"CNQ071","knowledge_id":"KP-CN-GHG-013","source_id":"SRC-CN-MEE-GHG-POWER-2026","question_type":"process","difficulty":"L3","question_text":"在“维护因子台账并锁定报告版本。”的工作情境中，哪项做法最符合“因子版本管理”要求？","options":[{"key":"A","text":"排放因子应记录来源、版本、适用年份和单位，更新时评估可比影响。"},{"key":"B","text":"从网络搜索任意因子且不记录来源。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"排放因子应记录来源、版本、适用年份和单位，更新时评估可比影响。","practical_use":"维护因子台账并锁定报告版本。","answer_basis":"核算报告指南关于参数和排放因子的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"温室气体","title":"因子版本管理"}},{"question_id":"CNQ072","knowledge_id":"KP-CN-GHG-014","source_id":"SRC-CN-MOF-CLIMATE-2025","question_type":"data_interpretation","difficulty":"L4","question_text":"在“处理收购新工厂后的排放趋势。”的工作情境中，哪项做法最符合“边界变化重算”要求？","options":[{"key":"A","text":"重大组织边界变化可能影响趋势，应评估基准和比较数据是否需要重算。"},{"key":"B","text":"并购后直接与旧边界数字比较。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"重大组织边界变化可能影响趋势，应评估基准和比较数据是否需要重算。","practical_use":"处理收购新工厂后的排放趋势。","answer_basis":"气候准则关于核算范围、方法和可比性的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"温室气体","title":"边界变化重算"}},{"question_id":"CNQ073","knowledge_id":"KP-CN-GHG-015","source_id":"SRC-CN-MEE-GHG-DISC-2025","question_type":"comprehensive_case","difficulty":"L3","question_text":"在“编制目标进展和抵销使用说明。”的工作情境中，哪项做法最符合“减排与抵销区分”要求？","options":[{"key":"A","text":"企业自身减排、价值链减排和碳抵销应清楚区分，避免将抵销替代实际减排行动。"},{"key":"B","text":"购买抵销后宣称运营已无排放。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"企业自身减排、价值链减排和碳抵销应清楚区分，避免将抵销替代实际减排行动。","practical_use":"编制目标进展和抵销使用说明。","answer_basis":"温室气体自愿披露意见关于规范、真实和透明披露的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"温室气体","title":"减排与抵销区分"}},{"question_id":"CNQ074","knowledge_id":"KP-CN-GHG-016","source_id":"SRC-CN-MEE-GHG-DISC-2025","question_type":"single_choice","difficulty":"L3","question_text":"在“为内部复核或第三方核查准备资料。”的工作情境中，哪项做法最符合“核查证据准备”要求？","options":[{"key":"A","text":"核算工作底稿应能追溯排放源、活动数据、参数、计算和复核责任。"},{"key":"B","text":"只提供最终总量截图。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"核算工作底稿应能追溯排放源、活动数据、参数、计算和复核责任。","practical_use":"为内部复核或第三方核查准备资料。","answer_basis":"温室气体自愿披露意见关于数据质量和可信度的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"温室气体","title":"核查证据准备"}},{"question_id":"CNQ075","knowledge_id":"KP-CN-ENV-006","source_id":"SRC-CN-NPC-ENV-2014","question_type":"decision","difficulty":"L2","question_text":"在“建立适用法规和许可证到期清单。”的工作情境中，哪项做法最符合“环境合规清单”要求？","options":[{"key":"A","text":"企业应识别适用环境法律、许可、标准和报告义务并持续更新。"},{"key":"B","text":"仅在被检查时查询要求。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"企业应识别适用环境法律、许可、标准和报告义务并持续更新。","practical_use":"建立适用法规和许可证到期清单。","answer_basis":"环境保护法关于企业污染防治和守法责任的规定。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"环境管理","title":"环境合规清单"}},{"question_id":"CNQ076","knowledge_id":"KP-CN-ENV-007","source_id":"SRC-CN-MEE-ENV-DISC-2021","question_type":"error_spotting","difficulty":"L3","question_text":"在“复核废水和废气监测计划。”的工作情境中，哪项做法最符合“污染物监测”要求？","options":[{"key":"A","text":"污染物监测应按适用规范、点位、频次和方法执行并保存记录。"},{"key":"B","text":"只在排放较低时安排采样。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"污染物监测应按适用规范、点位、频次和方法执行并保存记录。","practical_use":"复核废水和废气监测计划。","answer_basis":"环境信息依法披露管理办法关于环境数据和记录的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"环境数据","title":"污染物监测"}},{"question_id":"CNQ077","knowledge_id":"KP-CN-ENV-008","source_id":"SRC-CN-NPC-ENV-2014","question_type":"process","difficulty":"L3","question_text":"在“开展泄漏风险演练和物资检查。”的工作情境中，哪项做法最符合“突发环境事件应急”要求？","options":[{"key":"A","text":"企业应识别环境事件风险，准备应急措施并在事件发生时依法报告和处置。"},{"key":"B","text":"发生泄漏后先删除监控记录。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"企业应识别环境事件风险，准备应急措施并在事件发生时依法报告和处置。","practical_use":"开展泄漏风险演练和物资检查。","answer_basis":"环境保护法关于突发环境事件应急管理的规定。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"环境管理","title":"突发环境事件应急"}},{"question_id":"CNQ078","knowledge_id":"KP-CN-ENV-009","source_id":"SRC-CN-SSE-ESG-2024","question_type":"data_interpretation","difficulty":"L3","question_text":"在“管理废溶剂、废油和含污染物包装。”的工作情境中，哪项做法最符合“危险废物管理”要求？","options":[{"key":"A","text":"危险废物应按适用要求识别、分类、储存、转移并保留台账。"},{"key":"B","text":"将危险废物混入一般垃圾。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"危险废物应按适用要求识别、分类、储存、转移并保留台账。","practical_use":"管理废溶剂、废油和含污染物包装。","answer_basis":"上交所指引关于废弃物和污染物管理的议题要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"环境管理","title":"危险废物管理"}},{"question_id":"CNQ079","knowledge_id":"KP-CN-ENV-010","source_id":"SRC-CN-SSE-ESG-2024","question_type":"comprehensive_case","difficulty":"L3","question_text":"在“评估高耗水工序和缺水地区运营点。”的工作情境中，哪项做法最符合“水资源风险”要求？","options":[{"key":"A","text":"企业应结合所在地和业务依赖识别取水、用水、排水及缺水风险。"},{"key":"B","text":"只比较总用水量，不看地区风险。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"企业应结合所在地和业务依赖识别取水、用水、排水及缺水风险。","practical_use":"评估高耗水工序和缺水地区运营点。","answer_basis":"上交所指引关于水资源利用的议题要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"环境管理","title":"水资源风险"}},{"question_id":"CNQ080","knowledge_id":"KP-CN-ENV-011","source_id":"SRC-CN-SSE-ESG-2024","question_type":"single_choice","difficulty":"L3","question_text":"在“比较设备改造前后单位产量能耗。”的工作情境中，哪项做法最符合“能源效率管理”要求？","options":[{"key":"A","text":"企业应基于能源数据识别高耗能环节、制定措施并验证节能效果。"},{"key":"B","text":"只看总能耗下降，不考虑产量变化。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"企业应基于能源数据识别高耗能环节、制定措施并验证节能效果。","practical_use":"比较设备改造前后单位产量能耗。","answer_basis":"上交所指引关于能源利用和资源效率的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"环境管理","title":"能源效率管理"}},{"question_id":"CNQ081","knowledge_id":"KP-CN-ENV-012","source_id":"SRC-CN-SSE-ESG-2024","question_type":"decision","difficulty":"L4","question_text":"在“项目选址和供应链原料风险评估。”的工作情境中，哪项做法最符合“生物多样性影响”要求？","options":[{"key":"A","text":"涉及敏感区域或生态依赖时，应识别、避免、减缓和修复重要影响。"},{"key":"B","text":"认为厂区绿化等同全部生物多样性管理。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"涉及敏感区域或生态依赖时，应识别、避免、减缓和修复重要影响。","practical_use":"项目选址和供应链原料风险评估。","answer_basis":"上交所指引关于生态系统和生物多样性的议题要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"环境管理","title":"生物多样性影响"}},{"question_id":"CNQ082","knowledge_id":"KP-CN-ENV-013","source_id":"SRC-CN-MEE-ENV-DISC-2021","question_type":"error_spotting","difficulty":"L3","question_text":"在“处理监测数据录入错误。”的工作情境中，哪项做法最符合“环境信息更正”要求？","options":[{"key":"A","text":"发现已披露环境信息存在重要错误时，应及时核实并按适用要求更正说明。"},{"key":"B","text":"静默修改网页且不保留更正记录。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"发现已披露环境信息存在重要错误时，应及时核实并按适用要求更正说明。","practical_use":"处理监测数据录入错误。","answer_basis":"管理办法关于环境信息真实、准确、完整和及时的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"环境披露","title":"环境信息更正"}},{"question_id":"CNQ083","knowledge_id":"KP-CN-SOC-006","source_id":"SRC-CN-MOHRSS-LABOR-2012","question_type":"process","difficulty":"L2","question_text":"在“复核标准劳动合同模板和签署记录。”的工作情境中，哪项做法最符合“劳动合同必备管理”要求？","options":[{"key":"A","text":"书面劳动合同应依法明确工作内容、报酬、期限、社会保险等重要事项。"},{"key":"B","text":"合同只写岗位名称，不明确关键权利义务。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"书面劳动合同应依法明确工作内容、报酬、期限、社会保险等重要事项。","practical_use":"复核标准劳动合同模板和签署记录。","answer_basis":"劳动合同法关于劳动合同内容的规定。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"劳动用工","title":"劳动合同必备管理"}},{"question_id":"CNQ084","knowledge_id":"KP-CN-SOC-007","source_id":"SRC-CN-MOHRSS-LABOR-2012","question_type":"data_interpretation","difficulty":"L2","question_text":"在“排班、考勤和加班审批管理。”的工作情境中，哪项做法最符合“工时休息管理”要求？","options":[{"key":"A","text":"用工安排应依法管理工作时间、休息休假和加班记录。"},{"key":"B","text":"长期口头要求加班且不留记录。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"用工安排应依法管理工作时间、休息休假和加班记录。","practical_use":"排班、考勤和加班审批管理。","answer_basis":"劳动合同法关于劳动条件和劳动者权益的相关规定。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"劳动用工","title":"工时休息管理"}},{"question_id":"CNQ085","knowledge_id":"KP-CN-SOC-008","source_id":"SRC-CN-MOHRSS-LABOR-2012","question_type":"comprehensive_case","difficulty":"L2","question_text":"在“复核工资发放和入离职衔接。”的工作情境中，哪项做法最符合“薪酬与社会保障”要求？","options":[{"key":"A","text":"企业应依法及时足额支付劳动报酬并履行相关社会保障义务。"},{"key":"B","text":"以内部规定单方面免除法定义务。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"企业应依法及时足额支付劳动报酬并履行相关社会保障义务。","practical_use":"复核工资发放和入离职衔接。","answer_basis":"劳动合同法关于劳动报酬和社会保险的规定。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"劳动用工","title":"薪酬与社会保障"}},{"question_id":"CNQ086","knowledge_id":"KP-CN-SOC-009","source_id":"SRC-CN-MOHRSS-LABOR-2012","question_type":"single_choice","difficulty":"L3","question_text":"在“处理岗位调整和员工申诉。”的工作情境中，哪项做法最符合“员工申诉与协商记录”要求？","options":[{"key":"A","text":"劳动关系争议和重大调整应建立沟通、受理、协商和留痕机制。"},{"key":"B","text":"只接受口头投诉并立即删除记录。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"劳动关系争议和重大调整应建立沟通、受理、协商和留痕机制。","practical_use":"处理岗位调整和员工申诉。","answer_basis":"劳动合同法关于协商、履行和变更的规定。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"劳动用工","title":"员工申诉与协商记录"}},{"question_id":"CNQ087","knowledge_id":"KP-CN-SOC-010","source_id":"SRC-CN-NPC-SAFE-2021","question_type":"decision","difficulty":"L3","question_text":"在“设备、动火、有限空间和承包商作业评估。”的工作情境中，哪项做法最符合“危险源辨识”要求？","options":[{"key":"A","text":"企业应持续辨识危险源、评估风险并落实分级控制措施。"},{"key":"B","text":"只在事故后补做危险源辨识。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"企业应持续辨识危险源、评估风险并落实分级控制措施。","practical_use":"设备、动火、有限空间和承包商作业评估。","answer_basis":"安全生产法关于风险分级管控的规定。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"安全生产","title":"危险源辨识"}},{"question_id":"CNQ088","knowledge_id":"KP-CN-SOC-011","source_id":"SRC-CN-NPC-SAFE-2021","question_type":"error_spotting","difficulty":"L3","question_text":"在“处理人员受伤或重大险情。”的工作情境中，哪项做法最符合“事故报告与应急处置”要求？","options":[{"key":"A","text":"事故发生后应立即组织救援、依法报告并保护相关记录。"},{"key":"B","text":"先隐瞒事故，等内部统一口径后再处理。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"事故发生后应立即组织救援、依法报告并保护相关记录。","practical_use":"处理人员受伤或重大险情。","answer_basis":"安全生产法关于事故应急救援和报告的规定。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"安全生产","title":"事故报告与应急处置"}},{"question_id":"CNQ089","knowledge_id":"KP-CN-GOV-006","source_id":"SRC-CN-NPC-COMPANY-2023","question_type":"process","difficulty":"L3","question_text":"在“审议重大投资和可持续风险事项。”的工作情境中，哪项做法最符合“董事会职责落实”要求？","options":[{"key":"A","text":"董事会及相关治理机构应依法依章程履行决策、监督和记录职责。"},{"key":"B","text":"管理层决定后再让董事会补签。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"董事会及相关治理机构应依法依章程履行决策、监督和记录职责。","practical_use":"审议重大投资和可持续风险事项。","answer_basis":"公司法关于公司治理机构职责的规定。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"公司治理","title":"董事会职责落实"}},{"question_id":"CNQ090","knowledge_id":"KP-CN-GOV-007","source_id":"SRC-CN-NPC-COMPANY-2023","question_type":"data_interpretation","difficulty":"L4","question_text":"在“审查关联采购和董事利益关系。”的工作情境中，哪项做法最符合“关联交易与回避”要求？","options":[{"key":"A","text":"存在关联关系或利益冲突时，应披露关系并依规定履行审议和回避程序。"},{"key":"B","text":"关联董事参与表决且不披露。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"存在关联关系或利益冲突时，应披露关系并依规定履行审议和回避程序。","practical_use":"审查关联采购和董事利益关系。","answer_basis":"公司法关于董监高忠实义务和利益冲突的规定。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"公司治理","title":"关联交易与回避"}},{"question_id":"CNQ091","knowledge_id":"KP-CN-GOV-008","source_id":"SRC-CN-NPC-COMPANY-2023","question_type":"comprehensive_case","difficulty":"L3","question_text":"在“复核重大合同和投资审批链。”的工作情境中，哪项做法最符合“授权与决策留痕”要求？","options":[{"key":"A","text":"重大事项应按权限矩阵和章程履行审批，并保存会议、决议和执行记录。"},{"key":"B","text":"仅凭即时通讯口头同意执行。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"重大事项应按权限矩阵和章程履行审批，并保存会议、决议和执行记录。","practical_use":"复核重大合同和投资审批链。","answer_basis":"公司法关于公司治理和章程约束的规定。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"公司治理","title":"授权与决策留痕"}},{"question_id":"CNQ092","knowledge_id":"KP-CN-GOV-009","source_id":"SRC-CN-NPC-COMPANY-2023","question_type":"single_choice","difficulty":"L3","question_text":"在“重大重组前评估权利义务和沟通。”的工作情境中，哪项做法最符合“股东和利益相关者权益”要求？","options":[{"key":"A","text":"治理决策应依法保护股东权利并关注对员工、债权人等相关方的影响。"},{"key":"B","text":"只考虑控股股东短期利益。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"治理决策应依法保护股东权利并关注对员工、债权人等相关方的影响。","practical_use":"重大重组前评估权利义务和沟通。","answer_basis":"公司法关于股东权利和公司社会责任的规定。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"公司治理","title":"股东和利益相关者权益"}},{"question_id":"CNQ093","knowledge_id":"KP-CN-DAT-003","source_id":"SRC-CN-NPC-PIPL-2021","question_type":"decision","difficulty":"L3","question_text":"在“设计客户注册和员工信息流程。”的工作情境中，哪项做法最符合“个人信息处理基础”要求？","options":[{"key":"A","text":"处理个人信息应具备合法处理基础，并以显著方式告知必要事项。"},{"key":"B","text":"默认勾选同意且不提供告知。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"处理个人信息应具备合法处理基础，并以显著方式告知必要事项。","practical_use":"设计客户注册和员工信息流程。","answer_basis":"个人信息保护法关于处理规则和告知同意的规定。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"数据治理","title":"个人信息处理基础"}},{"question_id":"CNQ094","knowledge_id":"KP-CN-DAT-004","source_id":"SRC-CN-NPC-PIPL-2021","question_type":"error_spotting","difficulty":"L3","question_text":"在“清理长期闲置的客户资料。”的工作情境中，哪项做法最符合“最小必要与保存期限”要求？","options":[{"key":"A","text":"收集字段和保存期限应限于实现明确目的所必需。"},{"key":"B","text":"为了以后可能使用而永久保存全部字段。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"收集字段和保存期限应限于实现明确目的所必需。","practical_use":"清理长期闲置的客户资料。","answer_basis":"个人信息保护法关于最小必要和保存期限的规定。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"数据治理","title":"最小必要与保存期限"}},{"question_id":"CNQ095","knowledge_id":"KP-CN-DAT-005","source_id":"SRC-CN-NPC-PIPL-2021","question_type":"process","difficulty":"L4","question_text":"在“处理身份证、生物识别和健康信息。”的工作情境中，哪项做法最符合“敏感个人信息”要求？","options":[{"key":"A","text":"处理敏感个人信息应具有特定目的和充分必要性，并采取严格保护措施。"},{"key":"B","text":"将敏感信息通过公开表格共享。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"处理敏感个人信息应具有特定目的和充分必要性，并采取严格保护措施。","practical_use":"处理身份证、生物识别和健康信息。","answer_basis":"个人信息保护法关于敏感个人信息的规定。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"数据治理","title":"敏感个人信息"}},{"question_id":"CNQ096","knowledge_id":"KP-CN-DAT-006","source_id":"SRC-CN-NPC-PIPL-2021","question_type":"data_interpretation","difficulty":"L3","question_text":"在“处置数据泄露及查阅、更正、删除请求。”的工作情境中，哪项做法最符合“安全事件与权利请求”要求？","options":[{"key":"A","text":"处理者应建立安全事件响应和个人权利请求处理机制。"},{"key":"B","text":"收到请求或泄露报告后不登记不响应。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"处理者应建立安全事件响应和个人权利请求处理机制。","practical_use":"处置数据泄露及查阅、更正、删除请求。","answer_basis":"个人信息保护法关于安全义务和个人权利的规定。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"数据治理","title":"安全事件与权利请求"}},{"question_id":"CNQ097","knowledge_id":"KP-CN-ETH-003","source_id":"SRC-CN-NPC-AUCL-2025","question_type":"comprehensive_case","difficulty":"L3","question_text":"在“管理礼品招待、返利和中介费用。”的工作情境中，哪项做法最符合“商业贿赂防控”要求？","options":[{"key":"A","text":"企业应识别交易中的不当利益输送风险并建立审批、记录和调查机制。"},{"key":"B","text":"把回扣记为市场推广费即可。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"企业应识别交易中的不当利益输送风险并建立审批、记录和调查机制。","practical_use":"管理礼品招待、返利和中介费用。","answer_basis":"反不正当竞争法关于商业贿赂的规定。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"商业道德","title":"商业贿赂防控"}},{"question_id":"CNQ098","knowledge_id":"KP-CN-ETH-004","source_id":"SRC-CN-NPC-AUCL-2025","question_type":"single_choice","difficulty":"L3","question_text":"在“审核零碳、可降解和节能广告。”的工作情境中，哪项做法最符合“真实环境宣称”要求？","options":[{"key":"A","text":"产品环保和减排宣称应有边界、方法和证据，不得虚假或引人误解。"},{"key":"B","text":"没有依据仍使用绝对化绿色宣称。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"产品环保和减排宣称应有边界、方法和证据，不得虚假或引人误解。","practical_use":"审核零碳、可降解和节能广告。","answer_basis":"反不正当竞争法关于虚假或引人误解宣传的规定。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"商业道德","title":"真实环境宣称"}},{"question_id":"CNQ099","knowledge_id":"KP-CN-ETH-005","source_id":"SRC-CN-NPC-AUCL-2025","question_type":"decision","difficulty":"L3","question_text":"在“开展供应商接触和竞争情报收集。”的工作情境中，哪项做法最符合“商业秘密保护”要求？","options":[{"key":"A","text":"获取和使用竞争信息应遵循合法方式并保护合作方商业秘密。"},{"key":"B","text":"诱导对方员工提供保密技术资料。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"获取和使用竞争信息应遵循合法方式并保护合作方商业秘密。","practical_use":"开展供应商接触和竞争情报收集。","answer_basis":"反不正当竞争法关于商业秘密保护的规定。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"商业道德","title":"商业秘密保护"}},{"question_id":"CNQ100","knowledge_id":"KP-CN-ETH-006","source_id":"SRC-CN-NPC-AUCL-2025","question_type":"error_spotting","difficulty":"L4","question_text":"在“处理采购回扣和虚假宣传举报。”的工作情境中，哪项做法最符合“举报调查与纠正”要求？","options":[{"key":"A","text":"企业应建立举报受理、独立调查、证据留存和纠正问责机制。"},{"key":"B","text":"收到举报后通知被举报人删除资料。"},{"key":"C","text":"只调整对外宣传，不改变内部流程"},{"key":"D","text":"待发生重大问题后再处理"}],"correct_answers":["A"],"explanation":"企业应建立举报受理、独立调查、证据留存和纠正问责机制。","practical_use":"处理采购回扣和虚假宣传举报。","answer_basis":"反不正当竞争法相关风险与公司诚信治理要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"商业道德","title":"举报调查与纠正"}},{"question_id":"CNQ101","knowledge_id":"KP-CN-ESG-006","source_id":"SRC-CN-MOF-BASE-2024","question_type":"error_spotting","difficulty":"L2","question_text":"团队提出“只与管理层沟通并代表所有利益方作结论。”。对此最恰当的判断或改进是什么？","options":[{"key":"A","text":"应按“利益相关方沟通”要求纠正，并保留依据与复核记录"},{"key":"B","text":"该做法没有风险，可直接采用"},{"key":"C","text":"只需修改报告措辞"},{"key":"D","text":"删除不利记录即可"}],"correct_answers":["A"],"explanation":"该做法忽略了“利益相关方沟通”的核心要求：企业应结合重要议题识别相关利益方，并以适当方式了解其合理关注。","practical_use":"规划员工、客户、供应商和社区沟通安排。","answer_basis":"基本准则关于企业活动、资源和关系及重要信息的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"可持续披露","title":"利益相关方沟通"}},{"question_id":"CNQ102","knowledge_id":"KP-CN-ESG-007","source_id":"SRC-CN-MOF-BASE-2024","question_type":"decision","difficulty":"L3","question_text":"团队提出“只纳入表现较好的单位。”。对此最恰当的判断或改进是什么？","options":[{"key":"A","text":"应按“报告边界”要求纠正，并保留依据与复核记录"},{"key":"B","text":"该做法没有风险，可直接采用"},{"key":"C","text":"只需修改报告措辞"},{"key":"D","text":"删除不利记录即可"}],"correct_answers":["A"],"explanation":"该做法忽略了“报告边界”的核心要求：披露边界应与重要影响、风险和机遇的识别范围相衔接，并说明重大差异。","practical_use":"确定集团、子公司和价值链信息纳入范围。","answer_basis":"基本准则关于报告主体、范围和重要信息的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"可持续披露","title":"报告边界"}},{"question_id":"CNQ103","knowledge_id":"KP-CN-ESG-008","source_id":"SRC-CN-MOF-BASE-2024","question_type":"error_spotting","difficulty":"L2","question_text":"团队提出“不同期间采用不同口径但不解释。”。对此最恰当的判断或改进是什么？","options":[{"key":"A","text":"应按“报告期间与比较信息”要求纠正，并保留依据与复核记录"},{"key":"B","text":"该做法没有风险，可直接采用"},{"key":"C","text":"只需修改报告措辞"},{"key":"D","text":"删除不利记录即可"}],"correct_answers":["A"],"explanation":"该做法忽略了“报告期间与比较信息”的核心要求：指标应明确报告期间，并在适用时提供可比信息和口径变化说明。","practical_use":"复核年度数据及上年比较数据。","answer_basis":"基本准则关于可比性和一致性的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"可持续披露","title":"报告期间与比较信息"}},{"question_id":"CNQ104","knowledge_id":"KP-CN-ESG-009","source_id":"SRC-CN-MOF-BASE-2024","question_type":"decision","difficulty":"L3","question_text":"团队提出“用未说明的方法补齐数据并当成实测值。”。对此最恰当的判断或改进是什么？","options":[{"key":"A","text":"应按“估计与不确定性”要求纠正，并保留依据与复核记录"},{"key":"B","text":"该做法没有风险，可直接采用"},{"key":"C","text":"只需修改报告措辞"},{"key":"D","text":"删除不利记录即可"}],"correct_answers":["A"],"explanation":"该做法忽略了“估计与不确定性”的核心要求：使用估计值时应说明方法、关键假设和不确定性，避免将估计表述为精确事实。","practical_use":"原始数据缺失时记录估算方法。","answer_basis":"基本准则关于如实反映、可验证性和信息披露的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"可持续披露","title":"估计与不确定性"}},{"question_id":"CNQ105","knowledge_id":"KP-CN-ESG-010","source_id":"SRC-CN-MOF-BASE-2024","question_type":"error_spotting","difficulty":"L3","question_text":"团队提出“报告各章节互不关联。”。对此最恰当的判断或改进是什么？","options":[{"key":"A","text":"应按“信息关联性”要求纠正，并保留依据与复核记录"},{"key":"B","text":"该做法没有风险，可直接采用"},{"key":"C","text":"只需修改报告措辞"},{"key":"D","text":"删除不利记录即可"}],"correct_answers":["A"],"explanation":"该做法忽略了“信息关联性”的核心要求：治理、战略、风险管理和指标目标信息应相互衔接，支持使用者理解因果关系。","practical_use":"检查风险是否对应行动、指标和目标。","answer_basis":"基本准则关于信息完整性和可理解性的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"可持续披露","title":"信息关联性"}},{"question_id":"CNQ106","knowledge_id":"KP-CN-ESG-011","source_id":"SRC-CN-SSE-ESG-2024","question_type":"decision","difficulty":"L3","question_text":"团队提出“只写管理层重视但没有职责和会议记录。”。对此最恰当的判断或改进是什么？","options":[{"key":"A","text":"应按“治理监督职责”要求纠正，并保留依据与复核记录"},{"key":"B","text":"该做法没有风险，可直接采用"},{"key":"C","text":"只需修改报告措辞"},{"key":"D","text":"删除不利记录即可"}],"correct_answers":["A"],"explanation":"该做法忽略了“治理监督职责”的核心要求：企业应说明治理机构对重要可持续议题的监督职责、信息获取和决策参与。","practical_use":"设计董事会或专门委员会监督流程。","answer_basis":"上交所指引关于可持续发展治理的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"可持续披露","title":"治理监督职责"}},{"question_id":"CNQ107","knowledge_id":"KP-CN-ESG-012","source_id":"SRC-CN-SSE-ESG-2024","question_type":"error_spotting","difficulty":"L3","question_text":"团队提出“仅在编报告时临时填写风险。”。对此最恰当的判断或改进是什么？","options":[{"key":"A","text":"应按“风险管理流程”要求纠正，并保留依据与复核记录"},{"key":"B","text":"该做法没有风险，可直接采用"},{"key":"C","text":"只需修改报告措辞"},{"key":"D","text":"删除不利记录即可"}],"correct_answers":["A"],"explanation":"该做法忽略了“风险管理流程”的核心要求：重要可持续风险和机遇应纳入识别、评估、排序、监测和应对流程。","practical_use":"把气候和环境风险纳入企业风险台账。","answer_basis":"上交所指引关于影响、风险和机遇管理的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"可持续披露","title":"风险管理流程"}},{"question_id":"CNQ108","knowledge_id":"KP-CN-ESG-013","source_id":"SRC-CN-SSE-ESG-2024","question_type":"decision","difficulty":"L2","question_text":"团队提出“年度只公布目标，不监测执行。”。对此最恰当的判断或改进是什么？","options":[{"key":"A","text":"应按“指标目标跟踪”要求纠正，并保留依据与复核记录"},{"key":"B","text":"该做法没有风险，可直接采用"},{"key":"C","text":"只需修改报告措辞"},{"key":"D","text":"删除不利记录即可"}],"correct_answers":["A"],"explanation":"该做法忽略了“指标目标跟踪”的核心要求：企业应定期监测指标与目标进展，分析偏差并采取纠正措施。","practical_use":"季度复核能耗、事故率和治理整改进度。","answer_basis":"上交所指引关于指标、目标和进展的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"可持续披露","title":"指标目标跟踪"}},{"question_id":"CNQ109","knowledge_id":"KP-CN-CLM-003","source_id":"SRC-CN-MOF-CLIMATE-2025","question_type":"error_spotting","difficulty":"L4","question_text":"团队提出“只采用最乐观情景证明没有风险。”。对此最恰当的判断或改进是什么？","options":[{"key":"A","text":"应按“情景分析”要求纠正，并保留依据与复核记录"},{"key":"B","text":"该做法没有风险，可直接采用"},{"key":"C","text":"只需修改报告措辞"},{"key":"D","text":"删除不利记录即可"}],"correct_answers":["A"],"explanation":"该做法忽略了“情景分析”的核心要求：企业可通过合理情景分析评估不同气候路径下风险、机遇和战略韧性。","practical_use":"比较不同升温或政策情景对业务的影响。","answer_basis":"气候准则关于情景分析和气候韧性的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"气候管理","title":"情景分析"}},{"question_id":"CNQ110","knowledge_id":"KP-CN-CLM-004","source_id":"SRC-CN-MOF-CLIMATE-2025","question_type":"decision","difficulty":"L3","question_text":"团队提出“所有风险都只看下一年度。”。对此最恰当的判断或改进是什么？","options":[{"key":"A","text":"应按“时间范围”要求纠正，并保留依据与复核记录"},{"key":"B","text":"该做法没有风险，可直接采用"},{"key":"C","text":"只需修改报告措辞"},{"key":"D","text":"删除不利记录即可"}],"correct_answers":["A"],"explanation":"该做法忽略了“时间范围”的核心要求：气候风险和机遇应结合企业实际界定短期、中期和长期范围。","practical_use":"评估厂房洪涝、能源合同和技术替代时点。","answer_basis":"气候准则关于短中长期气候风险和机遇的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"气候管理","title":"时间范围"}},{"question_id":"CNQ111","knowledge_id":"KP-CN-CLM-005","source_id":"SRC-CN-MOF-CLIMATE-2025","question_type":"error_spotting","difficulty":"L4","question_text":"团队提出“只描述气候事件，不分析经营影响。”。对此最恰当的判断或改进是什么？","options":[{"key":"A","text":"应按“财务影响”要求纠正，并保留依据与复核记录"},{"key":"B","text":"该做法没有风险，可直接采用"},{"key":"C","text":"只需修改报告措辞"},{"key":"D","text":"删除不利记录即可"}],"correct_answers":["A"],"explanation":"该做法忽略了“财务影响”的核心要求：应分析重要气候风险和机遇对财务状况、经营成果和现金流的当前及预期影响。","practical_use":"评估碳成本、停产和节能投资的财务影响。","answer_basis":"气候准则关于当前和预期财务影响的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"气候管理","title":"财务影响"}},{"question_id":"CNQ112","knowledge_id":"KP-CN-CLM-006","source_id":"SRC-CN-MOF-CLIMATE-2025","question_type":"decision","difficulty":"L4","question_text":"团队提出“把韧性等同于购买保险。”。对此最恰当的判断或改进是什么？","options":[{"key":"A","text":"应按“气候韧性”要求纠正，并保留依据与复核记录"},{"key":"B","text":"该做法没有风险，可直接采用"},{"key":"C","text":"只需修改报告措辞"},{"key":"D","text":"删除不利记录即可"}],"correct_answers":["A"],"explanation":"该做法忽略了“气候韧性”的核心要求：企业应评估战略和业务模式在不同气候条件下调整和承受影响的能力。","practical_use":"检验关键供应、设施和产品组合的适应能力。","answer_basis":"气候准则关于气候韧性的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"气候管理","title":"气候韧性"}},{"question_id":"CNQ113","knowledge_id":"KP-CN-CLM-007","source_id":"SRC-CN-MOF-CLIMATE-2025","question_type":"error_spotting","difficulty":"L3","question_text":"团队提出“只有远期净零口号。”。对此最恰当的判断或改进是什么？","options":[{"key":"A","text":"应按“转型行动计划”要求纠正，并保留依据与复核记录"},{"key":"B","text":"该做法没有风险，可直接采用"},{"key":"C","text":"只需修改报告措辞"},{"key":"D","text":"删除不利记录即可"}],"correct_answers":["A"],"explanation":"该做法忽略了“转型行动计划”的核心要求：转型计划应连接目标、行动、资源、责任和阶段性进度。","practical_use":"安排设备改造、能源替代和供应链协作。","answer_basis":"气候准则关于气候转型计划的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"气候管理","title":"转型行动计划"}},{"question_id":"CNQ114","knowledge_id":"KP-CN-CLM-008","source_id":"SRC-CN-MOF-CLIMATE-2025","question_type":"decision","difficulty":"L3","question_text":"团队提出“只选容易下降但与风险无关的指标。”。对此最恰当的判断或改进是什么？","options":[{"key":"A","text":"应按“气候指标”要求纠正，并保留依据与复核记录"},{"key":"B","text":"该做法没有风险，可直接采用"},{"key":"C","text":"只需修改报告措辞"},{"key":"D","text":"删除不利记录即可"}],"correct_answers":["A"],"explanation":"该做法忽略了“气候指标”的核心要求：气候指标应与重要风险机遇及管理行动相关，并保持口径一致。","practical_use":"选择排放、能源、暴露资产和投入指标。","answer_basis":"气候准则关于气候相关指标的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"气候管理","title":"气候指标"}},{"question_id":"CNQ115","knowledge_id":"KP-CN-CLM-009","source_id":"SRC-CN-MOF-CLIMATE-2025","question_type":"error_spotting","difficulty":"L3","question_text":"团队提出“对外宣传内部碳价但决策从未使用。”。对此最恰当的判断或改进是什么？","options":[{"key":"A","text":"应按“内部碳价格”要求纠正，并保留依据与复核记录"},{"key":"B","text":"该做法没有风险，可直接采用"},{"key":"C","text":"只需修改报告措辞"},{"key":"D","text":"删除不利记录即可"}],"correct_answers":["A"],"explanation":"该做法忽略了“内部碳价格”的核心要求：使用内部碳价格时应说明用途、适用范围和计价假设。","practical_use":"在投资决策中比较高碳与低碳方案。","answer_basis":"气候准则关于内部碳价格信息的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"气候管理","title":"内部碳价格"}},{"question_id":"CNQ116","knowledge_id":"KP-CN-CLM-010","source_id":"SRC-CN-MOF-CLIMATE-2025","question_type":"decision","difficulty":"L3","question_text":"团队提出“认为供应商风险与本企业无关。”。对此最恰当的判断或改进是什么？","options":[{"key":"A","text":"应按“价值链气候风险”要求纠正，并保留依据与复核记录"},{"key":"B","text":"该做法没有风险，可直接采用"},{"key":"C","text":"只需修改报告措辞"},{"key":"D","text":"删除不利记录即可"}],"correct_answers":["A"],"explanation":"该做法忽略了“价值链气候风险”的核心要求：气候风险识别不应局限于自有运营，还应关注重要上下游依赖和影响。","practical_use":"识别关键原料、物流和客户转型风险。","answer_basis":"气候准则关于价值链气候风险和机遇的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"气候管理","title":"价值链气候风险"}},{"question_id":"CNQ117","knowledge_id":"KP-CN-GHG-009","source_id":"SRC-CN-MOF-CLIMATE-2025","question_type":"error_spotting","difficulty":"L3","question_text":"团队提出“每年选择排放最高年份作基准。”。对此最恰当的判断或改进是什么？","options":[{"key":"A","text":"应按“基准年管理”要求纠正，并保留依据与复核记录"},{"key":"B","text":"该做法没有风险，可直接采用"},{"key":"C","text":"只需修改报告措辞"},{"key":"D","text":"删除不利记录即可"}],"correct_answers":["A"],"explanation":"该做法忽略了“基准年管理”的核心要求：减排目标和趋势分析应明确基准年，并在重大边界或方法变化时评估是否重算。","practical_use":"处理并购、剥离和核算方法变化。","answer_basis":"气候准则关于温室气体目标、方法和可比信息的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"温室气体","title":"基准年管理"}},{"question_id":"CNQ118","knowledge_id":"KP-CN-GHG-010","source_id":"SRC-CN-MEE-GHG-POWER-2026","question_type":"decision","difficulty":"L2","question_text":"团队提出“只统计金额最大的能源账单。”。对此最恰当的判断或改进是什么？","options":[{"key":"A","text":"应按“排放源清单”要求纠正，并保留依据与复核记录"},{"key":"B","text":"该做法没有风险，可直接采用"},{"key":"C","text":"只需修改报告措辞"},{"key":"D","text":"删除不利记录即可"}],"correct_answers":["A"],"explanation":"该做法忽略了“排放源清单”的核心要求：核算前应系统识别各运营地点的固定燃烧、移动燃烧、逸散和外购能源等排放源。","practical_use":"建立厂区排放源清单并指定数据责任人。","answer_basis":"核算报告指南关于排放源识别和数据收集的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"温室气体","title":"排放源清单"}},{"question_id":"CNQ119","knowledge_id":"KP-CN-GHG-011","source_id":"SRC-CN-MEE-GHG-POWER-2026","question_type":"error_spotting","difficulty":"L3","question_text":"团队提出“汇总后不再检查异常值。”。对此最恰当的判断或改进是什么？","options":[{"key":"A","text":"应按“数据质量控制”要求纠正，并保留依据与复核记录"},{"key":"B","text":"该做法没有风险，可直接采用"},{"key":"C","text":"只需修改报告措辞"},{"key":"D","text":"删除不利记录即可"}],"correct_answers":["A"],"explanation":"该做法忽略了“数据质量控制”的核心要求：活动数据和参数应经过完整性、准确性、单位及异常波动检查。","practical_use":"月度核对仪表、账单和台账差异。","answer_basis":"核算报告指南关于数据质量管理的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"温室气体","title":"数据质量控制"}},{"question_id":"CNQ120","knowledge_id":"KP-CN-GHG-012","source_id":"SRC-CN-MEE-GHG-POWER-2026","question_type":"decision","difficulty":"L3","question_text":"团队提出“直接填入上月数字且不说明。”。对此最恰当的判断或改进是什么？","options":[{"key":"A","text":"应按“缺失数据处理”要求纠正，并保留依据与复核记录"},{"key":"B","text":"该做法没有风险，可直接采用"},{"key":"C","text":"只需修改报告措辞"},{"key":"D","text":"删除不利记录即可"}],"correct_answers":["A"],"explanation":"该做法忽略了“缺失数据处理”的核心要求：数据缺失时应采用有依据的方法估算、记录原因并保留复核痕迹。","practical_use":"处理仪表故障期间的燃料或用电数据。","answer_basis":"核算报告指南关于缺失数据和质量控制的要求。","status":"pilot","is_prototype":false,"display_order":null,"knowledge_points":{"module":"温室气体","title":"缺失数据处理"}}];
+const OFFICIAL_SOURCE_MAP=new Map(OFFICIAL_SOURCES.map(function(s){return [s.source_id,s];}));
+const OFFICIAL_KP_MAP=new Map(OFFICIAL_KNOWLEDGE_POINTS.map(function(k){return [k.knowledge_id,k];}));
+let activeLearningKnowledgeId=null;
+
+function officialModules(){return Array.from(new Set(OFFICIAL_KNOWLEDGE_POINTS.map(function(k){return k.module;})));}
+function fillOfficialModuleSelects(){
+  var opts='<option value="all">全部模块</option>'+officialModules().map(function(m){return '<option value="'+esc(m)+'">'+esc(m)+'</option>';}).join('');
+  var test=document.getElementById('official-test-module'); if(test)test.innerHTML=opts;
+  var learn=document.getElementById('learning-module'); if(learn)learn.innerHTML=opts;
+}
+function showOfficialTestSetup(){fillOfficialModuleSelects();showScreen('screen-official-test-setup');}
+function showOfficialLearning(){fillOfficialModuleSelects();showScreen('screen-official-learning');renderLearningList();}
+function renderLearningList(){
+  var module=document.getElementById('learning-module').value||'all';
+  var items=OFFICIAL_KNOWLEDGE_POINTS.filter(function(k){return module==='all'||k.module===module;});
+  var list=document.getElementById('learning-kp-list');
+  list.innerHTML=items.map(function(k){return '<div class="kp-item '+(k.knowledge_id===activeLearningKnowledgeId?'on':'')+'" data-kp="'+esc(k.knowledge_id)+'"><b>'+esc(k.title)+'</b><span>'+esc(k.difficulty)+' · '+esc(k.module)+'</span></div>';}).join('');
+  list.onclick=function(event){var item=event.target.closest('.kp-item[data-kp]');if(item)showKnowledgeCard(item.dataset.kp);};
+  if(!activeLearningKnowledgeId||!items.some(function(k){return k.knowledge_id===activeLearningKnowledgeId;})) activeLearningKnowledgeId=items[0]&&items[0].knowledge_id;
+  if(activeLearningKnowledgeId) showKnowledgeCard(activeLearningKnowledgeId,false);
+}
+function showKnowledgeCard(id,rerenderList=true){
+  activeLearningKnowledgeId=id; var k=OFFICIAL_KP_MAP.get(id); if(!k)return;
+  var s=OFFICIAL_SOURCE_MAP.get(k.source_id)||{};
+  if(rerenderList)document.querySelectorAll('.kp-item').forEach(function(el){el.classList.toggle('on',el.textContent.includes(k.title));});
+  var count=OFFICIAL_QUESTION_ROWS.filter(function(q){return q.knowledge_id===id;}).length;
+  document.getElementById('learning-kp-detail').innerHTML='<div class="kp-badges"><span class="kp-chip">'+esc(k.difficulty)+'</span><span class="kp-chip">'+esc(k.module)+'</span><span class="kp-chip">'+count+'道练习</span></div><h3>'+esc(k.title)+'</h3><div class="kp-section"><b>核心知识</b><p>'+esc(k.practical_definition)+'</p></div><div class="kp-section"><b>工作应用</b><p>'+esc(k.work_scenario)+'</p></div><div class="kp-section"><b>常见错误</b><p>'+esc(k.common_mistake)+'</p></div><div class="kp-section source-proof"><b>答案依据与官方来源</b><p>'+esc(k.answer_basis)+'</p><p>'+esc(s.organization||'')+'｜'+esc(s.title||'')+'</p><a href="'+esc(s.source_url||'#')+'" target="_blank" rel="noopener">查看官方原文 ↗</a></div><button class="btn btn-primary" data-kp="'+esc(id)+'" onclick="startKnowledgePractice(this.dataset.kp)">练习本知识点 →</button>';
+}
+function shuffleOfficial(list){
+  var out=list.slice(); for(var i=out.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=out[i];out[i]=out[j];out[j]=t;} return out;
+}
+function questionsFor(module,difficulty){return OFFICIAL_QUESTION_ROWS.filter(function(q){return (module==='all'||q.knowledge_points.module===module)&&(difficulty==='all'||q.difficulty===difficulty);});}
+function beginOfficialQuiz(rows,mode,name,timeMinutes,diff){
+  var qs=rows.map(mapQuestionBankRow); if(!qs.length){toast('目前筛选条件没有题目','err');return;}
+  QZ={qs:qs,name:name||'本地测试者',ans:{},start:Date.now(),timeLimit:(timeMinutes||0)*60,timerRef:null,idx:0,done:false,mode:mode,diff:diff||'mixed'};
+  showScreen('screen-quiz'); document.getElementById('ai-gen-loading').style.display='none';document.getElementById('quiz-body-wrap').style.display='flex';document.getElementById('quiz-nav-bar').style.display='flex';renderDots();renderQ(0);startTimer();
+}
+function startOfficialAssessment(){
+  var module=document.getElementById('official-test-module').value;var diff=document.getElementById('official-test-difficulty').value;var requested=parseInt(document.getElementById('official-test-count').value,10);var time=parseInt(document.getElementById('official-test-time').value,10);var name=document.getElementById('official-test-name').value.trim();
+  if(!name){toast('请输入测试者姓名','err');return;} var pool=shuffleOfficial(questionsFor(module,diff)); if(pool.length<requested){toast('筛选后仅有 '+pool.length+' 题，将使用全部题目','info');}
+  beginOfficialQuiz(pool.slice(0,Math.min(requested,pool.length)),'official-test',name,time,diff==='all'?'mixed':diff);
+}
+function startKnowledgePractice(id){
+  var rows=shuffleOfficial(OFFICIAL_QUESTION_ROWS.filter(function(q){return q.knowledge_id===id;})).slice(0,5); var k=OFFICIAL_KP_MAP.get(id);
+  beginOfficialQuiz(rows,'official-learning','学习练习',0,k&&k.difficulty||'mixed');
+}
+const QUESTION_TYPE_LABELS={
+  single_choice:'单选题',
+  multiple_choice:'多选题',
+  error_spotting:'找错题',
+  process:'流程题',
+  calculation:'计算题',
+  decision:'决策题',
+  data_interpretation:'资料判读',
+  comprehensive_case:'综合案例'
+};
+
+function mapQuestionBankRow(row){
+  const options=Array.isArray(row.options)?row.options:[];
+  const optionKeys=options.map(function(option){return option.key;});
+  const correct=(row.correct_answers||[]).map(function(key){return optionKeys.indexOf(key);}).filter(function(index){return index>=0;});
+  const levelSkill={L1:'基础认知',L2:'实务应用',L3:'分析决策',L4:'综合实战'}[row.difficulty]||'实务应用';
+  return {
+    id:row.question_id,
+    knowledgeId:row.knowledge_id,
+    sourceId:row.source_id,
+    answerBasis:row.answer_basis,
+    questionType:row.question_type,
+    level:row.difficulty,
+    skill:levelSkill,
+    kind:QUESTION_TYPE_LABELS[row.question_type]||'实务题',
+    type:row.question_type==='multiple_choice'?'multi':'single',
+    text:row.question_text,
+    choices:options.map(function(option){return option.text;}),
+    optionKeys:optionKeys,
+    correct:correct,
+    explanation:row.explanation,
+    module:row.knowledge_points&&row.knowledge_points.module,
+    knowledgeTitle:row.knowledge_points&&row.knowledge_points.title
+  };
+}
+
+async function loadPrototypeQuestions(){
+  if(prototypeQuestionCache) return prototypeQuestionCache.map(function(q){return Object.assign({},q);});
+  if(SIMULATION_MODE){
+    const data=SIMULATION_QUESTION_ROWS;
+    if(!Array.isArray(data)||data.length!==10) throw new Error('模拟题库应为 10 题，目前读取到 '+((data&&data.length)||0)+' 题');
+    prototypeQuestionCache=data.map(mapQuestionBankRow);
+    const invalid=prototypeQuestionCache.find(function(q){return !q.choices.length||!q.correct.length;});
+    if(invalid) throw new Error('题目 '+invalid.id+' 的选项或正确答案格式无效');
+    return prototypeQuestionCache.map(function(q){return Object.assign({},q);});
+  }
+  const query=_sb.from('question_bank')
+    .select('question_id,knowledge_id,source_id,question_type,difficulty,question_text,options,correct_answers,explanation,answer_basis,display_order,knowledge_points(module,title)')
+    .eq('is_prototype',true)
+    .in('status',['pilot','published'])
+    .order('display_order',{ascending:true});
+  const timeout=new Promise(function(_,reject){
+    setTimeout(function(){reject(new Error('连接题库超时，请检查网络或确认已执行 migration.sql 与 seed.sql'));},12000);
+  });
+  const {data,error}=await Promise.race([query,timeout]);
+  if(error) throw error;
+  if(!data||data.length!==10) throw new Error('Prototype 题库应为 10 题，目前读取到 '+((data&&data.length)||0)+' 题');
+  prototypeQuestionCache=data.map(mapQuestionBankRow);
+  const invalid=prototypeQuestionCache.find(function(q){return !q.choices.length||!q.correct.length;});
+  if(invalid) throw new Error('题目 '+invalid.id+' 的选项或正确答案格式无效');
+  return prototypeQuestionCache.map(function(q){return Object.assign({},q);});
+}
+
+function showPrototypeIntro(){
+  const el=document.getElementById('prototype-intro-overlay');
+  if(el) el.classList.add('open');
+}
+function closePrototypeIntro(){
+  const el=document.getElementById('prototype-intro-overlay');
+  if(el) el.classList.remove('open');
+}
+function beginPrototypeFromIntro(){
+  closePrototypeIntro();
+  startPrototypeBeta();
+}
+
+async function startPrototypeBeta(){
+  const name='BETA 測試者';
+  let questions;
+  try{
+    toast(SIMULATION_MODE?'正在载入中国官方题库模拟题目…':'正在从正式题库载入 Prototype 题目…','info');
+    questions=await loadPrototypeQuestions();
+  }catch(error){
+    console.error('loadPrototypeQuestions error:',error);
+    toast('Prototype 题库载入失败：'+error.message,'err');
+    return;
+  }
+  QZ={qs:questions,name,ans:{},start:Date.now(),timeLimit:15*60,timerRef:null,idx:0,done:false,mode:'prototype',diff:'mixed'};
+  showScreen('screen-quiz');
+  const load=document.getElementById('ai-gen-loading'); if(load) load.style.display='none';
+  document.getElementById('quiz-body-wrap').style.display='flex';
+  document.getElementById('quiz-nav-bar').style.display='flex';
+  const body=document.getElementById('quiz-body-wrap');
+  if(body && !document.getElementById('prototype-banner')){
+    const b=document.createElement('div');
+    b.id='prototype-banner'; b.className='prototype-banner';
+    b.innerHTML=SIMULATION_MODE
+      ?'<b>🧪 中国官方题库模拟版</b>　共 10 题，覆盖 L1～L4 与多种实务题型；本次成绩仅在当前浏览器显示，不写入 Supabase。'
+      :'<b>历史兼容题组</b>　该入口已停用。';
+    body.parentNode.insertBefore(b,body);
+  }
+  renderDots(); renderQ(0); startTimer();
+}
+
+function questionDifficultyLabel(q){
+  const map={L1:['lv1','🟢 L1 基础认知'],L2:['lv2','🔵 L2 实务应用'],L3:['lv3','🟠 L3 分析决策'],L4:['lv4','🔴 L4 综合实战']};
+  return map[q&&q.level]||null;
+}
+
+function renderPrototypeDiagnostic(){
+  const sec=document.getElementById('prototype-diagnostic');
+  const growth=document.getElementById('growth-section');
+  const pct=document.getElementById('pct-section');
+  if(!sec) return;
+  if(!QZ || QZ.mode!=='prototype'){
+    sec.style.display='none';
+    if(growth) growth.style.display='block';
+    return;
+  }
+  sec.style.display='block';
+  if(growth) growth.style.display='none';
+  if(pct) pct.style.display='none';
+  const order=['L1','L2','L3','L4'];
+  const labels={L1:'L1 基础认知',L2:'L2 实务应用',L3:'L3 分析决策',L4:'L4 综合实战'};
+  const stats={}; order.forEach(l=>stats[l]={total:0,correct:0});
+  QZ.qs.forEach((q,i)=>{
+    const s=stats[q.level]||stats.L1; s.total++;
+    const ua=(QZ.ans[i]||[]).slice().sort().join(',');
+    const ca=(q.correct||[]).slice().sort().join(',');
+    if(ua===ca) s.correct++;
+  });
+  document.getElementById('prototype-levels').innerHTML=order.map(l=>{
+    const s=stats[l]; const p=s.total?Math.round(s.correct/s.total*100):0;
+    return '<div class="prototype-level-row"><div>'+labels[l]+'</div><div class="prototype-level-bar"><div class="prototype-level-fill" style="width:'+p+'%"></div></div><div class="prototype-level-score">'+p+'%</div></div>';
+  }).join('');
+  const weakest=order.filter(l=>stats[l].total).sort((a,b)=>(stats[a].correct/stats[a].total)-(stats[b].correct/stats[b].total))[0];
+  const note=document.getElementById('prototype-note');
+  const weakestRate=weakest?stats[weakest].correct/stats[weakest].total:1;
+  const diagnosticText=weakestRate===1
+    ?'本次各难度均已全部答对，暂未发现明显薄弱项。'
+    :'目前相对薄弱项：<b>'+labels[weakest]+'</b>。';
+  if(note) note.innerHTML='本次为体验验证版。请特别感受：<b>题目是否像真实工作／考试、L1～L4 难度是否有明显阶梯、计算与决策题是否过难或过浅。</b><br>'+diagnosticText;
+}
+
+function showPhase2Notice(){
+  toast('AI 测验与学习模式将在 Phase 2 开放，请先体验实务模拟测验。','info');
+}
+
 function showSetup(mode){
   currentMode=mode||'quiz';
-  // 每次進入選題畫面，重新從 Supabase 讀取最新文章
+  // 每次進入選题畫面，重新從 Supabase 讀取最新文章
   // 強制等待 Firebase，再渲染文章選單
   (async()=>{
     try{
@@ -1237,12 +1842,6 @@ async function handleSetupStart(){
   const artId=document.getElementById('setup-article').value;
   if(!artId){toast('请先选择文章素材','err');return;}
 
-  // 從 DB 讀取管理者設定的 API Key
-  const apiKey=DB.get('apikey')||'';
-  if(!apiKey){
-    toast('请先由管理者在后台设定 DeepSeek API Key','err');
-    return;
-  }
   let article;
   if(artId==='__all__'){
     // 合併所有文章
@@ -1256,12 +1855,13 @@ async function handleSetupStart(){
     article=(DB.get('articles')||[]).find(a=>String(a.id)===String(artId));
     if(!article){toast('找不到文章','err');return;}
   }
-  if(currentMode==='learn') await startLearnMode(article,apiKey);
-  else await startQuizMode(article,apiKey);
+  // DeepSeek 密钥只保存在服务端代理；浏览器不读取或保存密钥。
+  if(currentMode==='learn') await startLearnMode(article,null);
+  else await startQuizMode(article,null);
 }
 
 // ══════════════════════════════════════════
-//  QUIZ MODE — AI 即時出題
+//  QUIZ MODE — AI 即時出题
 // ══════════════════════════════════════════
 async function startQuizMode(article,apiKey){
   const name=document.getElementById('tester-name').value.trim();
@@ -1291,18 +1891,18 @@ async function startQuizMode(article,apiKey){
         <div style="font-size:38px;margin-bottom:14px">${isKeyErr?'🔑':'❌'}</div>
         <div style="font-size:15px;font-weight:700;color:var(--red);margin-bottom:10px">${isKeyErr?'API Key 问题':'题目生成失败'}</div>
         <div style="font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:20px;background:var(--bg3);padding:14px 16px;border-radius:var(--r);text-align:left">
-          ${isKeyErr?'请由管理者在后台「系统设定 → AI 设定」重新填写有效的 API Key 后再试。':''+esc(err.message)}
+          ${isKeyErr?'DeepSeek 服务端密钥未正确配置，请由部署管理员检查代理服务环境变量。':''+esc(err.message)}
         </div>
         <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
           <button class="btn btn-secondary" onclick="showScreen('screen-landing')">返回首页</button>
-          <button class="btn btn-primary" onclick="showAdminLogin()">前往设定 API Key</button>
+          <button class="btn btn-primary" onclick="showScreen('screen-landing')">稍后重试</button>
         </div>
       </div>`;
     }
   });
 }
 
-// ── 分批生成題目 ──
+// ── 分批生成题目 ──
 async function generateQuizQuestions(article,count,diff,apiKey){
   const diffText={easy:'初级（简单基础）',medium:'中等难度',hard:'高级进阶',mixed:'混合难度（初中高均有）'}[diff]||'混合难度';
   const batchSize=5;
@@ -1390,7 +1990,7 @@ practice练习题严格禁止涉及任一特定国家/地区的政策、法规�
       <div style="font-size:40px;margin-bottom:16px">${isKeyErr?'🔑':'❌'}</div>
       <div style="font-size:15px;font-weight:700;color:var(--red);margin-bottom:10px">${isKeyErr?'API Key 问题':'生成失败'}</div>
       <div style="font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:20px;background:var(--bg3);padding:14px 16px;border-radius:var(--r);border:1px solid var(--border2);text-align:left">
-        ${isKeyErr?'<b>解决步骤：</b><br>① 前往 <a href=\'https://platform.deepseek.com\' target=\'_blank\' style=\'color:var(--forest)\'>platform.deepseek.com</a> 取得有效 API Key<br>② 将本系统 HTML 文件下载到本地<br>③ 用浏览器直接开启本地 HTML 文件<br>④ 在「管理后台 → 系统设定 → AI 设定」贴上 Key 并保存':esc(err.message)}
+        ${isKeyErr?'DeepSeek 服务端密钥未正确配置，请由部署管理员检查代理服务环境变量。':esc(err.message)}
       </div>
       <button class="btn btn-secondary" onclick="showSetup('learn')">返回重试</button>
     </div>`;
@@ -1399,7 +1999,7 @@ practice练习题严格禁止涉及任一特定国家/地区的政策、法规�
 
 function renderLearnNotes(title,notes){
   const area=document.getElementById('learn-notes-area');
-  // 練習題 HTML 生成
+  // 練習题 HTML 生成
   const practiceHtml=(notes.practice&&notes.practice.length)?`
     <div class="practice-section">
       <div class="practice-title">✏️ 简单练习</div>
@@ -1455,7 +2055,7 @@ function renderLearnNotes(title,notes){
   </div>`;
 }
 
-// 練習題作答
+// 練習题作答
 function answerPQ(pi, oi, ans){
   const item=document.getElementById('pq-'+pi);
   if(!item||item.classList.contains('answered')) return;
@@ -1493,7 +2093,7 @@ function sanitizeJSONControlChars(s){
   return out;
 }
 
-// 通用 AI JSON 回應解析（適用於任何 schema，非僅題目陣列）
+// 通用 AI JSON 回應解析（適用於任何 schema，非僅题目陣列）
 // 依序嘗試：直接解析 → 修補控制字元 → 移除多餘逗號後再解析
 function safeParseAIJSON(raw){
   if(!raw) return null;
@@ -1545,7 +2145,7 @@ function safeParseJSON(raw){
   try { return JSON.parse(s); } catch(e1){}
 
   // 步驟4：修補截斷的 JSON
-  // 找最後一個完整題目（以 } 結尾的物件）
+  // 找最後一個完整题目（以 } 結尾的物件）
   try {
     let depth = 0, lastGood = -1;
     for(let i = 0; i < s.length; i++){
@@ -1562,14 +2162,14 @@ function safeParseJSON(raw){
     }
   } catch(e3){}
 
-  // 步驟5：逐題用 indexOf 提取（最後手段）
+  // 步驟5：逐题用 indexOf 提取（最後手段）
   try {
     const questions = [];
     let pos = 0;
     while(true){
       const tStart = s.indexOf('"text"', pos);
       if(tStart === -1) break;
-      // 找這個題目物件的起始 {
+      // 找這個题目物件的起始 {
       let qStart = tStart;
       while(qStart > 0 && s[qStart] !== '{') qStart--;
       // 找對應的結尾 }
@@ -1623,7 +2223,7 @@ async function callClaude(messages,_apiKey,maxTokens=2000){
   let data;
   try{
     data=await resp.json();
-    console.log('[callClaude] 回應資料:', JSON.stringify(data).slice(0,200));
+    console.log('[callClaude] 回應数据:', JSON.stringify(data).slice(0,200));
   }catch(jsonErr){
     console.error('[callClaude] JSON 解析錯誤:', jsonErr);
     throw new Error('AI 回應格式錯誤');
@@ -1652,9 +2252,13 @@ function renderQ(idx){
   const btnNext=document.getElementById('btn-next');
   btnNext.textContent=isLast?'交卷':'下一题 →';
   window._quizIsLast=isLast;
-  const badgeMap={single:['single','单选题'],multi:['multi','多选题（可复选）'],truefalse:['tf','是非题']};
+  const badgeMap={single:['single','单选题'],multi:['multi','多选题（可複選）'],truefalse:['tf','是非题']};
   const[bc,bl]=badgeMap[q.type]||['single','单选题'];
-  document.getElementById('q-badge-wrap').innerHTML=`<span class="q-badge ${bc}">${bl}</span>`;
+  const dl=questionDifficultyLabel(q);
+  const levelHtml=dl?`<span class="q-level-badge ${dl[0]}">${dl[1]}</span>`:'';
+  const kindHtml=q.kind?`<span class="q-skill-badge">${esc(q.kind)}</span>`:'';
+  const skillHtml=q.skill?`<span class="q-skill-badge">${esc(q.skill)}</span>`:'';
+  document.getElementById('q-badge-wrap').innerHTML=`<div class="q-meta-row"><span class="q-badge ${bc}">${bl}</span>${levelHtml}${kindHtml}${skillHtml}</div>`;
   document.getElementById('q-text').textContent=q.text;
   document.getElementById('q-hint').style.display=q.type==='multi'?'flex':'none';
   const container=document.getElementById('choices-container');
@@ -1674,9 +2278,9 @@ function renderQ(idx){
     container.appendChild(div);
   });
 
-  // 加入提示按鈕（每題都有）
+  // 加入提示按鈕（每题都有）
   const hintArea=document.getElementById('q-hint-box-area');
-  if(hintArea){
+  if(hintArea&&QZ.mode!=='official-test'){
     // 生成提示文字：從選項結構推導
     const hintText=generateHintText(q);
     hintArea.innerHTML=`
@@ -1708,7 +2312,7 @@ document.getElementById('choices-container').addEventListener('click',function(e
   document.getElementById('q-ans').textContent=Object.keys(QZ.ans).filter(k=>QZ.ans[k].length>0).length;
   document.querySelectorAll('#choices-container .choice').forEach((el,ci)=>el.classList.toggle('on',ans.includes(ci)));
   document.querySelectorAll('.qdot').forEach((d,di)=>d.classList.toggle('done',!!(QZ.ans[di]&&QZ.ans[di].length)));
-  if(isSingle&&ans.length>0){
+  if(isSingle&&ans.length>0&&QZ.mode!=='official-test'){
     instantLocked=true;
     showInstantFeedback(QZ.idx,ans);
     // 解鎖：確保 btn-next 可點
@@ -1763,7 +2367,7 @@ function generateHintText(q){
   if(!q) return '请仔细阅读题目并思考各选项的差异。';
   const type=q.type;
   const hints=[];
-  // 根據題型給不同提示
+  // 根據题型給不同提示
   if(type==='truefalse'){
     hints.push('这是一道判断题，请判断陈述是否与文章内容一致。');
   } else if(type==='multi'){
@@ -1771,7 +2375,7 @@ function generateHintText(q){
   } else {
     hints.push('这是单选题，只有一个最佳答案。');
   }
-  // 從題目文字提取關鍵詞提示
+  // 從题目文字提取關鍵詞提示
   const text=q.text||'';
   if(text.includes('哪') || text.includes('什么')) hints.push('思考方向：找出题目询问的核心概念或定义。');
   if(text.includes('为什么') || text.includes('原因')) hints.push('思考方向：从文章中寻找因果关系的描述。');
@@ -1825,6 +2429,44 @@ const ESG_RANKS = [
   {min:0,  icon:'💡', title:'覺醒起點',     desc:'永續之旅正在開始，每一次學習都是承諾', next:'再提升 {n} 分即可晉升 ESG 探索者 🌱'},
 ];
 
+async function recordPrototypeAttempt(rec){
+  if(!QZ||QZ.mode!=='prototype') return;
+  if(SIMULATION_MODE){
+    console.info('Simulation attempt is local only.',{score:rec.score,total:rec.total,correct:rec.correct});
+    return;
+  }
+  const answers={};
+  const difficultySummary={};
+  const weakKnowledge={};
+  QZ.qs.forEach(function(q,index){
+    const keys=q.optionKeys||q.choices.map(function(_,choiceIndex){return String.fromCharCode(65+choiceIndex);});
+    const selected=(QZ.ans[index]||[]).map(function(choiceIndex){return keys[choiceIndex];}).filter(Boolean);
+    const isCorrect=(QZ.ans[index]||[]).slice().sort().join(',')===q.correct.slice().sort().join(',');
+    answers[q.id]={selected:selected,is_correct:isCorrect};
+    if(!difficultySummary[q.level]) difficultySummary[q.level]={total:0,correct:0};
+    difficultySummary[q.level].total++;
+    if(isCorrect) difficultySummary[q.level].correct++;
+    if(!isCorrect&&q.knowledgeId){
+      weakKnowledge[q.knowledgeId]=(weakKnowledge[q.knowledgeId]||0)+1;
+    }
+  });
+  const {error}=await _sb.from('quiz_attempts').insert([{
+    mode:'prototype',
+    question_ids:QZ.qs.map(function(q){return q.id;}),
+    answers:answers,
+    total_questions:rec.total,
+    correct_count:rec.correct,
+    score:rec.score,
+    elapsed_seconds:rec.elapsed,
+    difficulty_summary:difficultySummary,
+    weakness_summary:{incorrect_by_knowledge_id:weakKnowledge},
+    started_at:new Date(QZ.start).toISOString(),
+    completed_at:new Date().toISOString(),
+    metadata:{prototype:'BETA02',source:'question_bank',adaptive_learning:false}
+  }]);
+  if(error) throw error;
+}
+
 function submitQuiz(){
   try{
   closeModal('modal-submit');
@@ -1836,7 +2478,7 @@ function submitQuiz(){
   QZ.qs.forEach((q,i)=>{
     if((QZ.ans[i]||[]).slice().sort().join(',')===q.correct.slice().sort().join(','))correct++;
   });
-  // 100分制：每題分數 = 100 / 總題數
+  // 100分制：每题分數 = 100 / 總题數
   const pointsPerQ=100/total;
   const score=Math.round(correct*pointsPerQ);
 
@@ -1859,8 +2501,8 @@ function submitQuiz(){
     date:new Date().toLocaleDateString('zh-TW'),
     ts:Date.now()
   };
-  // 直接插入 Supabase，不需要先讀全部
-  (async function(){
+  // 正式测验成绩按既有规则处理。
+  if(QZ.mode==='instant') (async function(){
     try{
       await _sb.from('scores').insert([{
         name: rec.name, score: rec.score, correct: rec.correct,
@@ -1873,10 +2515,12 @@ function submitQuiz(){
       }]);
     }catch(e){ console.warn('score insert error:', e.message); }
   })();
-  // 同時更新本地快取
-  var scores=_cache['scores']||[];
-  scores.push(rec);
-  _cache['scores']=scores.sort(function(a,b){return b.score-a.score||a.elapsed-b.elapsed;});
+  // 同时更新本地缓存。
+  if(QZ.mode==='instant'){
+    var scores=_cache['scores']||[];
+    scores.push(rec);
+    _cache['scores']=scores.sort(function(a,b){return b.score-a.score||a.elapsed-b.elapsed;});
+  }
   showResult(rec);
   }catch(err){
     console.error('submitQuiz error:', err);
@@ -1975,7 +2619,7 @@ function showResult(rec){
     // 成長圖表
     renderGrowthChart(rec.name,rec.score);
 
-    // 答題解析
+    // 答题解析
     var revSec=document.getElementById('review-sec');
     if(settings.showExplain!==false){
       if(revSec) revSec.style.display='block';
@@ -2065,7 +2709,7 @@ function renderLB(){
       '<div class="lb-rank '+(i<3?'r'+(i+1):'')+'">'+(i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1)+'</div>'+
       '<div class="lb-name">'+esc(s.name)+aboveAvg+'</div>'+
       '<div class="lb-score">'+s.score+' 分</div>'+
-      '<div style="font-size:11px;color:var(--text2);text-align:center">'+s.total+'題 / '+diffLabel+'</div>'+
+      '<div style="font-size:11px;color:var(--text2);text-align:center">'+s.total+'题 / '+diffLabel+'</div>'+
       '<div style="font-size:11px;color:var(--text3);text-align:center">'+timeLbl+'</div>'+
       '<div class="lb-time">'+pad(Math.floor(s.elapsed/60))+':'+pad(s.elapsed%60)+'</div>'+
       '<div class="lb-date">'+s.date+'</div>'+
@@ -2084,21 +2728,6 @@ function showAdminLogin(){
   document.getElementById('login-overlay').classList.add('open');
 }
 function closeLogin(){document.getElementById('login-overlay').classList.remove('open');}
-// ══════════════════════════════════════════
-//  EmailJS 設定
-//  請至 emailjs.com 免費註冊後填入以下三個值
-// ══════════════════════════════════════════
-const EMAILJS_CONFIG = {
-  publicKey:  'YOUR_PUBLIC_KEY',   // EmailJS 帳號 Public Key
-  serviceId:  'YOUR_SERVICE_ID',   // Email 服務 ID（Gmail/Outlook等）
-  templateId: 'YOUR_TEMPLATE_ID',  // Email 模板 ID
-};
-
-// 臨時驗證碼（存在記憶體，不存資料庫）
-let _resetCode = null;
-let _resetEmail = null;
-let _resetExpiry = null;
-
 function openForgot(){
   closeLogin();
   document.getElementById('forgot-email').value='';
@@ -2115,7 +2744,6 @@ function openForgot(){
 
 function closeForgot(){
   document.getElementById('forgot-overlay').classList.remove('open');
-  _resetCode=null; _resetEmail=null; _resetExpiry=null;
   // 重新開啟登入框
   showAdminLogin();
 }
@@ -2123,214 +2751,82 @@ function closeForgot(){
 async function sendResetEmail(){
   const emailInput=document.getElementById('forgot-email').value.trim();
   const msgEl=document.getElementById('forgot-msg');
-
   if(!emailInput){
     msgEl.style.color='var(--red)';
     msgEl.textContent='請輸入 Email 地址';
     return;
   }
-
-  // 驗證 Email 是否與管理者帳號相符
-  const admin=DB.get('admin')||{};
-  if(emailInput.toLowerCase()!==( admin.email||'admin@admin.com').toLowerCase()){
-    msgEl.style.color='var(--red)';
-    msgEl.textContent='此 Email 與管理者帳號不符';
-    return;
-  }
-
-  // 檢查 EmailJS 是否設定
-  if(EMAILJS_CONFIG.publicKey==='YOUR_PUBLIC_KEY'){
-    // 未設定 EmailJS 時，顯示備用方案（直接顯示提示）
-    msgEl.style.color='var(--warm2)';
-    msgEl.textContent='EmailJS 尚未設定，使用備用方案...';
-    setTimeout(()=>{
-      // 直接跳到重設密碼（只需知道 Email 即可，適合小規模內部使用）
-      _resetCode='BYPASS';
-      _resetEmail=emailInput;
-      document.getElementById('forgot-sent-info').innerHTML=
-        '⚠️ EmailJS 尚未設定。<br>因為你已通過 Email 驗證，可直接輸入新密碼重設。<br><small style="color:var(--text3)">（設定 EmailJS 後可收到驗證碼信件）</small>';
-      document.getElementById('forgot-code').parentElement.style.display='none';
-      document.querySelectorAll('.forgot-step').forEach(s=>s.classList.remove('active'));
-      document.getElementById('forgot-step2').classList.add('active');
-    },1000);
-    return;
-  }
-
-  // 生成 6 位驗證碼
-  _resetCode=String(Math.floor(100000+Math.random()*900000));
-  _resetEmail=emailInput;
-  _resetExpiry=Date.now()+600000; // 10 分鐘有效
-
   msgEl.style.color='var(--text3)';
-  msgEl.textContent='寄送中...';
-
-  try{
-    // 初始化 EmailJS
-    emailjs.init({publicKey: EMAILJS_CONFIG.publicKey});
-
-    await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, {
-      to_email: emailInput,
-      reset_code: _resetCode,
-      admin_email: emailInput,
-      expiry_time: '10 分鐘',
-    });
-
-    document.getElementById('forgot-sent-info').innerHTML=
-      `✅ 驗證碼已寄送到 <b>${emailInput}</b><br>請查看信箱，驗證碼 10 分鐘內有效。`;
-    document.getElementById('forgot-code').parentElement.style.display='block';
-    document.querySelectorAll('.forgot-step').forEach(s=>s.classList.remove('active'));
-    document.getElementById('forgot-step2').classList.add('active');
-  }catch(e){
+  msgEl.textContent='正在发送安全重设链接…';
+  const redirectTo=window.location.href.split('#')[0];
+  const {error}=await _sb.auth.resetPasswordForEmail(emailInput,{redirectTo:redirectTo});
+  if(error){
     msgEl.style.color='var(--red)';
-    msgEl.textContent='寄送失敗：'+e.text||e.message||'請確認 EmailJS 設定';
+    msgEl.textContent='发送失败：'+error.message;
+    return;
   }
+  msgEl.style.color='var(--green)';
+  msgEl.textContent='安全重设链接已发送，请前往邮箱继续。';
 }
 
-function confirmReset(){
-  const codeInput=document.getElementById('forgot-code').value.trim();
+async function confirmReset(){
   const newpw=document.getElementById('forgot-newpw').value;
   const confirmpw=document.getElementById('forgot-confirmpw').value;
   const msgEl=document.getElementById('forgot-msg2');
-
-  // 驗證碼檢查（bypass 模式跳過）
-  if(_resetCode!=='BYPASS'){
-    if(!codeInput){msgEl.style.color='var(--red)';msgEl.textContent='請輸入驗證碼';return;}
-    if(Date.now()>_resetExpiry){msgEl.style.color='var(--red)';msgEl.textContent='驗證碼已過期，請重新發送';return;}
-    if(codeInput!==_resetCode){msgEl.style.color='var(--red)';msgEl.textContent='驗證碼錯誤，請重新輸入';return;}
-  }
-
   if(!newpw||newpw.length<6){msgEl.style.color='var(--red)';msgEl.textContent='新密碼至少需要 6 位';return;}
   if(newpw!==confirmpw){msgEl.style.color='var(--red)';msgEl.textContent='兩次輸入的密碼不一致';return;}
-
-  // 更新密碼
-  const admin=DB.get('admin')||{};
-  admin.password=newpw;
-  _cache['admin']=admin;
-  // 同步到 Supabase
-  _sb.from('admins').update({password:newpw}).eq('email', admin.email).then(function(){});
-
-  _resetCode=null; _resetEmail=null; _resetExpiry=null;
-
+  const {error}=await _sb.auth.updateUser({password:newpw});
+  if(error){msgEl.style.color='var(--red)';msgEl.textContent='更新失败：请先使用邮件中的安全链接进入本页。';return;}
   document.querySelectorAll('.forgot-step').forEach(s=>s.classList.remove('active'));
   document.getElementById('forgot-step3').classList.add('active');
   toast('✅ 密碼已重設成功','ok');
 }
 
-
-// ══ 超級管理員（緊急備用，永遠有效）══
-const SUPER_ADMIN = {
-  email: 'superadmin@esg.system',
-  password: 'ESG@Super2025!',
-  isSuperAdmin: true
-};
-
-function doLogin(){
+async function doLogin(){
   const email=document.getElementById('l-email').value.trim();
   const pw=document.getElementById('l-pw').value;
   const errEl=document.getElementById('login-sub');
-
-  // 優先驗證超級管理員（硬編碼，永遠有效）
-  if(email===SUPER_ADMIN.email && pw===SUPER_ADMIN.password){
-    adminIn=true;
-    window._isSuperAdmin=true;
-    closeLogin();
-    document.getElementById('admin-lbl').textContent='⚡ '+email+' [超級管理員]';
-    loadAdminData();
-    showScreen('screen-admin');
-    toast('⚡ 超級管理員模式登入','info');
+  if(!email||!pw){
+    errEl.textContent='请输入账号与密码';
+    errEl.style.color='var(--red)';
     return;
   }
-
-  // 一般管理員驗證（從 Supabase 讀取）
-  window._isSuperAdmin=false;
-  const admin=DB.get('admin')||{email:'admin@admin.com',password:'admin1234'};
-  if(email!==admin.email||pw!==admin.password){
+  errEl.textContent='正在安全验证…';
+  errEl.style.color='var(--text3)';
+  const {data,error}=await _sb.auth.signInWithPassword({email:email,password:pw});
+  if(error||!data.user){
     toast('账号或密码错误','err');
     errEl.textContent='账号或密码错误，请重试';
     errEl.style.color='var(--red)';
     return;
   }
   adminIn=true;closeLogin();
-  document.getElementById('admin-lbl').textContent=email;
+  document.getElementById('admin-lbl').textContent=data.user.email||email;
   loadAdminData();showScreen('screen-admin');
 }
-function adminLogout(){adminIn=false;showScreen('screen-landing');}
-function saveApiKey(){
-  const input=document.getElementById('s-apikey');
-  const raw=input.value||'';
-  // 逐字符清理：去除所有不可見字符（空格、換行、BOM等）
-  let k='';
-  for(let i=0;i<raw.length;i++){
-    const cc=raw.charCodeAt(i);
-    if(cc>32&&cc!==65279&&cc!==12288)k+=raw[i];
-  }
-  const statusEl=document.getElementById('apikey-status');
-  if(!k){
-    // 欄位空白：若已有儲存的 Key 則提示，否則警告
-    const existing=DB.get('apikey')||'';
-    if(existing){
-      toast('API Key 已设定，如需更换请粘贴新 Key 后保存','info');
-    } else {
-      toast('请粘贴 DeepSeek API Key','err');
-    }
-    return;
-  }
-  if(!k.startsWith('sk-')||k.length<20){
-    statusEl.textContent='❌ 格式有误（开头：'+k.slice(0,10)+'），DeepSeek Key 应以 sk- 开头完整 Key';
-    statusEl.style.color='var(--red)';
-    input.value='';
-    input.focus();
-    return;
-  }
-  _cache['apikey']=k;
-  _sb.from('settings').upsert({key:'apikey', value: JSON.stringify(k)}, {onConflict:'key'}).then(function(){});
-  // 清空輸入欄，顯示遮罩預覽（前8碼 + *** + 後4碼）
-  input.value='';
-  const preview=k.slice(0,8)+'•••••••••'+k.slice(-4);
-  input.placeholder='已设定：'+preview+'（如需更换请直接粘贴新 DeepSeek Key）';
-  statusEl.textContent='✅ API Key 已保存';
-  statusEl.style.color='var(--green)';
-  toast('✅ API Key 已保存');
+async function adminLogout(){
+  await _sb.auth.signOut();
+  adminIn=false;
+  showScreen('screen-landing');
 }
 
-function loadAdminData(){
-  // 先渲染快取資料（立即顯示）
+async function loadAdminData(){
+  // 先渲染快取数据（立即顯示）
   renderOverview();renderArtList();renderAdminScores();loadSettings();
-  // 背景從 Supabase 拉取最新資料後重新渲染
-  (async function(){
-    try{
-      await Promise.all([
-        DB.fetch('articles'), DB.fetch('scores'),
-        DB.fetch('admin'), DB.fetch('apikey'), DB.fetch('settings')
-      ]);
-    }catch(e){ console.warn('loadAdminData fetch error:', e); }
-    renderOverview();renderArtList();renderAdminScores();loadSettings();
-  })();
-  const admin=DB.get('admin')||{};
-  document.getElementById('s-email').value=admin.email||'';
-  // 超級管理員：顯示專區面板
-  const superCard=document.getElementById('super-admin-card');
-  if(superCard) superCard.style.display=window._isSuperAdmin?'block':'none';
+  // 背景從 Supabase 拉取最新数据後重新渲染
+  try{
+    await Promise.all([DB.fetch('articles'),DB.fetch('scores'),DB.fetch('settings')]);
+  }catch(e){console.warn('loadAdminData fetch error:',e);}
+  renderOverview();renderArtList();renderAdminScores();loadSettings();
+  const {data}=await _sb.auth.getUser();
+  const email=data&&data.user&&data.user.email?data.user.email:'';
+  document.getElementById('s-email').value=email;
   document.getElementById('s-oldpw').value='';
   document.getElementById('s-newpw').value='';
   document.getElementById('s-confirmpw').value='';
   // 更新當前帳號顯示
   const curEmail=document.getElementById('account-current-email');
-  if(curEmail) curEmail.textContent=admin.email||'--';
-  // 顯示 API Key 狀態
-  const savedKey=DB.get('apikey')||'';
-  const apikeyInput=document.getElementById('s-apikey');
-  const apikeyStatus=document.getElementById('apikey-status');
-  if(apikeyInput){
-    apikeyInput.value='';
-    apikeyInput.placeholder=savedKey
-      ?(savedKey.slice(0,8)+'•••••••••'+savedKey.slice(-4)+' （如需更换请直接粘贴新 Key）')
-      :'粘贴 DeepSeek API Key（sk-...）';
-  }
-  if(apikeyStatus){
-    apikeyStatus.textContent=savedKey?'✅ API Key 已设定':'⚠️ 尚未设定，请粘贴后保存';
-    apikeyStatus.style.color=savedKey?'var(--green)':'var(--warm2)';
-  }
+  if(curEmail) curEmail.textContent=email||'--';
 }
 function showPanel(id){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
@@ -2351,7 +2847,7 @@ function renderOverview(){
       '<div class="sc"><div class="sc-v">'+avg+'</div><div class="sc-l">平均分数</div></div>';
   }
   const rec=sc.slice(0,5);
-  document.getElementById('ov-scores').innerHTML=rec.length?`<div class="lb-row lbh"><div>排名</div><div>姓名</div><div>分数</div><div>題數/難度</div><div>限時</div><div>用时</div><div>日期</div></div>`+rec.map((s,i)=>`<div class="lb-row"><div class="lb-rank">${i+1}</div><div class="lb-name">${esc(s.name)}</div><div class="lb-score">${s.score}</div><div class="lb-time">${pad(Math.floor(s.elapsed/60))}:${pad(s.elapsed%60)}</div><div class="lb-date">${s.date}</div></div>`).join(''):'<div style="color:var(--text3);font-size:13px;padding:8px 0">尚无记录</div>';
+  document.getElementById('ov-scores').innerHTML=rec.length?`<div class="lb-row lbh"><div>排名</div><div>姓名</div><div>分数</div><div>题數/難度</div><div>限時</div><div>用时</div><div>日期</div></div>`+rec.map((s,i)=>`<div class="lb-row"><div class="lb-rank">${i+1}</div><div class="lb-name">${esc(s.name)}</div><div class="lb-score">${s.score}</div><div class="lb-time">${pad(Math.floor(s.elapsed/60))}:${pad(s.elapsed%60)}</div><div class="lb-date">${s.date}</div></div>`).join(''):'<div style="color:var(--text3);font-size:13px;padding:8px 0">尚无记录</div>';
 }
 function saveArticle(){
   var title=document.getElementById('art-title').value.trim();
@@ -2566,7 +3062,7 @@ function renderAdminScores(){
       '<div class="lb-rank">'+(i+1)+'</div>'+
       '<div class="lb-name">'+esc(s.name)+'</div>'+
       '<div class="lb-score">'+s.score+'</div>'+
-      '<div style="font-size:11px;color:var(--text2);text-align:center">'+s.total+'題 / '+diffLabel+'</div>'+
+      '<div style="font-size:11px;color:var(--text2);text-align:center">'+s.total+'题 / '+diffLabel+'</div>'+
       '<div style="font-size:11px;color:var(--text3);text-align:center">'+timeLbl+'</div>'+
       '<div class="lb-time">'+pad(Math.floor(s.elapsed/60))+':'+pad(s.elapsed%60)+'</div>'+
       '<div class="lb-date">'+s.date+'</div>'+
@@ -2610,38 +3106,42 @@ function switchAccountTab(tab){
 }
 
 // ── 修改 Email ──
-function saveEmailChange(){
+async function saveEmailChange(){
   const newEmail=document.getElementById('s-email').value.trim();
   const pw=document.getElementById('s-oldpw-email').value;
-  const admin=DB.get('admin')||{};
   if(!newEmail){toast('请输入新 Email 地址','err');return;}
   if(!pw){toast('请输入当前密码以验证身份','err');return;}
-  if(pw!==admin.password){toast('密码不正确，无法验证身份','err');return;}
   const emailReg=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if(!emailReg.test(newEmail)){toast('Email 格式不正确','err');return;}
-  if(newEmail===admin.email){toast('新 Email 与当前相同，无需修改','info');return;}
-  admin.email=newEmail;
-  DB.set('admin',admin);
-  document.getElementById('admin-lbl').textContent=newEmail;
-  document.getElementById('account-current-email').textContent=newEmail;
+  const {data:userData}=await _sb.auth.getUser();
+  const currentEmail=userData&&userData.user&&userData.user.email;
+  if(!currentEmail){toast('登录状态已失效，请重新登录','err');return;}
+  if(newEmail===currentEmail){toast('新 Email 与当前相同，无需修改','info');return;}
+  const {error:verifyError}=await _sb.auth.signInWithPassword({email:currentEmail,password:pw});
+  if(verifyError){toast('密码不正确，无法验证身份','err');return;}
+  const {error}=await _sb.auth.updateUser({email:newEmail});
+  if(error){toast('Email 更新失败：'+error.message,'err');return;}
   document.getElementById('s-oldpw-email').value='';
-  toast('✅ Email 已更新为 '+newEmail);
+  toast('✅ 验证邮件已发送，请完成确认后使用新 Email 登录','info');
 }
 
 // ── 修改密碼 ──
-function savePasswordChange(){
+async function savePasswordChange(){
   const oldpw=document.getElementById('s-oldpw').value;
   const newpw=document.getElementById('s-newpw').value;
   const confirmpw=document.getElementById('s-confirmpw').value;
-  const admin=DB.get('admin')||{};
   if(!oldpw){toast('请输入当前密码','err');return;}
-  if(oldpw!==admin.password){toast('当前密码不正确','err');return;}
   if(!newpw){toast('请输入新密码','err');return;}
   if(newpw.length<6){toast('新密码至少 6 个字符','err');return;}
   if(newpw!==confirmpw){toast('两次输入的密码不一致','err');return;}
   if(newpw===oldpw){toast('新密码不能与当前密码相同','err');return;}
-  admin.password=newpw;
-  DB.set('admin',admin);
+  const {data:userData}=await _sb.auth.getUser();
+  const currentEmail=userData&&userData.user&&userData.user.email;
+  if(!currentEmail){toast('登录状态已失效，请重新登录','err');return;}
+  const {error:verifyError}=await _sb.auth.signInWithPassword({email:currentEmail,password:oldpw});
+  if(verifyError){toast('当前密码不正确','err');return;}
+  const {error}=await _sb.auth.updateUser({password:newpw});
+  if(error){toast('密码更新失败：'+error.message,'err');return;}
   document.getElementById('s-oldpw').value='';
   document.getElementById('s-newpw').value='';
   document.getElementById('s-confirmpw').value='';
@@ -2687,40 +3187,6 @@ function checkPwMatch(){
   else{msg.textContent='✗ 密码不一致';msg.style.color='var(--red)';}
 }
 
-// 保留舊的 saveSettings 相容（系統設定其他部分仍會呼叫）
-function superResetAdmin(){
-  if(!window._isSuperAdmin){toast('權限不足','err');return;}
-  const newEmail=document.getElementById('super-new-email').value.trim();
-  const newPw=document.getElementById('super-new-pw').value;
-  const confirmPw=document.getElementById('super-confirm-pw').value;
-  const msgEl=document.getElementById('super-reset-msg');
-
-  if(!newEmail){msgEl.style.color='var(--red)';msgEl.textContent='請輸入新 Email';return;}
-  const emailReg=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if(!emailReg.test(newEmail)){msgEl.style.color='var(--red)';msgEl.textContent='Email 格式不正確';return;}
-  if(!newPw||newPw.length<6){msgEl.style.color='var(--red)';msgEl.textContent='密碼至少 6 位';return;}
-  if(newPw!==confirmPw){msgEl.style.color='var(--red)';msgEl.textContent='兩次密碼不一致';return;}
-
-  // 強制更新 管理員帳密
-  const newAdmin={email:newEmail,password:newPw};
-  _cache['admin']=newAdmin;
-  // 同步到 Supabase
-  _sb.from('admins').update({email:newEmail, password:newPw}).eq('email', newEmail)
-    .then(function(){})
-    .catch(function(){
-      // 如果 email 不存在就 insert
-      _sb.from('admins').insert([{email:newEmail, password:newPw}]).then(function(){});
-    });
-
-  msgEl.style.color='var(--green)';
-  msgEl.textContent='✅ 管理員帳密已重設為：'+newEmail+' / '+newPw;
-  document.getElementById('super-new-email').value='';
-  document.getElementById('super-new-pw').value='';
-  document.getElementById('super-confirm-pw').value='';
-  document.getElementById('s-email').value=newEmail;
-  toast('✅ 管理員帳密已重設，請記錄新帳密','ok');
-}
-
 function saveSettings(){
   // 已拆分為 saveEmailChange 和 savePasswordChange
   // 此函數保留為空以防止報錯
@@ -2758,8 +3224,6 @@ function openConfirm(title,desc,cb){
 }
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function pad(n){return String(n).padStart(2,'0');}
-
-initDB().catch(e=>console.error("initDB failed:",e));
 
 initDB().catch(function(e){ console.error('initDB failed:', e); });
 </script>
