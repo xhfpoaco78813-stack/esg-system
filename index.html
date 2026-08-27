@@ -329,6 +329,22 @@ body::before{content:'';position:fixed;inset:0;
 .rev-q{font-size:12px;color:var(--text2);margin-bottom:6px;line-height:1.6}
 .rev-a{font-size:11px;line-height:1.7}
 .rev-explain{margin-top:7px;padding:7px 11px;background:var(--bg4);border-radius:5px;font-size:11px;color:var(--text3);line-height:1.6}
+.ai-insight-section{padding:24px 44px;border-top:1.5px solid var(--border);background:linear-gradient(180deg,rgba(106,166,92,.04),transparent)}
+.ai-insight-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:12px}
+.ai-insight-title{font-size:10px;font-weight:700;letter-spacing:2px;color:var(--forest);text-transform:uppercase}
+.ai-insight-desc{font-size:11px;color:var(--text3);line-height:1.6;margin-top:6px}
+.ai-insight-output{margin-top:13px;padding:14px 16px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);font-size:12px;color:var(--text2);line-height:1.75}
+.ai-insight-output:empty{display:none}
+.ai-insight-output h4{font-size:12px;color:var(--forest);margin:12px 0 4px}
+.ai-insight-output h4:first-child{margin-top:0}
+.ai-insight-output ul{padding-left:20px;margin:5px 0}
+.ai-insight-output .ai-note{margin-top:10px;padding-top:9px;border-top:1px solid var(--border);font-size:10px;color:var(--text3)}
+.rev-ai-actions{margin-top:9px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.rev-ai-output{margin-top:9px;padding:12px;background:rgba(106,166,92,.07);border:1px solid rgba(106,166,92,.22);border-radius:7px;font-size:11px;color:var(--text2);line-height:1.7}
+.rev-ai-output:empty{display:none}
+.ai-loading{color:var(--blue)}
+.btn-ai{padding:7px 11px;font-size:10px;border:1px solid rgba(106,166,92,.35);color:var(--forest);background:rgba(106,166,92,.08)}
+.btn-ai:disabled{opacity:.55;cursor:wait}
 .res-actions{padding:22px 44px;border-top:1.5px solid var(--border);display:flex;gap:10px;flex-wrap:wrap}
 
 /* ════ LEADERBOARD ════ */
@@ -454,7 +470,8 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
 
 /* RESPONSIVE */
 @media(max-width:700px){
-  .setup-card,.res-hd,.res-actions,.review-sec,.rank-section,.pct-section,.growth-section{padding-left:18px;padding-right:18px}
+  .setup-card,.res-hd,.res-actions,.review-sec,.rank-section,.pct-section,.growth-section,.ai-insight-section{padding-left:18px;padding-right:18px}
+  .ai-insight-head{display:block}.ai-insight-head .btn{margin-top:12px;width:100%}
   .admin-sidebar{display:none}.admin-content{padding:16px 13px}
   .quiz-hd{padding:10px 14px}.quiz-body{padding:22px 12px}.quiz-nav{padding:13px}
   .res-stats{grid-template-columns:repeat(2,1fr)}
@@ -568,6 +585,7 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
     <div class="land-admin">
       <button class="btn btn-ghost btn-sm" onclick="showAdminLogin()">⚙️ 管理后台</button>
       <button class="btn btn-ghost btn-sm" onclick="showLeaderboard()">🏆 排行榜</button>
+      <button class="btn btn-ghost btn-sm" onclick="openFeedback()">💬 意见反馈</button>
     </div>
   </div>
 </div>
@@ -577,7 +595,7 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
 
 <div id="screen-official-test-setup" class="screen">
   <div class="official-panel">
-    <div class="official-hero"><h2>📝 中国官方知识技能测验</h2><p>从 120 道本地评审题中组卷。作答过程中不显示答案，提交后统一查看成绩、正确答案与解析。</p><div style="margin-top:10px"><span class="official-stat">L1 18题（15%）</span> <span class="official-stat">L2 42题（35%）</span> <span class="official-stat">L3 42题（35%）</span> <span class="official-stat">L4 18题（15%）</span></div><div class="review-banner">当前为本地模拟：不会写入线上成绩或正式题库。</div></div>
+    <div class="official-hero"><h2>📝 中国官方知识技能测验</h2><p>从 120 道评审题中组卷。作答过程中不显示答案，提交后统一查看成绩、正确答案与解析。</p><div style="margin-top:10px"><span class="official-stat">L1 18题（15%）</span> <span class="official-stat">L2 42题（35%）</span> <span class="official-stat">L3 42题（35%）</span> <span class="official-stat">L4 18题（15%）</span></div><div class="review-banner">正式测验会保存匿名答题纪录；题目答案与依据仍由官方知识点控制。</div></div>
     <div class="official-toolbar">
       <div class="official-field"><label>知识模块</label><select id="official-test-module"></select></div>
       <div class="official-field"><label>题目数量</label><select id="official-test-count"><option value="10">10题</option><option value="20" selected>20题</option><option value="30">30题</option></select></div>
@@ -735,11 +753,22 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
     <div class="rank-section"><div class="rank-card" id="rank-card"><div class="rank-icon" id="rank-icon">🌿</div><div class="rank-title" id="rank-title">--</div><div class="rank-desc" id="rank-desc"></div><div class="rank-next" id="rank-next" style="display:none"></div></div></div>
     <div class="pct-section" id="pct-section"><div class="pct-label" id="pct-label">超越了<br><b style="color:var(--forest);font-size:18px" id="pct-val">--</b> 的测验者</div><div class="pct-bar-wrap"><div class="pct-bar-fill" id="pct-bar" style="width:0%"></div></div></div>
     <div class="growth-section" id="growth-section"><div class="growth-title">📈 我的成长轨迹</div><div id="growth-area"></div></div>
+    <div class="ai-insight-section" id="ai-weakness-section">
+      <div class="ai-insight-head">
+        <div><div class="ai-insight-title">🤖 AI 个人弱点报告</div><div class="ai-insight-desc">DeepSeek 仅依据本次真实作答与官方答案依据分析，不会修改分数或正确答案。</div></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-secondary" id="btn-ai-weakness-preview" onclick="showAiWeaknessPreview(this)">查看示例报告</button>
+          <button class="btn btn-ai" id="btn-ai-weakness" onclick="requestAiWeaknessReport(this)">生成弱点报告</button>
+        </div>
+      </div>
+      <div class="ai-insight-output" id="ai-weakness-output"></div>
+    </div>
     <div class="review-sec" id="review-sec" style="display:none"><div class="review-ttl">📋 答题解析</div><div id="review-list"></div></div>
+    <div id="attempt-save-status" style="padding:0 32px 16px;font-size:12px;color:var(--text3)"></div>
     <div class="res-actions">
       <button class="btn btn-primary" onclick="showScreen('screen-landing')">返回首页</button>
       <button class="btn btn-secondary" onclick="showLeaderboard()">🏆 排行榜</button>
-      <button class="btn btn-warm" onclick="showSetup('quiz')">再次测验</button>
+      <button class="btn btn-warm" onclick="restartCurrentAssessment()">再次测验</button>
     </div>
   </div>
 </div>
@@ -775,6 +804,8 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
       <div class="sb-item" id="sb-articles" onclick="showPanel('panel-articles')">📄 文章管理</div>
       <div class="sb-div"></div>
       <div class="sb-item" id="sb-scores" onclick="showPanel('panel-scores')">📈 成绩记录</div>
+      <div class="sb-item" id="sb-attempts" onclick="showPanel('panel-attempts')">🧾 正式答题纪录</div>
+      <div class="sb-item" id="sb-feedback" onclick="showPanel('panel-feedback')">💬 意见反馈</div>
       <div class="sb-item" id="sb-settings" onclick="showPanel('panel-settings')">🔧 系统设定</div>
     </div>
     <div class="admin-content">
@@ -833,6 +864,18 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
           <div id="admin-scores"></div>
         </div>
         <div style="margin-top:12px"><button class="btn btn-danger btn-sm" onclick="confirmClearScores()">清空所有记录</button></div>
+      </div>
+
+      <div class="panel" id="panel-attempts">
+        <div class="panel-title">正式答题纪录</div>
+        <div class="panel-desc">测验模式与学习练习的云端答题纪录；不储存使用者邮箱。</div>
+        <div class="card" style="padding:0;overflow:auto"><div id="admin-attempts"></div></div>
+      </div>
+
+      <div class="panel" id="panel-feedback">
+        <div class="panel-title">意见反馈</div>
+        <div class="panel-desc">使用者直接提交至后台，无需开启个人邮箱。</div>
+        <div class="card"><div id="admin-feedback"></div></div>
       </div>
 
       <div class="panel" id="panel-settings">
@@ -931,6 +974,15 @@ body.hi-contrast{--bg:#000!important;--bg2:#0a0f08!important;--bg3:#101a0e!impor
 <div class="modal-overlay" id="modal-submit"><div class="modal"><div class="modal-title">确认交卷</div><div class="modal-desc" id="modal-submit-desc">确定要提交吗？</div><div class="modal-actions"><button class="btn btn-secondary" id="btn-modal-continue">继续作答</button><button class="btn btn-primary" id="btn-modal-confirm-submit">确认交卷</button></div></div></div>
 <div class="modal-overlay" id="modal-confirm"><div class="modal"><div class="modal-title" id="mc-title">确认操作</div><div class="modal-desc" id="mc-desc">此操作无法复原。</div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('modal-confirm')">取消</button><button class="btn btn-danger" id="mc-ok">确认</button></div></div></div>
 <div class="modal-overlay" id="modal-timeout"><div class="modal"><div class="modal-title">⏰ 时间到！</div><div class="modal-desc">测验时间已结束。</div><div class="modal-actions"><button class="btn btn-primary" id="btn-modal-timeout-ok">查看结果</button></div></div></div>
+<div class="modal-overlay" id="modal-feedback"><div class="modal">
+  <div class="modal-title">💬 意见反馈</div>
+  <div class="modal-desc">反馈将直接储存于管理后台，不会开启您的邮件软件。请勿填写密码、身份证号等敏感信息。</div>
+  <div class="form-group"><label class="form-label">反馈类型</label><select class="select-input" id="feedback-category" style="width:100%"><option value="question">题目问题</option><option value="feature">功能建议</option><option value="operation">操作问题</option><option value="other">其他</option></select></div>
+  <div class="form-group"><label class="form-label">反馈内容</label><textarea class="textarea-input" id="feedback-message" maxlength="2000" placeholder="请具体说明遇到的问题或建议（至少 10 个字）" style="min-height:130px"></textarea></div>
+  <div class="form-group"><label class="form-label">联系方式（选填）</label><input class="form-input" id="feedback-contact" maxlength="200" placeholder="如需回复，可留下邮箱或其他联系方式"></div>
+  <input id="feedback-website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
+  <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('modal-feedback')">取消</button><button class="btn btn-primary" id="btn-feedback-submit" onclick="submitFeedback(this)">提交反馈</button></div>
+</div></div>
 <div id="login-overlay"><div class="login-box"><div class="login-title">管理者登录</div><div class="login-sub" id="login-sub">请输入管理者账号密码</div><div class="form-group"><label class="form-label">Email</label><input class="form-input" id="l-email" type="email" placeholder="admin@admin.com" onkeydown="if(event.key==='Enter')doLogin()"></div><div class="form-group"><label class="form-label">密码</label><input class="form-input" id="l-pw" type="password" placeholder="输入密码" onkeydown="if(event.key==='Enter')doLogin()"></div><div style="display:flex;gap:9px;margin-top:4px"><button class="btn btn-primary" style="flex:1" onclick="doLogin()">登录</button><button class="btn btn-secondary" onclick="closeLogin()">取消</button></div><div style="text-align:center;margin-top:12px"><button class="btn btn-ghost btn-sm" onclick="openForgot()" style="font-size:12px;color:var(--text3)">忘記密碼？</button></div></div>
 
 <!-- ── 忘記密碼 Overlay ── -->
@@ -1198,6 +1250,35 @@ function showScreen(id){
   window.scrollTo(0,0);
 }
 function showLeaderboard(){renderLB();showScreen('screen-leaderboard');}
+function openFeedback(){
+  document.getElementById('feedback-category').value='question';
+  document.getElementById('feedback-message').value='';
+  document.getElementById('feedback-contact').value='';
+  document.getElementById('feedback-website').value='';
+  document.getElementById('modal-feedback').classList.add('open');
+}
+async function submitFeedback(button){
+  const category=document.getElementById('feedback-category').value;
+  const message=document.getElementById('feedback-message').value.trim();
+  const contact=document.getElementById('feedback-contact').value.trim();
+  const honeypot=document.getElementById('feedback-website').value.trim();
+  if(honeypot)return;
+  if(message.length<10){toast('请至少填写 10 个字的具体反馈','err');return;}
+  const lastSubmit=Number(localStorage.getItem('esg_feedback_last_submit')||0);
+  if(Date.now()-lastSubmit<30000){toast('请稍候 30 秒再提交下一则反馈','info');return;}
+  button.disabled=true;button.textContent='提交中…';
+  try{
+    const {error}=await _sb.from('feedback').insert([{
+      category:category,message:message,contact:contact||null,
+      page_url:String(location.href).slice(0,1000),status:'new'
+    }]);
+    if(error)throw error;
+    localStorage.setItem('esg_feedback_last_submit',String(Date.now()));
+    closeModal('modal-feedback');toast('感谢反馈，内容已直接送达管理后台','ok');
+  }catch(error){
+    toast('反馈提交失败：'+error.message+'。请确认已执行反馈 migration。','err');
+  }finally{button.disabled=false;button.textContent='提交反馈';}
+}
 
 document.addEventListener('click',e=>{
   const b=e.target.closest('.opt-btn[data-g]');
@@ -1623,6 +1704,7 @@ const OFFICIAL_QUESTION_ROWS=[{"question_id":"CNQ001","knowledge_id":"KP-CN-ESG-
 const OFFICIAL_SOURCE_MAP=new Map(OFFICIAL_SOURCES.map(function(s){return [s.source_id,s];}));
 const OFFICIAL_KP_MAP=new Map(OFFICIAL_KNOWLEDGE_POINTS.map(function(k){return [k.knowledge_id,k];}));
 let activeLearningKnowledgeId=null;
+let LAST_RESULT_RECORD=null;
 
 function officialModules(){return Array.from(new Set(OFFICIAL_KNOWLEDGE_POINTS.map(function(k){return k.module;})));}
 function fillOfficialModuleSelects(){
@@ -1666,6 +1748,13 @@ function startKnowledgePractice(id){
   var rows=shuffleOfficial(OFFICIAL_QUESTION_ROWS.filter(function(q){return q.knowledge_id===id;})).slice(0,5); var k=OFFICIAL_KP_MAP.get(id);
   beginOfficialQuiz(rows,'official-learning','学习练习',0,k&&k.difficulty||'mixed');
 }
+function restartCurrentAssessment(){
+  if(QZ&&QZ.mode==='official-learning'){
+    var knowledgeId=QZ.qs&&QZ.qs[0]&&QZ.qs[0].knowledgeId;
+    if(knowledgeId){startKnowledgePractice(knowledgeId);return;}
+  }
+  showOfficialTestSetup();
+}
 const QUESTION_TYPE_LABELS={
   single_choice:'单选题',
   multiple_choice:'多选题',
@@ -1677,8 +1766,16 @@ const QUESTION_TYPE_LABELS={
   comprehensive_case:'综合案例'
 };
 
+function balancedQuestionOptions(row){
+  const source=Array.isArray(row.options)?row.options:[];
+  if(source.length<2)return source.slice();
+  const numeric=parseInt(String(row.question_id||'').replace(/\D/g,''),10)||1;
+  const offset=(numeric-1)%source.length;
+  return source.map(function(_,index){return source[(index+offset)%source.length];});
+}
 function mapQuestionBankRow(row){
-  const options=Array.isArray(row.options)?row.options:[];
+  // 题库的正确答案仍以原始 option key 为依据，仅稳定轮换显示位置，避免答案位置形成规律。
+  const options=balancedQuestionOptions(row);
   const optionKeys=options.map(function(option){return option.key;});
   const correct=(row.correct_answers||[]).map(function(key){return optionKeys.indexOf(key);}).filter(function(index){return index>=0;});
   const levelSkill={L1:'基础认知',L2:'实务应用',L3:'分析决策',L4:'综合实战'}[row.difficulty]||'实务应用';
@@ -2201,6 +2298,7 @@ function safeParseJSON(raw){
 // ── DeepSeek API（OpenAI 相容格式）──
 // ══ Vercel API 網址（部署後如不同請更新）══
 const PROXY_URL = 'https://esg-proxy.xhfpoaco78813.workers.dev';
+const AI_INSIGHT_API_URL = 'https://esg-deepseek-question-drafts.xhfpoaco78813.workers.dev';
 
 async function callClaude(messages,_apiKey,maxTokens=2000){
   // API Key 由 Vercel 保管，前端不需要 Key
@@ -2429,12 +2527,11 @@ const ESG_RANKS = [
   {min:0,  icon:'💡', title:'覺醒起點',     desc:'永續之旅正在開始，每一次學習都是承諾', next:'再提升 {n} 分即可晉升 ESG 探索者 🌱'},
 ];
 
-async function recordPrototypeAttempt(rec){
-  if(!QZ||QZ.mode!=='prototype') return;
-  if(SIMULATION_MODE){
-    console.info('Simulation attempt is local only.',{score:rec.score,total:rec.total,correct:rec.correct});
-    return;
-  }
+async function recordQuizAttempt(rec){
+  if(!QZ)return false;
+  const modeMap={prototype:'prototype','official-learning':'practice','official-test':'assessment'};
+  const storedMode=modeMap[QZ.mode];
+  if(!storedMode)return false;
   const answers={};
   const difficultySummary={};
   const weakKnowledge={};
@@ -2450,8 +2547,14 @@ async function recordPrototypeAttempt(rec){
       weakKnowledge[q.knowledgeId]=(weakKnowledge[q.knowledgeId]||0)+1;
     }
   });
+  let userId=null;
+  try{
+    const authResult=await _sb.auth.getUser();
+    userId=authResult&&authResult.data&&authResult.data.user?authResult.data.user.id:null;
+  }catch(ignore){}
   const {error}=await _sb.from('quiz_attempts').insert([{
-    mode:'prototype',
+    user_id:userId,
+    mode:storedMode,
     question_ids:QZ.qs.map(function(q){return q.id;}),
     answers:answers,
     total_questions:rec.total,
@@ -2462,12 +2565,19 @@ async function recordPrototypeAttempt(rec){
     weakness_summary:{incorrect_by_knowledge_id:weakKnowledge},
     started_at:new Date(QZ.start).toISOString(),
     completed_at:new Date().toISOString(),
-    metadata:{prototype:'BETA02',source:'question_bank',adaptive_learning:false}
+    metadata:{
+      tester_name:rec.name,
+      client_mode:QZ.mode,
+      source:'china_official_question_bank',
+      question_bank_version:'CN-OFFICIAL-V3',
+      adaptive_learning:false
+    }
   }]);
   if(error) throw error;
+  return true;
 }
 
-function submitQuiz(){
+async function submitQuiz(){
   try{
   closeModal('modal-submit');
   clearInterval(QZ.timerRef);
@@ -2501,7 +2611,7 @@ function submitQuiz(){
     date:new Date().toLocaleDateString('zh-TW'),
     ts:Date.now()
   };
-  // 正式测验成绩按既有规则处理。
+  // 旧版即时出题仍沿用排行榜；正式题库统一写入 quiz_attempts。
   if(QZ.mode==='instant') (async function(){
     try{
       await _sb.from('scores').insert([{
@@ -2516,12 +2626,23 @@ function submitQuiz(){
     }catch(e){ console.warn('score insert error:', e.message); }
   })();
   // 同时更新本地缓存。
-  if(QZ.mode==='instant'){
+  if(QZ.mode==='instant'||QZ.mode==='official-test'){
     var scores=_cache['scores']||[];
     scores.push(rec);
     _cache['scores']=scores.sort(function(a,b){return b.score-a.score||a.elapsed-b.elapsed;});
   }
+  if(['prototype','official-learning','official-test'].includes(QZ.mode)){
+    try{
+      rec.attemptSaved=await recordQuizAttempt(rec);
+    }catch(saveError){
+      rec.attemptSaved=false;
+      rec.attemptSaveError=saveError.message||String(saveError);
+      console.warn('quiz_attempts insert error:',saveError);
+    }
+  }
   showResult(rec);
+  if(rec.attemptSaved)toast('答题纪录已安全保存','ok');
+  else if(rec.attemptSaveError)toast('成绩已显示，但云端纪录保存失败：'+rec.attemptSaveError,'err');
   }catch(err){
     console.error('submitQuiz error:', err);
     toast('交卷失敗：'+err.message,'err');
@@ -2564,8 +2685,156 @@ function startCountdown(topic,cb){
 // ══════════════════════════════════════════
 //  RESULT
 // ══════════════════════════════════════════
+function aiAnswerLabels(q,indexes){
+  var labels=q.type==='truefalse'?['T（正确）','F（错误）']:
+    (q.choices||[]).map(function(choice,ci){return String.fromCharCode(65+ci)+'. '+choice;});
+  return (indexes||[]).map(function(index){return labels[index]||String(index);});
+}
+
+function aiQuestionContext(q,i){
+  var kp=OFFICIAL_KP_MAP.get(q.knowledgeId)||{};
+  var source=OFFICIAL_SOURCE_MAP.get(q.sourceId)||{};
+  return {
+    question_id:q.id||('result-question-'+(i+1)),
+    question_text:q.text||'',
+    question_type:q.questionType||q.kind||q.type||'',
+    difficulty:q.level||'',
+    options:(q.choices||[]).map(function(choice,ci){return String.fromCharCode(65+ci)+'. '+choice;}),
+    selected_answers:aiAnswerLabels(q,QZ.ans[i]||[]),
+    correct_answers:aiAnswerLabels(q,q.correct||[]),
+    knowledge_id:q.knowledgeId||'',
+    knowledge_title:q.knowledgeTitle||kp.title||'',
+    knowledge_definition:kp.practical_definition||'',
+    common_mistake:kp.common_mistake||'',
+    source_id:q.sourceId||kp.source_id||'',
+    source_title:source.title||'',
+    source_organization:source.organization||'',
+    answer_basis:q.answerBasis||kp.answer_basis||'',
+    approved_explanation:q.explanation||''
+  };
+}
+
+async function aiInsightRequest(path,payload){
+  if(location.protocol==='file:') throw new Error('AI 功能需从线上网址或本地 http://127.0.0.1 开启，不能在 file:// 本地文件模式调用。');
+  var controller=new AbortController();
+  var timeout=setTimeout(function(){controller.abort();},45000);
+  try{
+    var response=await fetch(AI_INSIGHT_API_URL+path,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload),signal:controller.signal
+    });
+    var result=await response.json().catch(function(){return {};});
+    if(!response.ok){
+      if(response.status===429) throw new Error('请求较频繁，请稍后再试。');
+      throw new Error(result.message||result.error||('服务返回 '+response.status));
+    }
+    return result.data||{};
+  }catch(error){
+    if(error.name==='AbortError') throw new Error('AI 分析等待超时，请稍后重试。');
+    if(error instanceof TypeError) throw new Error('无法连接 AI 分析服务，请确认 Worker 已部署并允许当前网站来源。');
+    throw error;
+  }finally{clearTimeout(timeout);}
+}
+
+function renderAiWrongAnalysis(data){
+  var comparison=Array.isArray(data.option_comparison)?data.option_comparison:[];
+  return '<h4>判断重点</h4><div>'+esc(data.summary||'暂无摘要')+'</div>'+ 
+    '<h4>为什么会错</h4><div>'+esc(data.why_wrong||'未提供')+'</div>'+ 
+    (comparison.length?'<h4>选项对比</h4><ul>'+comparison.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul>':'')+
+    '<h4>知识缺口</h4><div>'+esc(data.knowledge_gap||'未提供')+'</div>'+ 
+    '<h4>工作场景</h4><div>'+esc(data.workplace_example||'未提供')+'</div>'+ 
+    '<h4>下一步</h4><div>'+esc(data.next_step||'未提供')+'</div>'+ 
+    '<div class="ai-note">答案依据：'+esc(data.basis_note||'以本题标注的官方答案依据为准')+' · AI 未修改成绩或答案</div>';
+}
+
+async function requestAiWrongAnalysis(index,button){
+  var q=QZ&&QZ.qs&&QZ.qs[index];
+  var output=document.getElementById('ai-wrong-output-'+index);
+  if(!q||!output)return;
+  if(!q.knowledgeId||!q.sourceId||!q.answerBasis){toast('该题缺少可追溯的知识点或来源，暂不调用 AI','err');return;}
+  button.disabled=true;output.innerHTML='<span class="ai-loading">DeepSeek 正在依据官方知识点分析…</span>';
+  try{output.innerHTML=renderAiWrongAnalysis(await aiInsightRequest('/v1/insights/wrong-answer',{question:aiQuestionContext(q,index)}));}
+  catch(error){output.innerHTML='<span style="color:var(--red)">分析失败：'+esc(error.message)+'</span>';}
+  finally{button.disabled=false;button.textContent='重新分析';}
+}
+
+function renderAiWeaknessReport(data){
+  var strengths=Array.isArray(data.strengths)?data.strengths:[];
+  var weaknesses=Array.isArray(data.weaknesses)?data.weaknesses:[];
+  var difficulty=Array.isArray(data.difficulty_observations)?data.difficulty_observations:[];
+  var types=Array.isArray(data.question_type_observations)?data.question_type_observations:[];
+  var plan=Array.isArray(data.study_plan)?data.study_plan:[];
+  var list=function(items){return items.length?'<ul>'+items.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul>':'<div>本次样本暂无明显证据。</div>';};
+  return '<h4>整体判断</h4><div>'+esc(data.overall||'暂无结论')+'</div>'+ 
+    '<h4>相对优势</h4>'+list(strengths)+
+    '<h4>优先弱点</h4>'+(weaknesses.length?'<ul>'+weaknesses.map(function(w){return '<li><b>'+esc(w.title||w.knowledge_id||'知识点')+'</b>：'+esc(w.evidence||'')+'；建议：'+esc(w.next_action||'继续练习')+'</li>';}).join('')+'</ul>':'<div>本次未发现足够的弱点证据。</div>')+
+    '<h4>难度表现</h4>'+list(difficulty)+
+    '<h4>题型表现</h4>'+list(types)+
+    '<h4>建议学习计划</h4>'+list(plan)+
+    '<div class="ai-note">'+esc(data.disclaimer||'本报告仅依据本次答题样本，用于学习参考，不改变成绩。')+'</div>';
+}
+
+function showAiWeaknessPreview(button){
+  var output=document.getElementById('ai-weakness-output');
+  if(!output)return;
+  var preview={
+    overall:'本次示例成绩为 70 分。基础认知较稳定，但在跨模块情境判断与排放边界应用上容易受干扰选项影响。',
+    strengths:[
+      '能够识别 ESG 三大维度及企业治理的基本职责。',
+      '对单一知识点的定义题与基础应用题掌握较稳定。'
+    ],
+    weaknesses:[
+      {title:'温室气体盘查边界',evidence:'2 道相关题中答错 2 道，容易把组织边界与运营边界混用',next_action:'复习边界判定顺序，并完成 3 道案例练习'},
+      {title:'供应链尽责管理',evidence:'情境题未能区分风险识别、纠正措施与信息披露的先后次序',next_action:'用流程图整理尽责管理步骤后再练习决策题'}
+    ],
+    difficulty_observations:[
+      'L1 正确率较高，说明基础概念已具备。',
+      'L3 情境判断正确率偏低，需要加强证据比较与决策顺序。'
+    ],
+    question_type_observations:[
+      '单选题表现稳定。',
+      '流程题与综合案例容易忽略题干中的范围及时间条件。'
+    ],
+    study_plan:[
+      '第 1 步：复习「组织边界、运营边界」官方知识卡（约 10 分钟）。',
+      '第 2 步：完成同知识点 3～5 道情境题并查看错题解析。',
+      '第 3 步：隔日再做一组 L3 流程／决策题，确认是否改善。'
+    ],
+    disclaimer:'以上为界面展示用的模拟报告，不代表你的真实能力，也不会写入成绩纪录。正式报告将依据实际作答与官方答案依据生成。'
+  };
+  output.innerHTML='<div style="display:inline-flex;margin-bottom:8px;padding:3px 8px;border-radius:999px;background:rgba(216,154,74,.12);color:var(--warm1);font-size:10px;font-weight:700">模拟示例</div>'+renderAiWeaknessReport(preview);
+  button.textContent='重新查看示例';
+}
+
+async function requestAiWeaknessReport(button){
+  var output=document.getElementById('ai-weakness-output');
+  if(!output||!QZ||!QZ.qs||!LAST_RESULT_RECORD)return;
+  var traceable=QZ.qs.every(function(q){return q.knowledgeId&&q.sourceId&&q.answerBasis;});
+  if(!traceable){toast('本次题目并非全部具备知识点与官方来源，暂不生成报告','err');return;}
+  var items=QZ.qs.slice(0,30).map(function(q,i){
+    var selected=(QZ.ans[i]||[]).slice().sort().join(',');
+    var correct=(q.correct||[]).slice().sort().join(',');
+    return {
+      knowledge_id:q.knowledgeId,knowledge_title:q.knowledgeTitle||'',module:q.module||'',
+      difficulty:q.level||'',question_type:q.questionType||q.kind||q.type||'',
+      is_correct:selected===correct,selected_answers:aiAnswerLabels(q,QZ.ans[i]||[]),
+      correct_answers:aiAnswerLabels(q,q.correct||[]),answer_basis:q.answerBasis||''
+    };
+  });
+  button.disabled=true;output.innerHTML='<span class="ai-loading">DeepSeek 正在汇总本次答题证据…</span>';
+  try{
+    var report=await aiInsightRequest('/v1/insights/weakness-report',{attempt:{
+      total:items.length,correct:LAST_RESULT_RECORD.correct,score:LAST_RESULT_RECORD.score,
+      elapsed_seconds:LAST_RESULT_RECORD.elapsed||0,items:items
+    }});
+    output.innerHTML=renderAiWeaknessReport(report);
+  }catch(error){output.innerHTML='<span style="color:var(--red)">报告生成失败：'+esc(error.message)+'</span>';}
+  finally{button.disabled=false;button.textContent='重新生成';}
+}
+
 function showResult(rec){
   try{
+    LAST_RESULT_RECORD=rec;
     var settings=DB.get('settings')||{};
     document.getElementById('res-name').textContent=rec.name;
     document.getElementById('res-score').textContent=rec.score;
@@ -2620,6 +2889,16 @@ function showResult(rec){
     renderGrowthChart(rec.name,rec.score);
 
     // 答题解析
+    var saveStatus=document.getElementById('attempt-save-status');
+    if(saveStatus){
+      if(rec.attemptSaved)saveStatus.innerHTML='✓ 本次答题纪录已保存至云端后台。';
+      else if(rec.attemptSaveError)saveStatus.innerHTML='<span style="color:var(--red)">⚠ 本次结果可正常查看，但云端纪录尚未保存。</span>';
+      else saveStatus.innerHTML='';
+    }
+    var weaknessOutput=document.getElementById('ai-weakness-output');
+    var weaknessButton=document.getElementById('btn-ai-weakness');
+    if(weaknessOutput) weaknessOutput.innerHTML='';
+    if(weaknessButton){weaknessButton.disabled=false;weaknessButton.textContent='生成弱点报告';}
     var revSec=document.getElementById('review-sec');
     if(settings.showExplain!==false){
       if(revSec) revSec.style.display='block';
@@ -2637,10 +2916,11 @@ function showResult(rec){
           var okTxt=ok?'✓ 答对':'✗ 答错';
           var wrongHtml=!ok?('<br><span style="color:var(--green)">正确答案：'+corrLabel+'</span>'):'';
           var explHtml=q.explanation?('<div class="rev-explain">📌 '+esc(q.explanation)+'</div>'):'';
+          var aiHtml=!ok&&q.knowledgeId&&q.sourceId&&q.answerBasis?('<div class="rev-ai-actions"><button class="btn btn-ai" onclick="requestAiWrongAnalysis('+i+',this)">AI 深度解析</button><span style="font-size:10px;color:var(--text3)">依据本题官方来源，不参与重新判分</span></div><div class="rev-ai-output" id="ai-wrong-output-'+i+'"></div>'):'';
           return '<div class="rev-item '+(ok?'ok':'ng')+'">'+
-            '<div class="rev-q">'+(i+1)+'. '+esc(q.text)+'</div>'+
-            '<div class="rev-a"><span style="color:'+okColor+'">'+okTxt+' — 您的答案：'+userLabel+'</span>'+wrongHtml+'</div>'+
-            explHtml+'</div>';
+            '<div class="rev-q">'+(i+1)+'. '+esc(q.text)+'</div>'+ 
+            '<div class="rev-a"><span style="color:'+okColor+'">'+okTxt+' — 您的答案：'+userLabel+'</span>'+wrongHtml+'</div>'+ 
+            explHtml+aiHtml+'</div>';
         }).join('');
       }
     } else {
@@ -2812,12 +3092,12 @@ async function adminLogout(){
 
 async function loadAdminData(){
   // 先渲染快取数据（立即顯示）
-  renderOverview();renderArtList();renderAdminScores();loadSettings();
+  renderOverview();renderArtList();renderAdminScores();renderAdminAttempts();renderAdminFeedback();loadSettings();
   // 背景從 Supabase 拉取最新数据後重新渲染
   try{
-    await Promise.all([DB.fetch('articles'),DB.fetch('scores'),DB.fetch('settings')]);
+    await Promise.all([DB.fetch('articles'),DB.fetch('scores'),DB.fetch('settings'),loadQuizAttempts(),loadFeedbackInbox()]);
   }catch(e){console.warn('loadAdminData fetch error:',e);}
-  renderOverview();renderArtList();renderAdminScores();loadSettings();
+  renderOverview();renderArtList();renderAdminScores();renderAdminAttempts();renderAdminFeedback();loadSettings();
   const {data}=await _sb.auth.getUser();
   const email=data&&data.user&&data.user.email?data.user.email:'';
   document.getElementById('s-email').value=email;
@@ -2832,10 +3112,51 @@ function showPanel(id){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
   document.getElementById(id).classList.add('on');
   document.querySelectorAll('.sb-item').forEach(s=>s.classList.remove('on'));
-  const map={'panel-overview':'sb-overview','panel-articles':'sb-articles','panel-scores':'sb-scores','panel-settings':'sb-settings'};
+  const map={'panel-overview':'sb-overview','panel-articles':'sb-articles','panel-scores':'sb-scores','panel-attempts':'sb-attempts','panel-feedback':'sb-feedback','panel-settings':'sb-settings'};
   if(map[id])document.getElementById(map[id]).classList.add('on');
   if(id==='panel-overview')renderOverview();
   if(id==='panel-scores')renderAdminScores();
+  if(id==='panel-attempts'){loadQuizAttempts().then(renderAdminAttempts);}
+  if(id==='panel-feedback'){loadFeedbackInbox().then(renderAdminFeedback);}
+}
+async function loadQuizAttempts(){
+  const {data,error}=await _sb.from('quiz_attempts').select('*').order('created_at',{ascending:false}).limit(200);
+  if(error)throw error;
+  _cache.quiz_attempts=data||[];
+  return _cache.quiz_attempts;
+}
+function renderAdminAttempts(){
+  const area=document.getElementById('admin-attempts');if(!area)return;
+  const rows=_cache.quiz_attempts||[];
+  if(!rows.length){area.innerHTML='<div class="lb-empty">尚无正式答题纪录，或尚未执行本次补充 migration。</div>';return;}
+  const modeLabel={assessment:'正式测验',practice:'学习练习',prototype:'Prototype'};
+  area.innerHTML='<div style="min-width:760px"><div class="lb-row lbh"><div>序号</div><div>测试者</div><div>模式</div><div>分数</div><div>答对/总题</div><div>用时</div><div>日期</div></div>'+rows.map(function(row,index){
+    const meta=row.metadata||{};const elapsed=Number(row.elapsed_seconds||0);
+    return '<div class="lb-row"><div class="lb-rank">'+(index+1)+'</div><div class="lb-name">'+esc(meta.tester_name||'匿名测试者')+'</div><div style="font-size:11px;text-align:center">'+esc(modeLabel[row.mode]||row.mode)+'</div><div class="lb-score">'+Math.round(Number(row.score||0))+'</div><div style="font-size:11px;text-align:center">'+Number(row.correct_count||0)+' / '+Number(row.total_questions||0)+'</div><div class="lb-time">'+pad(Math.floor(elapsed/60))+':'+pad(elapsed%60)+'</div><div class="lb-date">'+esc(formatAdminDate(row.created_at))+'</div></div>';
+  }).join('')+'</div>';
+}
+async function loadFeedbackInbox(){
+  const {data,error}=await _sb.from('feedback').select('*').order('created_at',{ascending:false}).limit(200);
+  if(error)throw error;
+  _cache.feedback=data||[];
+  return _cache.feedback;
+}
+function renderAdminFeedback(){
+  const area=document.getElementById('admin-feedback');if(!area)return;
+  const rows=_cache.feedback||[];
+  if(!rows.length){area.innerHTML='<div style="color:var(--text3);font-size:13px">尚无反馈，或尚未执行反馈表 migration。</div>';return;}
+  const category={question:'题目问题',feature:'功能建议',operation:'操作问题',other:'其他'};
+  area.innerHTML=rows.map(function(row){return '<div style="padding:14px 0;border-bottom:1px solid var(--border)"><div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><div><b>'+esc(category[row.category]||row.category)+'</b><span style="margin-left:8px;font-size:11px;color:var(--text3)">'+esc(formatAdminDate(row.created_at))+'</span></div><select class="select-input" style="width:auto;padding:5px 8px" onchange="updateFeedbackStatus(\''+esc(row.feedback_id)+'\',this.value)"><option value="new" '+(row.status==='new'?'selected':'')+'>待处理</option><option value="reviewed" '+(row.status==='reviewed'?'selected':'')+'>处理中</option><option value="resolved" '+(row.status==='resolved'?'selected':'')+'>已完成</option></select></div><div style="margin-top:8px;white-space:pre-wrap;line-height:1.7">'+esc(row.message)+'</div>'+(row.contact?'<div style="font-size:11px;color:var(--text3);margin-top:6px">联系方式：'+esc(row.contact)+'</div>':'')+'</div>';}).join('');
+}
+async function updateFeedbackStatus(id,status){
+  const {error}=await _sb.from('feedback').update({status:status}).eq('feedback_id',id);
+  if(error){toast('更新反馈状态失败：'+error.message,'err');return;}
+  const item=(_cache.feedback||[]).find(function(row){return row.feedback_id===id;});if(item)item.status=status;
+  toast('反馈状态已更新','ok');
+}
+function formatAdminDate(value){
+  if(!value)return '--';
+  try{return new Date(value).toLocaleString('zh-CN',{hour12:false});}catch(ignore){return String(value);}
 }
 function renderOverview(){
   const arts=DB.get('articles')||[],sc=DB.get('scores')||[];
