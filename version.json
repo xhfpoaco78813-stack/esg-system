@@ -1,0 +1,10 @@
+{
+  "version": "3.3.0-95-ready",
+  "built_at": "2026-09-14T00:04:37.210Z",
+  "files": {
+    "index.html": "00abe00c3b7273bc8d03b71a70b72f702f5b08da19f09857961310ead7163300",
+    "assets/styles.css": "4e0df672d217a0309505f83ec8940a3493715972a332d4fdcaef559eeddf0f54",
+    "assets/app.js": "f8e40cceed1a977e035582a9d5da946ea21b956d5dd82480e919f5afd62a612f",
+    "assets/supabase.js": "c45136a0ba5c7391646869a734db105ba607a9233fd6ec2e7e5bbab447bdc57a"
+  }
+}
