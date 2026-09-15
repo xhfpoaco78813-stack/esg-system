@@ -1,11 +1,12 @@
 {
-  "version": "3.4.0-feedback",
+  "version": "3.4.1-feedback-online",
   "built_at": "2026-09-15T00:00:00.000Z",
   "files": {
-    "index.html": "ab1d133d83f2249959e32091a5a83f10a3d6254b9300510fe9763b4e572fe410",
+    "index.html": "3ec7d9b05e49e6f58f0d352c9bdb2a1e22da6e31c69add6c826b2450e2ec5caa",
     "assets/styles.css": "e59208dd04018815002184baa346238b4ea5b531276676e70ed43e3b586eadfa",
     "assets/app.js": "f8e40cceed1a977e035582a9d5da946ea21b956d5dd82480e919f5afd62a612f",
     "assets/feedback.js": "9b804e40d123bc02b4e586528d76e752ef581077084d5a76a4d33abd247ab46a",
+    "assets/runtime-config.js": "df2034ab6f2ba3e0c4ace4e09400f0448ed9fb2b106d8ddc2d56597e751f31fd",
     "assets/supabase.js": "c45136a0ba5c7391646869a734db105ba607a9233fd6ec2e7e5bbab447bdc57a"
   }
 }
