@@ -2,6 +2,8 @@
 (() => {
   const removedViews = new Set(['sources', 'engine', 'ground', 'readiness32', 'privacy32', 'account']);
   titles.dash = ['学习总览', '查看你的学习进度、练习成果与能力诊断。'];
+  const versionLabel35 = document.querySelector('#dash .hero .k');
+  if (versionLabel35) versionLabel35.textContent = 'V3.6 账号管理版';
   const nav = el('nav');
   [...nav.querySelectorAll('button')].forEach(button => {
     const view = button.dataset.view;
@@ -12,7 +14,7 @@
   const gate = document.createElement('div');
   gate.id = 'loginGate35';
   gate.className = 'login-gate35';
-  gate.innerHTML = `<section class="login-story35"><div class="login-mark35">ESG</div><h1>ESG 学习测验系统</h1><p>以知识学习、情境练习与模拟测验，建立可持续发展及碳管理能力。</p><div class="login-points35"><span>知识学习</span><span>刷题训练</span><span>能力诊断</span><span>错题回补</span></div></section><section class="login-panel35"><div class="login-card35"><div id="loginMode35"><h2>登入系统</h2><p>请使用已建立的账号进入学习平台。</p><form id="loginForm35" class="login-form35"><label for="loginEmail35">电子邮箱</label><input class="search" id="loginEmail35" type="email" autocomplete="username" required placeholder="name@example.com"><label for="loginPassword35">密码</label><input class="search" id="loginPassword35" type="password" autocomplete="current-password" required placeholder="请输入密码"><button class="btn primary" id="loginSubmit35" type="submit">登入</button><button class="login-help35" id="forgotPassword35" type="button">忘记密码？</button></form></div><div id="recoveryMode35" hidden><h2>设定新密码</h2><p>请输入至少 12 位的新密码，完成后请重新登入。</p><form id="recoveryForm35" class="login-form35"><label for="recoveryPassword35">新密码</label><input class="search" id="recoveryPassword35" type="password" autocomplete="new-password" minlength="12" required><label for="recoveryConfirm35">确认新密码</label><input class="search" id="recoveryConfirm35" type="password" autocomplete="new-password" minlength="12" required><button class="btn primary" id="recoverySubmit35" type="submit">更新密码</button></form></div><p id="loginStatus35" class="login-status35" aria-live="polite">正在检查登入状态…</p><p class="login-foot35">账号验证与密码重设均由安全身份服务处理。</p></div></section>`;
+  gate.innerHTML = `<section class="login-story35"><div class="login-mark35">ESG</div><h1>ESG 学习测验系统</h1><p>以知识学习、情境练习与模拟测验，建立可持续发展及碳管理能力。</p><div class="login-points35"><span>知识学习</span><span>刷题训练</span><span>能力诊断</span><span>错题回补</span></div></section><section class="login-panel35"><div class="login-card35"><div id="loginMode35"><h2>登入系统</h2><form id="loginForm35" class="login-form35"><label for="loginEmail35">电子邮箱</label><input class="search" id="loginEmail35" type="email" autocomplete="username" required placeholder="name@example.com"><label for="loginPassword35">密码</label><input class="search" id="loginPassword35" type="password" autocomplete="current-password" required placeholder="请输入密码"><button class="btn primary" id="loginSubmit35" type="submit">登入</button></form></div><div id="recoveryMode35" hidden><h2>设定新密码</h2><p>请输入至少 12 位的新密码，完成后请重新登入。</p><form id="recoveryForm35" class="login-form35"><label for="recoveryPassword35">新密码</label><input class="search" id="recoveryPassword35" type="password" autocomplete="new-password" minlength="12" required><label for="recoveryConfirm35">确认新密码</label><input class="search" id="recoveryConfirm35" type="password" autocomplete="new-password" minlength="12" required><button class="btn primary" id="recoverySubmit35" type="submit">更新密码</button></form></div><p id="loginStatus35" class="login-status35" aria-live="polite">正在检查登入状态…</p></div></section>`;
   document.body.insertBefore(gate, document.body.firstChild);
 
   const top = document.querySelector('.top');
@@ -65,20 +67,6 @@
       console.error('Login failed', error);
       status('登入失败，请检查邮箱与密码。', 'error');
     } finally { button.disabled = false; }
-  });
-
-  el('forgotPassword35').addEventListener('click', async () => {
-    const email = el('loginEmail35').value.trim();
-    if (!email) return status('请先填写电子邮箱。', 'error');
-    if (!sb31) return status('登入服务暂时无法连接，请稍后再试。', 'error');
-    try {
-      const { error } = await sb31.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
-      if (error) throw error;
-      status('若此邮箱已建立账号，将收到密码重设邮件。', 'success');
-    } catch (error) {
-      console.error('Password reset request failed', error);
-      status('暂时无法送出重设请求，请稍后再试。', 'error');
-    }
   });
 
   el('recoveryForm35').addEventListener('submit', async event => {
