@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+  <title>System ESG-2｜试用体验</title>
+  <link rel="stylesheet" href="assets/trial-v1.css">
+</head>
+<body>
+  <div class="trial-app">
+    <aside class="trial-side">
+      <a class="trial-brand" href="trial.html" aria-label="System ESG-2 试用版首页"><span>ESG</span><b>System ESG-2</b><small>体验版</small></a>
+      <nav id="trialNav" aria-label="试用版功能">
+        <button class="active" data-view="overview"><span>⌂</span><b>体验首页</b></button>
+        <button data-view="learn"><span>▤</span><b>知识学习</b></button>
+        <button data-view="practice"><span>✎</span><b>情境练习</b></button>
+        <button data-view="exam"><span>◷</span><b>迷你测验</b></button>
+        <button data-view="result"><span>◎</span><b>能力结果</b></button>
+      </nav>
+      <div class="trial-limit"><strong>试用范围</strong><span>4 个知识点</span><span>10 道体验题</span><span>5 题迷你测验</span></div>
+      <a class="official-link" href="index.html">进入正式版 →</a>
+    </aside>
+
+    <main class="trial-main">
+      <header class="trial-top"><div><span class="eyebrow">SYSTEM ESG-2 · TRIAL</span><h1 id="viewTitle">体验首页</h1><p id="viewDesc">不用账号，先体验学习、练习与能力诊断。</p></div><a class="top-cta" href="index.html">正式版登入</a></header>
+
+      <section class="trial-view active" id="overview">
+        <div class="trial-hero"><div><span class="hero-tag">零门槛试用 · 无需登入</span><h2>用十分钟，体验 ESG 学习闭环</h2><p>先读一个知识点，再处理真实工作情境，最后用迷你测验查看能力结果。</p><div class="hero-actions"><button class="primary" data-go="learn">开始体验</button><button class="ghost" id="resetTrial">重置进度</button></div></div><div class="progress-orbit"><strong id="heroProgress">0%</strong><span>体验完成度</span></div></div>
+        <div class="metric-grid"><article><span>知识内容</span><strong id="learnedCount">0 / 4</strong><small>入门精选</small></article><article><span>练习进度</span><strong id="answeredCount">0 / 10</strong><small id="accuracyText">正确率 0%</small></article><article><span>迷你测验</span><strong id="examScore">—</strong><small>完成后显示</small></article></div>
+        <div class="section-head"><div><span>体验路线</span><h3>三步认识系统</h3></div></div>
+        <div class="route-grid"><button data-go="learn"><i>01</i><b>快速学习</b><span>阅读 4 个核心知识点</span></button><button data-go="practice"><i>02</i><b>情境练习</b><span>体验 7 种题型与解析</span></button><button data-go="exam"><i>03</i><b>迷你测验</b><span>5 题检验理解程度</span></button></div>
+      </section>
+
+      <section class="trial-view" id="learn">
+        <div class="section-head"><div><span>精选模块 01</span><h3>ESG 与碳管理入门</h3></div><em>正式版提供完整模块与法规路径</em></div>
+        <div class="lesson-layout"><div class="lesson-list" id="lessonList"></div><article class="lesson-detail" id="lessonDetail"><div class="empty-state">选择一个知识点开始学习。</div></article></div>
+      </section>
+
+      <section class="trial-view" id="practice">
+        <div class="section-head"><div><span>互动练习</span><h3>从情境判断到计算</h3></div><em id="practiceMeta">共 10 题</em></div>
+        <div class="question-card" id="practiceCard"></div>
+      </section>
+
+      <section class="trial-view" id="exam">
+        <div id="examIntro" class="exam-intro"><span class="exam-icon">◷</span><h2>5 题迷你测验</h2><p>题目从试用题库抽取。作答期间不显示答案，交卷后提供结果与建议。</p><div class="exam-facts"><span><b>5</b> 题</span><span><b>8</b> 分钟</span><span><b>60%</b> 通过</span></div><button class="primary" id="startExam">开始测验</button></div>
+        <div id="examRun" class="question-card" hidden></div>
+      </section>
+
+      <section class="trial-view" id="result">
+        <div class="result-hero"><span>体验能力结果</span><strong id="resultScore">尚未测验</strong><p id="resultCopy">完成迷你测验后，这里会显示你的表现与下一步建议。</p><button class="primary" data-go="exam">前往迷你测验</button></div>
+        <div class="result-grid" id="resultGrid"></div>
+        <div class="upgrade-card"><div><span>解锁完整学习路径</span><h3>正式版提供完整题库、错题回补、进度保存与管理功能</h3></div><a href="index.html">登入正式版</a></div>
+      </section>
+    </main>
+  </div>
+  <div class="trial-toast" id="trialToast" role="status" aria-live="polite"></div>
+  <script src="assets/trial-v1.js" defer></script>
+</body>
+</html>
+
