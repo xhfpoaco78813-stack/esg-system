@@ -16,10 +16,11 @@
         <button class="active" data-view="overview"><span>⌂</span><b>体验首页</b></button>
         <button data-view="learn"><span>▤</span><b>知识学习</b></button>
         <button data-view="practice"><span>✎</span><b>情境练习</b></button>
+        <button data-view="past"><span>◫</span><b>历届考题</b></button>
         <button data-view="exam"><span>◷</span><b>迷你测验</b></button>
         <button data-view="result"><span>◎</span><b>能力结果</b></button>
       </nav>
-      <div class="trial-limit"><strong>试用范围</strong><span>4 个知识点</span><span>10 道体验题</span><span>5 题迷你测验</span></div>
+      <div class="trial-limit"><strong>试用范围</strong><span>4 个知识点</span><span>10 道体验题</span><span>6 道历届考点</span><span>5 题迷你测验</span></div>
       <a class="official-link" href="index.html">进入正式版 →</a>
     </aside>
 
@@ -41,6 +42,12 @@
       <section class="trial-view" id="practice">
         <div class="section-head"><div><span>互动练习</span><h3>从情境判断到计算</h3></div><em id="practiceMeta">共 10 题</em></div>
         <div class="question-card" id="practiceCard"></div>
+      </section>
+
+      <section class="trial-view" id="past">
+        <div class="section-head"><div><span>AI 引导复习</span><h3>历届考点训练</h3></div><em>6 道高频考点重构题</em></div>
+        <div class="past-notice"><b>题库说明</b><span>依公开考纲与近年高频考点重构，用于训练命题重点与观念；不复制或冒充官方原题。</span></div>
+        <div class="past-layout"><aside class="past-list" id="pastList"></aside><article class="past-card" id="pastCard"></article></div>
       </section>
 
       <section class="trial-view" id="exam">
