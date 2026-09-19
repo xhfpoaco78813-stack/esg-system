@@ -1,17 +1,17 @@
 {
-  "version": "3.7.1-trial-assessment",
-  "built_at": "2026-09-19T23:15:30.959Z",
+  "version": "3.7.2-trial-simplified",
+  "built_at": "2026-09-19T23:53:46.339Z",
   "files": {
     "index.html": "cd804bed991aa77a7dd677bb7ea5f52de67a8cae59b3ecb965cc64e0ee6344eb",
-    "trial.html": "10bfc1c34a23777412a0e15742e046c4764d5be1545d85b274263330c85e82ab",
+    "trial.html": "1703de801431b555c2f8df281299535c235f2a2cd75eaf297449d1cd96911302",
     "assets/styles.css": "a2435d191ab06fdf06bcc9493aebe36b8178e200a29c018828d0831768099a37",
-    "assets/trial-v1.css": "5fa06680c1a4b4745b428c9a734b1edf5ecdf3fea110fe35d86360c1b15a6d0b",
+    "assets/trial-v1.css": "b9200bd3865b804f30cdbd57b6ba28bbe8f2225dbb002e85e78ffd334597c3ae",
     "assets/app.js": "f8e40cceed1a977e035582a9d5da946ea21b956d5dd82480e919f5afd62a612f",
     "assets/feedback.js": "9b804e40d123bc02b4e586528d76e752ef581077084d5a76a4d33abd247ab46a",
     "assets/simplify-v35.js": "60a8ffc7ed9b4ce8089fbc6436fd9eed9423f4c88f4320549e7067798638b7d2",
     "assets/account-admin-v36.js": "36c71df83371f738f90b70adc048eaaa92216db1c031b7cb38607c563d1ec1a4",
     "assets/past-exams-v37.js": "fa67744fc0b66bbd8b318c6ca1096ad199eac1c44f30ea2cbfd0dc2e3e39515f",
-    "assets/trial-v1.js": "961014d921cfa64b8f3279781c442fff87374dd2a1bf2fa9f53a9b6c712024f5",
+    "assets/trial-v1.js": "c36e394a1c586197e04dc8932f7f87d7d8e1f353d2e5914d1b577015a3465124",
     "assets/runtime-config.js": "df2034ab6f2ba3e0c4ace4e09400f0448ed9fb2b106d8ddc2d56597e751f31fd",
     "assets/supabase.js": "c45136a0ba5c7391646869a734db105ba607a9233fd6ec2e7e5bbab447bdc57a"
   }
