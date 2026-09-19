@@ -3,7 +3,7 @@
   const removedViews = new Set(['sources', 'engine', 'ground', 'readiness32', 'privacy32', 'account']);
   titles.dash = ['学习总览', '查看你的学习进度、练习成果与能力诊断。'];
   const versionLabel35 = document.querySelector('#dash .hero .k');
-  if (versionLabel35) versionLabel35.textContent = 'V3.6 账号管理版';
+  if (versionLabel35) versionLabel35.textContent = 'V3.7 历届考题版';
   const nav = el('nav');
   [...nav.querySelectorAll('button')].forEach(button => {
     const view = button.dataset.view;
