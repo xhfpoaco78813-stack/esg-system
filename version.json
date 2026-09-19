@@ -1,15 +1,16 @@
 {
-  "version": "3.6.2-past-exam-ai",
-  "built_at": "2026-09-19T16:03:36.685Z",
+  "version": "3.7.0-past-exams",
+  "built_at": "2026-09-19T22:56:15.802Z",
   "files": {
-    "index.html": "fa45c69be583da319c6be5098fd8b5f1bdbb888fb7fa7f129b35ff9cc9c01619",
+    "index.html": "cd804bed991aa77a7dd677bb7ea5f52de67a8cae59b3ecb965cc64e0ee6344eb",
     "trial.html": "89edd7369c75f7d068887b9067f40cb8f084555e4ba6364ee1a40ad29b84f1d8",
-    "assets/styles.css": "8040b91378c8c28e7eb59195c6762925126bb345743632b370aa84966a41481f",
+    "assets/styles.css": "a2435d191ab06fdf06bcc9493aebe36b8178e200a29c018828d0831768099a37",
     "assets/trial-v1.css": "6376c14af13a2e191fc38305a636a9b4a3223736608f1d46a2d13a5111eca213",
     "assets/app.js": "f8e40cceed1a977e035582a9d5da946ea21b956d5dd82480e919f5afd62a612f",
     "assets/feedback.js": "9b804e40d123bc02b4e586528d76e752ef581077084d5a76a4d33abd247ab46a",
-    "assets/simplify-v35.js": "e77dfbbb0df0418efb426950f96020e229ffd3845bf633f1a745c4f32e926c40",
+    "assets/simplify-v35.js": "60a8ffc7ed9b4ce8089fbc6436fd9eed9423f4c88f4320549e7067798638b7d2",
     "assets/account-admin-v36.js": "36c71df83371f738f90b70adc048eaaa92216db1c031b7cb38607c563d1ec1a4",
+    "assets/past-exams-v37.js": "fa67744fc0b66bbd8b318c6ca1096ad199eac1c44f30ea2cbfd0dc2e3e39515f",
     "assets/trial-v1.js": "ba8516e8a353ef678f25258400f1645cfbfa907aa04ed791542dc304f2f9fe25",
     "assets/runtime-config.js": "df2034ab6f2ba3e0c4ace4e09400f0448ed9fb2b106d8ddc2d56597e751f31fd",
     "assets/supabase.js": "c45136a0ba5c7391646869a734db105ba607a9233fd6ec2e7e5bbab447bdc57a"
