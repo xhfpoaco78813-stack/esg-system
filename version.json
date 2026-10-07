@@ -1,19 +1,19 @@
 {
-  "version": "3.7.2-trial-simplified",
-  "built_at": "2026-09-19T23:53:46.339Z",
+  "version": "3.8.0-mobile",
+  "built_at": "2026-10-07T10:59:25.255Z",
   "files": {
-    "index.html": "cd804bed991aa77a7dd677bb7ea5f52de67a8cae59b3ecb965cc64e0ee6344eb",
-    "trial.html": "1703de801431b555c2f8df281299535c235f2a2cd75eaf297449d1cd96911302",
-    "assets/styles.css": "a2435d191ab06fdf06bcc9493aebe36b8178e200a29c018828d0831768099a37",
-    "assets/trial-v1.css": "b9200bd3865b804f30cdbd57b6ba28bbe8f2225dbb002e85e78ffd334597c3ae",
+    "index.html": "089f53bb8ae600692367ed59124ec2a55b67ce94344affa1e592584cf5326c78",
+    "trial.html": "60ba44fae85627d073d120dbf273756fb0309e62565985a67019072b15bf7ec0",
+    "assets/styles.css": "da9d96dfe83d293d5005551a56595b34112b8be5dadd380ae5a0fafee1b000f3",
+    "assets/trial-v1.css": "3e0f0573ad967f7f805f60222ca90f391c3bb12d20e6705de3a31d5b83ae47d7",
     "assets/app.js": "f8e40cceed1a977e035582a9d5da946ea21b956d5dd82480e919f5afd62a612f",
     "assets/feedback.js": "9b804e40d123bc02b4e586528d76e752ef581077084d5a76a4d33abd247ab46a",
-    "assets/simplify-v35.js": "60a8ffc7ed9b4ce8089fbc6436fd9eed9423f4c88f4320549e7067798638b7d2",
+    "assets/simplify-v35.js": "6ab34ca8ae0da28cff74161ff8d5c13ce4a15d4988c3b3aed29cd9f5fed90dee",
     "assets/account-admin-v36.js": "36c71df83371f738f90b70adc048eaaa92216db1c031b7cb38607c563d1ec1a4",
     "assets/past-exams-v37.js": "fa67744fc0b66bbd8b318c6ca1096ad199eac1c44f30ea2cbfd0dc2e3e39515f",
     "assets/trial-v1.js": "c36e394a1c586197e04dc8932f7f87d7d8e1f353d2e5914d1b577015a3465124",
     "assets/runtime-config.js": "df2034ab6f2ba3e0c4ace4e09400f0448ed9fb2b106d8ddc2d56597e751f31fd",
-    "assets/supabase.js": "c45136a0ba5c7391646869a734db105ba607a9233fd6ec2e7e5bbab447bdc57a"
+    "assets/supabase.js": "c45136a0ba5c7391646869a734db105ba607a9233fd6ec2e7e5bbab447bdc57a",
+    "assets/mobile-v38.js": "71baa5af4e1a2efe3e9bbc0365700e16bbfc7025d00c967669c0f82e8162c380"
   }
 }
-
