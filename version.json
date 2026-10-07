@@ -1,6 +1,6 @@
 {
   "version": "3.9.0-validation",
-  "built_at": "2026-10-07T13:44:10.9584070Z",
+  "built_at": "2026-10-07T13:54:06.8533784Z",
   "files": {
     "index.html": "f4480d638a7936716d77ab550c0b8bf42bdc48db90e3197897e5e0a34b94b6a3",
     "trial.html": "3e78d02f923388ff5074e4a84e06b650fc58a4db90e723359369d712e0bd6c81",
@@ -15,7 +15,7 @@
     "assets/runtime-config.js": "df2034ab6f2ba3e0c4ace4e09400f0448ed9fb2b106d8ddc2d56597e751f31fd",
     "assets/supabase.js": "c45136a0ba5c7391646869a734db105ba607a9233fd6ec2e7e5bbab447bdc57a",
     "assets/mobile-v38.js": "71baa5af4e1a2efe3e9bbc0365700e16bbfc7025d00c967669c0f82e8162c380",
-    "assets/venture-v39.js": "a24162c67385d56030188c76fc2a956c13c0bb96e4596c1d86cf39dafed91eb1",
+    "assets/venture-v39.js": "0e663e2eeaa73065bd3442181c58f3ea9c8012baaf95ce3512fcb52a4f8ce2f4",
     "supabase/migrations/202610070001_v39_venture_validation.sql": "89c8cb9270050dcf1eb7ce9595a6137172734473c1bd37690c7ba65b2651358e"
   }
 }
