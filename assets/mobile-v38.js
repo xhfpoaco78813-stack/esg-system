@@ -66,6 +66,7 @@
   function clearExamDraft38() {
     try { localStorage.removeItem(draftKey38()); } catch {}
     $('examResume38')?.remove();
+    document.dispatchEvent(new CustomEvent('esg:exam-draft-cleared'));
   }
   function readExamDraft38() {
     try {
@@ -80,7 +81,9 @@
     if (exam.completed || (!$('examResult')?.classList.contains('hidden') && $('examRun')?.classList.contains('hidden'))) return clearExamDraft38();
     try {
       if (typeof captureExam31 === 'function') captureExam31();
-      localStorage.setItem(draftKey38(), JSON.stringify({ version:1, ids:exam.qs.map(question => question.id), i:exam.i || 0, ans:exam.ans || {}, end:exam.end, savedAt:Date.now() }));
+      const draft = { version:1, ids:exam.qs.map(question => question.id), i:exam.i || 0, ans:exam.ans || {}, end:exam.end, savedAt:Date.now() };
+      localStorage.setItem(draftKey38(), JSON.stringify(draft));
+      document.dispatchEvent(new CustomEvent('esg:exam-draft-changed', { detail:draft }));
     } catch (error) { console.warn('Exam draft save failed', error); }
   }
   function renderExamResume38() {
@@ -124,6 +127,21 @@
     await priorApplySession38(session);
     renderExamResume38();
     syncMobileNav38();
+  };
+  window.esgExamDraft38 = {
+    key:draftKey38,
+    read:readExamDraft38,
+    render:renderExamResume38,
+    clear:clearExamDraft38,
+    applyRemote(draft) {
+      if (!draft || draft.deleted) {
+        try { localStorage.removeItem(draftKey38()); } catch {}
+        $('examResume38')?.remove();
+        return;
+      }
+      try { localStorage.setItem(draftKey38(), JSON.stringify(draft)); } catch { return; }
+      renderExamResume38();
+    }
   };
   renderExamResume38();
   syncMobileNav38();
