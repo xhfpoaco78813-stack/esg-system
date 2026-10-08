@@ -11,6 +11,7 @@
   let draftTimer40 = 0;
   let lastDraftJson40 = '';
   let cloudVersion40 = 0;
+  let draftOps40 = 0;
   const consentKey40 = () => `systemESG41:cloudConsent:${user31?.id || 'anonymous'}`;
   const hasConsent40 = () => user31 && localStorage.getItem(consentKey40()) === 'true';
 
@@ -121,6 +122,7 @@
 
   async function syncDraft40(localDraft = window.esgExamDraft38?.read?.()) {
     if (!sb31 || !user31 || !navigator.onLine || !window.esgExamDraft38 || !hasConsent40()) return;
+    draftOps40++;
     try {
       const json = JSON.stringify(localDraft || null);
       const { data, error } = await sb31.rpc('esg_sync_exam_draft_v40', {
@@ -139,9 +141,11 @@
         if (remoteJson !== json) window.esgExamDraft38.applyRemote(row.payload);
       }
     } catch (error) { console.warn('Cross-device exam draft sync failed', error); }
+    finally { draftOps40--; }
   }
   async function deleteDraft40() {
     if (!sb31 || !user31 || !navigator.onLine || !hasConsent40()) return;
+    draftOps40++;
     try {
       const { error } = await sb31.rpc('esg_sync_exam_draft_v40', {
         p_payload:null,
@@ -151,6 +155,17 @@
       if (error) throw error;
       lastDraftJson40 = JSON.stringify({ deleted:true });
     } catch (error) { console.warn('Cloud exam draft deletion failed', error); }
+    finally { draftOps40--; }
+  }
+  async function pauseAndWait40() {
+    if (!user31) throw Error('请先登录');
+    localStorage.setItem(consentKey40(), 'false');
+    clearTimeout(timer40);
+    clearTimeout(draftTimer40);
+    setStatus40('同步已暂停', 'local');
+    const deadline = Date.now() + 10000;
+    while ((syncing40 || draftOps40 > 0) && Date.now() < deadline) await new Promise(resolve => setTimeout(resolve, 25));
+    if (syncing40 || draftOps40 > 0) throw Error('同步仍在进行，请稍后重试删除');
   }
   document.addEventListener('esg:exam-draft-changed', event => {
     clearTimeout(draftTimer40);
@@ -196,13 +211,14 @@
     consentKey:consentKey40,
     async setConsent(enabled) {
       if (!user31) throw Error('请先登录');
-      localStorage.setItem(consentKey40(), enabled ? 'true' : 'false');
-      if (!enabled) { clearTimeout(timer40); clearTimeout(draftTimer40); setStatus40('同步未开启', 'local'); return; }
+      if (!enabled) { await pauseAndWait40(); setStatus40('同步未开启', 'local'); return; }
+      localStorage.setItem(consentKey40(), 'true');
       dirty40 = true;
       setStatus40('读取云端…', 'pending');
       await syncProgress40('consent');
       await syncDraft40();
     },
+    pauseAndWait:pauseAndWait40,
     syncNow:async()=>{ await syncProgress40('manual'); await syncDraft40(); },
     setStatus:setStatus40
   };

@@ -41,6 +41,7 @@ check("V4 sync payload includes past37", "past37:state.past37" in sync and "valu
 check("all progress and draft sync paths require consent", sync.count("hasConsent40()") >= 7 and "同步未开启" in sync)
 check("privacy UI is learner-accessible", "privacyTop41" in gate and "data-mobile-view38" in gate and "privacy32" in gate)
 check("cloud deletion targets V4 progress and draft data", "esg_delete_my_learning_data_v41" in migration and "delete from public.esg_progress_v40" in migration and "delete from public.esg_exam_drafts_v40" in migration)
+check("cloud deletion uses one handler and pauses sync first", "cloudDelete.onclick = null" in gate and gate.index("pauseAndWait()") < gate.index("esg_delete_my_learning_data_v41"))
 check("past-exam answers merge by newest timestamp", "v_past_answers" in migration and "{past37,answers}" in migration and "esg_answer_time_v40(items.value) desc" in migration)
 check("restricted question bank never returns answer_payload in list RPC", "esg_question_bank_v41" in migration and "q.public_question" in migration and "esg_check_answer_v41" in migration)
 check("Edge Function source is present", (ROOT / "supabase/functions/question-bank-v41/index.ts").exists())

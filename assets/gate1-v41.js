@@ -4,9 +4,9 @@
   const $ = id => document.getElementById(id);
   const escape41 = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 
-  document.querySelector('.brand small').textContent = 'V4.1 Gate 1 修正版';
+  document.querySelector('.brand small').textContent = 'V4.1.1 Gate 1 复验版';
   const heroVersion = document.querySelector('#dash .hero .k');
-  if (heroVersion) heroVersion.textContent = 'V4.1 核准题与隐私同步版';
+  if (heroVersion) heroVersion.textContent = 'V4.1.1 核准题与安全删除版';
 
   // Restore a learner-facing privacy entry after the simplified shell removed it.
   if (!$('nav').querySelector('[data-view="privacy32"]')) {
@@ -92,7 +92,9 @@
   const configureCloudDelete41 = () => {
     const cloudDelete = $('#privacyCloudDelete32');
     if (!cloudDelete) return false;
-    cloudDelete.onclick = deleteCloud41;
+    // app-core contains the legacy V3.2 handler. Remove it and keep one delegated V4.1 path.
+    cloudDelete.onclick = null;
+    cloudDelete.dataset.gate1Delete = 'ready';
     return true;
   };
   async function deleteCloud41() {
@@ -101,10 +103,12 @@
     const button = $('#privacyCloudDelete32');
     button.disabled = true;
     try {
+      await window.esgSync40.pauseAndWait();
       const { error } = await sb31.rpc('esg_delete_my_learning_data_v41');
       if (error) throw error;
       window.esgExamDraft38?.applyRemote(null);
-      $('#privacyStatus32').textContent = 'V4.0/V4.1 云端学习进度与考试草稿已删除。';
+      refreshConsent41();
+      $('#privacyStatus32').textContent = '云端学习进度与考试草稿已删除；云端同步已关闭，本机资料仍保留。';
     } catch (error) {
       console.error('Cloud data deletion failed', error);
       $('#privacyStatus32').textContent = '云端删除失败；请确认 V4.1 migration 已部署。';

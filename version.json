@@ -1,25 +1,26 @@
 {
-  "version": "4.1.0-gate1-remediation",
-  "built_at": "2026-10-08T23:21:41.7718646Z",
-  "gate": "Gate 1",
-  "deployment_status": "local-only",
+  "version": "4.1.1-gate1-revalidation",
+  "built_at": "2026-10-08T23:43:14.0041128Z",
+  "gate": "Gate 1 revalidation",
+  "deployment_status": "pending",
   "files": {
-    "index.html": "f94b1aae9e433185dd6639d826f5911d3f9ccf2b47e2ab1bf6ad1667f388ab53",
+    "index.html": "eb5a4805a2d0d0f3ac68ca20e93e9e03b80de112915be5fefb773d86f5c9f599",
     "trial.html": "3e78d02f923388ff5074e4a84e06b650fc58a4db90e723359369d712e0bd6c81",
     "assets/styles.css": "52830812beb5bf182970c1c3dee4cd677f09dcc87b2c5ec8a7bb1daf3ade020a",
     "assets/app-core-v41.js": "98beb80a327575df3aac46c6fa2a564500a6f2a8455dfcb23b1f78e00aca3bcc",
-    "assets/gate1-v41.js": "9f24430db52f6422c71093cc880d0e54e4d96fba2cb7ee095319b988a61523c3",
+    "assets/gate1-v41.js": "65c7605ba6d34d30f5c3e27d9c0761d6a01effec28b932e5caf93577da8e39bc",
     "assets/feedback.js": "9b804e40d123bc02b4e586528d76e752ef581077084d5a76a4d33abd247ab46a",
     "assets/simplify-v35.js": "b04cd498354b2a1253a292edfdea8bdec42684bfe1512d8498cf34f375f681fd",
     "assets/account-admin-v36.js": "36c71df83371f738f90b70adc048eaaa92216db1c031b7cb38607c563d1ec1a4",
     "assets/past-exams-v37.js": "fa67744fc0b66bbd8b318c6ca1096ad199eac1c44f30ea2cbfd0dc2e3e39515f",
     "assets/mobile-v38.js": "42c5b010117494b1f35a3b58cdf57804f890010f050a4275264f9a970673dfb9",
     "assets/venture-v39.js": "01ad2c20108e351fdce0a403b9e8eb163c9dbe133a77e5d1c344b49ea3fef746",
-    "assets/sync-v40.js": "2fcffc140b6f355fa843e7ccf8267b0baa07a39b9febf09172d472182c32d447",
+    "assets/sync-v40.js": "e2b279af44bd30694ae9d1befd414cdc97b63fa778f7fe2213a21f69bfc19769",
     "assets/runtime-config.js": "df2034ab6f2ba3e0c4ace4e09400f0448ed9fb2b106d8ddc2d56597e751f31fd",
     "assets/supabase.js": "c45136a0ba5c7391646869a734db105ba607a9233fd6ec2e7e5bbab447bdc57a",
     "supabase/migrations/202610090001_gate1_v41_state_privacy_question_access.sql": "84cb6e4649601ef84b37dbe2ea5c30c87823bd754fce3400353e80fe0ced306d",
     "supabase/functions/question-bank-v41/index.ts": "804f6a8a9343ff6b00384f49c3e6cfc9ee7a40d360b2afbbf6808c67028315eb",
-    "docs/GATE1-CONTENT-ACCESS-POLICY.md": "7e6ab05d9e7763496683226bd46bb77c95d791b308148bc4251b7da9092b288d"
+    "docs/GATE1-CONTENT-ACCESS-POLICY.md": "7e6ab05d9e7763496683226bd46bb77c95d791b308148bc4251b7da9092b288d",
+    "docs/GATE1-REMEDIATION-REPORT.md": "7c5048dd854777b98a341433e7cda3b999e2ec525ab6b752c651323519afcc1a"
   }
 }
