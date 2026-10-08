@@ -11,6 +11,8 @@
   let draftTimer40 = 0;
   let lastDraftJson40 = '';
   let cloudVersion40 = 0;
+  const consentKey40 = () => `systemESG41:cloudConsent:${user31?.id || 'anonymous'}`;
+  const hasConsent40 = () => user31 && localStorage.getItem(consentKey40()) === 'true';
 
   const status40 = document.createElement('span');
   status40.id = 'syncStatus40';
@@ -27,7 +29,9 @@
       && value.answered && typeof value.answered === 'object'
       && value.learned && typeof value.learned === 'object'
       && value.wrong && typeof value.wrong === 'object'
-      && Array.isArray(value.exams) && Array.isArray(value.attempts);
+      && Array.isArray(value.exams) && Array.isArray(value.attempts)
+      && value.past37 && typeof value.past37 === 'object'
+      && value.past37.answers && typeof value.past37.answers === 'object';
   }
   function cloneState40() {
     return JSON.parse(JSON.stringify({
@@ -35,7 +39,9 @@
       learned:state.learned || {},
       wrong:state.wrong || {},
       exams:state.exams || [],
-      attempts:state.attempts || []
+      attempts:state.attempts || [],
+      past37:state.past37 || { answers:{} },
+      schema_version:4.1
     }));
   }
 
@@ -46,6 +52,7 @@
     if (applyingRemote40 || !user31) return;
     dirty40 = true;
     revision40++;
+    if (!hasConsent40()) { setStatus40('同步未开启', 'local'); return; }
     setStatus40(navigator.onLine ? '等待同步' : '离线保存', navigator.onLine ? 'pending' : 'offline');
     scheduleSync40();
   };
@@ -64,7 +71,7 @@
     timer40 = setTimeout(() => syncProgress40('change'), delay);
   }
   async function syncProgress40(reason = 'poll') {
-    if (syncing40 || !sb31 || !user31 || !navigator.onLine) return;
+    if (syncing40 || !sb31 || !user31 || !navigator.onLine || !hasConsent40()) return;
     if (reason === 'poll' && !dirty40) return pullProgress40();
     syncing40 = true;
     const startedRevision = revision40;
@@ -95,7 +102,7 @@
     } finally { syncing40 = false; }
   }
   async function pullProgress40() {
-    if (syncing40 || !sb31 || !user31 || !navigator.onLine) return;
+    if (syncing40 || !sb31 || !user31 || !navigator.onLine || !hasConsent40()) return;
     syncing40 = true;
     try {
       const { data, error } = await sb31.from('esg_progress_v40').select('payload,version,updated_at').eq('user_id', user31.id).maybeSingle();
@@ -113,7 +120,7 @@
   }
 
   async function syncDraft40(localDraft = window.esgExamDraft38?.read?.()) {
-    if (!sb31 || !user31 || !navigator.onLine || !window.esgExamDraft38) return;
+    if (!sb31 || !user31 || !navigator.onLine || !window.esgExamDraft38 || !hasConsent40()) return;
     try {
       const json = JSON.stringify(localDraft || null);
       const { data, error } = await sb31.rpc('esg_sync_exam_draft_v40', {
@@ -134,7 +141,7 @@
     } catch (error) { console.warn('Cross-device exam draft sync failed', error); }
   }
   async function deleteDraft40() {
-    if (!sb31 || !user31 || !navigator.onLine) return;
+    if (!sb31 || !user31 || !navigator.onLine || !hasConsent40()) return;
     try {
       const { error } = await sb31.rpc('esg_sync_exam_draft_v40', {
         p_payload:null,
@@ -159,18 +166,19 @@
     await applySessionBase40(session);
     if (!user31) { setStatus40('仅本机', 'local'); return; }
     dirty40 = true;
+    if (!hasConsent40()) { setStatus40('同步未开启', 'local'); return; }
     setStatus40('读取云端…', 'pending');
     await syncProgress40('login');
     await syncDraft40();
   };
-  window.addEventListener('online', () => { setStatus40('重新连线…', 'pending'); syncProgress40('online'); syncDraft40(); });
+  window.addEventListener('online', () => { if (!hasConsent40()) return setStatus40('同步未开启', 'local'); setStatus40('重新连线…', 'pending'); syncProgress40('online'); syncDraft40(); });
   window.addEventListener('offline', () => setStatus40('离线保存', 'offline'));
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') { syncProgress40('visible'); syncDraft40(); }
     else if (dirty40) syncProgress40('hidden');
   });
   setInterval(() => {
-    if (user31 && navigator.onLine) { syncProgress40('poll'); syncDraft40(); }
+    if (user31 && navigator.onLine && hasConsent40()) { syncProgress40('poll'); syncDraft40(); }
   }, 10000);
 
   // Resolve a session that may have completed before this final layer loaded.
@@ -182,4 +190,20 @@
       if (data.session) await applySession31(data.session);
     } catch (error) { console.warn('Initial cross-device sync failed', error); }
   })();
+
+  window.esgSync40 = {
+    hasConsent:hasConsent40,
+    consentKey:consentKey40,
+    async setConsent(enabled) {
+      if (!user31) throw Error('请先登录');
+      localStorage.setItem(consentKey40(), enabled ? 'true' : 'false');
+      if (!enabled) { clearTimeout(timer40); clearTimeout(draftTimer40); setStatus40('同步未开启', 'local'); return; }
+      dirty40 = true;
+      setStatus40('读取云端…', 'pending');
+      await syncProgress40('consent');
+      await syncDraft40();
+    },
+    syncNow:async()=>{ await syncProgress40('manual'); await syncDraft40(); },
+    setStatus:setStatus40
+  };
 })();

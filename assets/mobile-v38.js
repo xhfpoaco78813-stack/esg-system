@@ -27,7 +27,7 @@
   function syncMobileNav38() {
     const current = document.querySelector('.view.active')?.id;
     mobileNav.querySelectorAll('[data-mobile-view38]').forEach(button => button.classList.toggle('active', button.dataset.mobileView38 === current));
-    $('mobileMoreButton38').classList.toggle('active', ['exam','wrong','ability','feedback34','account'].includes(current));
+    $('mobileMoreButton38').classList.toggle('active', ['exam','wrong','ability','feedback34','privacy32','account'].includes(current));
   }
   document.querySelectorAll('[data-mobile-view38]').forEach(button => button.addEventListener('click', () => {
     const view = button.dataset.mobileView38;

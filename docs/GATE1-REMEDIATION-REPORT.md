@@ -1,0 +1,87 @@
+# System-ESG V4.1 Gate 1 修復與驗證報告
+
+日期：2026-10-09  
+分支：`gate1-remediation`  
+狀態：本地修復完成，未部署，未進入 Gate 2
+
+## 修復結果
+
+### P0｜學習到練習流程
+
+- 15 道核准樣本題全部映射到首頁現有知識點；中國法域為 10 道，全部法域為 15 道。
+- 首頁模組與知識點頁只計算目前法域的核准題。
+- 沒有核准題的知識點顯示「暫無核准練習題」，不產生練習按鈕；後端函式也再次阻擋空題池。
+- 300 個知識點仍可閱讀，不以待審題製造虛假練習數量。
+
+### P1｜模考題量
+
+- 20／50／100 題按目前核准題池判斷。
+- 中國法域只有 10 道、全部法域只有 15 道，因此三種模式均停用並顯示所需題量。
+- `startExam()` 增加執行時題量檢查，防止從其他入口繞過停用狀態。
+- 不重複題目，不以待審題補足。
+
+### P1｜歷屆考題進度
+
+- 狀態格式升級為 V4.1，加入 `past37.answers`。
+- `readState()` 保留舊資料並為舊狀態補上安全預設值。
+- V4 同步 payload 加入 `past37`；SQL 依每題 `at` 時間選擇較新的答案，支援重新整理、重新登入及跨裝置合併。
+
+### P1｜同步同意與刪除
+
+- 登入、作答、定時輪詢、重新連線、頁面切換和考試草稿同步均先檢查該裝置、該帳號的同意狀態。
+- 未同意時顯示「同步未開啟」，資料只存本機。
+- 桌面頂部、側欄及手機「更多」均提供「隱私與同步」入口。
+- 新增 `esg_delete_my_learning_data_v41()`，一次刪除 `esg_progress_v40`、`esg_exam_drafts_v40` 及存在時的舊進度資料。
+
+### P1｜題庫存取
+
+- 公開 `assets/app.js` 與舊獨立網站已從目前分支刪除。
+- 新公開核心 `assets/app-core-v41.js` 不含 5,200 道待審題；公開包由約 3.6 MB 降至約 158 KB。
+- 公開範圍定義為知識目錄、來源元資料及 15 道核准免費樣本題。
+- 未來 Pro／B2B／正式題放入 `esg_question_bank_v41`，答案留在 `answer_payload`；已驗證且具有效 entitlement 的使用者只能取得題幹，提交後由 `esg_check_answer_v41()` 判分。
+- 已提供 `supabase/functions/question-bank-v41/index.ts`，不再缺少受限題庫 Edge Function 原始碼。
+
+## 測試結果
+
+| 測試 | 結果 |
+|---|---|
+| Gate 1 自動驗收（映射、公開包、題量、狀態、同意、刪除、後端存取、HTTP） | 21/21 通過 |
+| `past37` 重新載入與舊狀態升級 | 2/2 通過 |
+| JavaScript 語法檢查 | 4/4 通過 |
+| Git whitespace／衝突檢查 | 通過 |
+| 全新瀏覽器載入 | 通過，無 console error |
+| 登入牆與試用版入口 | 通過 |
+| 首頁中國法域核准題數 | 10 道，與資料一致 |
+| 20／50／100 模考停用 | 全部正確停用並顯示原因 |
+| 桌面／手機隱私入口 | 均存在 |
+| 舊 `assets/app.js` HTTP 存取 | 404 |
+
+執行指令：
+
+```text
+python tests/gate1_acceptance.py http://127.0.0.1:4174
+node tests/gate1_state_reload_test.js
+node --check assets/app-core-v41.js
+node --check assets/sync-v40.js
+node --check assets/gate1-v41.js
+node --check assets/mobile-v38.js
+git diff --check
+```
+
+## 尚未完成／重新驗收前須知
+
+1. V4.1 migration 與 Edge Function 尚未部署到正式 Supabase；本輪依要求只完成本地修改。
+2. 因本機沒有啟動可隔離的 Supabase/Postgres 測試環境，SQL 已做結構與存取規則檢查，但尚未在本地資料庫實際執行 migration。
+3. 正式環境跨裝置 E2E 要在部署 migration 後，以兩個裝置完成：各自同意、歷屆作答合併、考試草稿同步及雲端刪除。
+4. 現有 10 道中國核准題不足 20 題模考，因此模考保持停用。這是修復後的正確行為；若要開放 20／50／100 模式，仍需分別增加足量、已核准且映射知識點的題目。
+5. 舊 5,200 道草稿仍存在 Git 歷史，但已定義為不可發布、不可認證、不可銷售的研發草稿。若法務或資安政策要求從歷史永久移除，需另做 Git 歷史重寫與遠端強制更新。
+6. `esg_question_bank_v41` 尚未匯入 Pro／B2B 題目，也未建立營運端 entitlement 發放流程；本輪完成的是安全骨架。
+
+## 缺件檢查
+
+- `assets`：完整，V4.1 核心與 Gate 1 UI 已加入。
+- Supabase migration：既有 V3.4–V4.0 migration 均存在；V4.1 migration 已新增。
+- RPC：V4 同步 RPC 原始碼存在；V4.1 刪除、受限題庫取得與判分 RPC 已新增。
+- Edge Function：既有帳號管理 Function 存在；V4.1 受限題庫 Function 已新增。
+
+重新驗收應停留在 Gate 1，先審查本分支與本報告；通過後再另行安排正式 Supabase migration、Edge Function 部署及 Gate 2。

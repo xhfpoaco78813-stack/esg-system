@@ -1,0 +1,5 @@
+.edge-*/
+.pnpm-cache/
+.pnpm-home/
+.tools/
+supabase/.temp/

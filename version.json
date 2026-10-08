@@ -1,25 +1,25 @@
 {
-  "version": "4.0.0-cross-device-sync",
-  "built_at": "2026-10-07T23:35:17.0290133Z",
+  "version": "4.1.0-gate1-remediation",
+  "built_at": "2026-10-08T23:21:41.7718646Z",
+  "gate": "Gate 1",
+  "deployment_status": "local-only",
   "files": {
-    "index.html": "0e564a22b89b0ab657a73cdf4d8cfe0eff11aab5369ff55008de16a4c802f099",
+    "index.html": "f94b1aae9e433185dd6639d826f5911d3f9ccf2b47e2ab1bf6ad1667f388ab53",
     "trial.html": "3e78d02f923388ff5074e4a84e06b650fc58a4db90e723359369d712e0bd6c81",
     "assets/styles.css": "52830812beb5bf182970c1c3dee4cd677f09dcc87b2c5ec8a7bb1daf3ade020a",
-    "assets/app.js": "f8e40cceed1a977e035582a9d5da946ea21b956d5dd82480e919f5afd62a612f",
+    "assets/app-core-v41.js": "98beb80a327575df3aac46c6fa2a564500a6f2a8455dfcb23b1f78e00aca3bcc",
+    "assets/gate1-v41.js": "9f24430db52f6422c71093cc880d0e54e4d96fba2cb7ee095319b988a61523c3",
     "assets/feedback.js": "9b804e40d123bc02b4e586528d76e752ef581077084d5a76a4d33abd247ab46a",
     "assets/simplify-v35.js": "b04cd498354b2a1253a292edfdea8bdec42684bfe1512d8498cf34f375f681fd",
     "assets/account-admin-v36.js": "36c71df83371f738f90b70adc048eaaa92216db1c031b7cb38607c563d1ec1a4",
     "assets/past-exams-v37.js": "fa67744fc0b66bbd8b318c6ca1096ad199eac1c44f30ea2cbfd0dc2e3e39515f",
-    "assets/trial-v1.js": "c36e394a1c586197e04dc8932f7f87d7d8e1f353d2e5914d1b577015a3465124",
-    "assets/trial-v1.css": "3e0f0573ad967f7f805f60222ca90f391c3bb12d20e6705de3a31d5b83ae47d7",
+    "assets/mobile-v38.js": "42c5b010117494b1f35a3b58cdf57804f890010f050a4275264f9a970673dfb9",
+    "assets/venture-v39.js": "01ad2c20108e351fdce0a403b9e8eb163c9dbe133a77e5d1c344b49ea3fef746",
+    "assets/sync-v40.js": "2fcffc140b6f355fa843e7ccf8267b0baa07a39b9febf09172d472182c32d447",
     "assets/runtime-config.js": "df2034ab6f2ba3e0c4ace4e09400f0448ed9fb2b106d8ddc2d56597e751f31fd",
     "assets/supabase.js": "c45136a0ba5c7391646869a734db105ba607a9233fd6ec2e7e5bbab447bdc57a",
-    "assets/mobile-v38.js": "378de0a5669eb81e2b44e92ba6dda5ab3287009c54b1f92e6a782ec93f22bfd6",
-    "assets/venture-v39.js": "01ad2c20108e351fdce0a403b9e8eb163c9dbe133a77e5d1c344b49ea3fef746",
-    "assets/sync-v40.js": "7d183be955b22f854679ac27b8b6d5301845f6e2515030aa332345339f707992",
-    "supabase/migrations/202610070001_v39_venture_validation.sql": "89c8cb9270050dcf1eb7ce9595a6137172734473c1bd37690c7ba65b2651358e",
-    "supabase/migrations/202610080001_v40_cross_device_sync.sql": "34e967189790ce71ed0940278ec213a3f448f5d92a2f6340a40b42d1462a5a51",
-    "supabase/migrations/202610080002_v40_exam_draft_tombstone.sql": "69fdf3352edcf4ec8f189b3d3eef9acd5e4a164b184886812b226a45de1da81f",
-    "supabase/migrations/202610080003_v40_exam_draft_polling.sql": "b5fdd1298f6505291b24b81bbeae366fad6d62eb5b7c27c6742508863df6f540"
+    "supabase/migrations/202610090001_gate1_v41_state_privacy_question_access.sql": "84cb6e4649601ef84b37dbe2ea5c30c87823bd754fce3400353e80fe0ced306d",
+    "supabase/functions/question-bank-v41/index.ts": "804f6a8a9343ff6b00384f49c3e6cfc9ee7a40d360b2afbbf6808c67028315eb",
+    "docs/GATE1-CONTENT-ACCESS-POLICY.md": "7e6ab05d9e7763496683226bd46bb77c95d791b308148bc4251b7da9092b288d"
   }
 }
