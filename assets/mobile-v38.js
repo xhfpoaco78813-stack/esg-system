@@ -17,7 +17,7 @@
   moreSheet.id = 'mobileMore38';
   moreSheet.className = 'mobile-more38';
   moreSheet.hidden = true;
-  moreSheet.innerHTML = `<button class="mobile-more-backdrop38" type="button" aria-label="关闭更多功能"></button><section role="dialog" aria-modal="true" aria-labelledby="mobileMoreTitle38"><div><b id="mobileMoreTitle38">更多功能</b><button type="button" id="mobileMoreClose38" aria-label="关闭">×</button></div><button type="button" data-mobile-view38="exam">⏱️ 模拟考试</button><button type="button" data-mobile-view38="wrong">🔁 错题回补</button><button type="button" data-mobile-view38="ability">🎯 能力评估</button>${$('feedback34') ? '<button type="button" data-mobile-view38="feedback34">💬 意见反馈</button>' : ''}<small>账号管理建议使用电脑操作。</small></section>`;
+  moreSheet.innerHTML = `<button class="mobile-more-backdrop38" type="button" aria-label="关闭更多功能"></button><section role="dialog" aria-modal="true" aria-labelledby="mobileMoreTitle38"><div><b id="mobileMoreTitle38">更多功能</b><button type="button" id="mobileMoreClose38" aria-label="关闭">×</button></div><button type="button" data-mobile-view38="exam">⏱️ 模拟考试</button><button type="button" data-mobile-view38="wrong">🔁 错题回补</button><button type="button" data-mobile-view38="ability">🎯 学习报告</button>${$('feedback34') ? '<button type="button" data-mobile-view38="feedback34">💬 意见反馈</button>' : ''}<small>账号管理建议使用电脑操作。</small></section>`;
   document.body.append(moreSheet);
 
   function closeMore38() {

@@ -20,6 +20,7 @@ def sha256(path):
 parser = argparse.ArgumentParser()
 parser.add_argument('--output', required=True)
 parser.add_argument('--version', default='4.1.4-gate1-revalidation')
+parser.add_argument('--gate', default='Gate 1 revalidation')
 args = parser.parse_args()
 
 listed = subprocess.check_output(
@@ -43,7 +44,7 @@ with tempfile.TemporaryDirectory(prefix='system-esg-release-') as tmp:
     manifest = {
         'version':args.version,
         'built_at':datetime.now(timezone.utc).isoformat(),
-        'gate':'Gate 1 revalidation',
+        'gate':args.gate,
         'deployment_status':'local-only',
         'hash_scope':'Every packaged file except version.json; hashes use the exact ZIP entry bytes.',
         'files':hashes
