@@ -14,7 +14,7 @@ check('sync is paused before cloud delete RPC', gate.indexOf('pauseAndWait()') <
 check('pause revokes consent before waiting', sync.indexOf("localStorage.setItem(consentKey40(), 'false')") < sync.indexOf('while ((syncing40 || draftOps40 > 0)'));
 check('pause waits for progress and draft operations', sync.includes('syncing40 || draftOps40 > 0'));
 check('cloud deletion clears the active local generation', gate.includes('state = {schema_version:4.1,cloud_reset_version:resetVersion'));
-check('other devices receive the reset generation', sync.includes('remoteReset > Number(state.cloud_reset_version || 0)'));
+check('other devices receive the reset generation', sync.includes('remoteReset > localReset') && sync.includes('applyRemote40(emptyState40(remoteReset))'));
 check('stale exam drafts use the reset-aware RPC', sync.includes("rpc('esg_sync_exam_draft_v41'"));
 check('stale progress no longer overwrites server state with an empty payload', migration.includes('stale caller receives') && !migration.includes('if v_client_reset < v_reset_version then\n    v_merged := jsonb_build_object'));
 check('legacy draft RPC execute privilege is revoked', migration.includes('from public,anon,authenticated'));

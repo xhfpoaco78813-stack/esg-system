@@ -26,6 +26,13 @@
 - 新版草稿同步、學習進度合併及帳號刪除均先以 `SELECT ... FOR UPDATE` 鎖定同一筆 `esg_data_resets_v41` 記錄。同步先取得鎖時，刪除會在其後清除資料；刪除先取得鎖時，舊世代同步會收到 tombstone 且不能寫入。
 - 新增實際 PostgreSQL 執行測試，依序套用 V4.1 與 V4.1.3 migration，驗證新進度保留、舊 RPC 權限封鎖，以及草稿先於／後於刪除的兩種交錯順序。
 
+## V4.1.4 跨裝置新世代顯示修復
+
+- 修正 `pullProgress40()`：刪除世代與該世代的有效進度同時返回時，優先套用有效進度，不再先清空後直接結束。
+- 只有新世代尚無有效進度時才套用空白狀態；此時不會把舊世代的雲端版本記成已讀，確保新世代第一筆通常為 version 1 的進度仍可在後續輪詢載入。
+- 一般輪詢也要求 `payload.cloud_reset_version` 與帳號刪除世代一致，避免舊世代 payload 越過刪除保護。
+- 新增 8 項輪詢決策回歸測試，完整覆蓋驗收中心提出的情境：A 刪除後建立新進度，已在線的 B 透過輪詢讀取新進度，同時不復活 B 的舊答案。
+
 ## 修復結果
 
 ### P0｜學習到練習流程
@@ -67,12 +74,13 @@
 
 | 測試 | 結果 |
 |---|---|
-| Gate 1 自動驗收（映射、公開包、題量、狀態、同意、刪除、後端存取） | 22/22 通過 |
-| 本地 HTTP 檔案與舊公開入口檢查 | 5/5 通過；合計 27/27 |
+| Gate 1 自動驗收（映射、公開包、題量、狀態、同意、刪除、後端存取） | 23/23 通過 |
+| 本地 HTTP 檔案與舊公開入口檢查 | 5/5 通過；合計 28/28 |
 | `past37`、刪除世代重新載入與舊狀態升級 | 3/3 通過 |
 | 安全刪除專項檢查 | 11/11 通過 |
 | A／B 裝置刪除世代整合測試 | 5/5 通過 |
 | 實際 PostgreSQL migration／RPC／ACL 測試 | 9/9 通過 |
+| A 刪除後建立新進度、B 輪詢顯示回歸測試 | 8/8 通過 |
 | ZIP 逐檔 SHA-256 校驗 | 全數通過 |
 | JavaScript 語法檢查 | 4/4 通過 |
 | Git whitespace／衝突檢查 | 通過 |
@@ -90,6 +98,7 @@ python tests/gate1_acceptance.py http://127.0.0.1:4174
 node tests/gate1_state_reload_test.js
 node tests/gate1_cloud_delete_test.js
 node tests/gate1_cross_device_delete_test.js
+node tests/gate1_pull_generation_test.js
 node tests/gate1_sql_integration_test.mjs
 python tools/build_release.py --output <交付ZIP>
 node --check assets/app-core-v41.js

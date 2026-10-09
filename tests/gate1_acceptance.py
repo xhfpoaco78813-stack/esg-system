@@ -49,6 +49,7 @@ check("stale exam drafts are rejected by reset generation", "esg_sync_exam_draft
 check("stale progress returns current server state without blanking it", "stale caller receives" in migration_v412 and "return query select p.payload" in migration_v412)
 check("legacy V4.0 draft RPC is closed to authenticated clients", "revoke all on function public.esg_sync_exam_draft_v40(jsonb,uuid,boolean) from public,anon,authenticated" in migration_v412)
 check("draft sync and deletion lock the same reset row", migration_v412.count("from public.esg_data_resets_v41 r where r.user_id=v_uid for update") >= 3)
+check("new-generation progress takes priority over reset-only state", "choosePull40" in sync and "decision === 'progress'" in sync and "cloudVersion40 = 0" in sync)
 check("past-exam answers merge by newest timestamp", "v_past_answers" in migration and "{past37,answers}" in migration and "esg_answer_time_v40(items.value) desc" in migration)
 check("restricted question bank never returns answer_payload in list RPC", "esg_question_bank_v41" in migration and "q.public_question" in migration and "esg_check_answer_v41" in migration)
 check("Edge Function source is present", (ROOT / "supabase/functions/question-bank-v41/index.ts").exists())

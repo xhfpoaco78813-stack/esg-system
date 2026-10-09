@@ -38,6 +38,16 @@
   function emptyState40(resetVersion = 0) {
     return { schema_version:4.1,cloud_reset_version:Number(resetVersion)||0,answered:{},learned:{},wrong:{},exams:[],attempts:[],past37:{answers:{}} };
   }
+  function choosePull40(data, remoteReset, localReset, currentCloudVersion, payloadValid) {
+    const payloadReset = payloadValid ? Number(data.payload.cloud_reset_version || 0) : -1;
+    if (remoteReset > localReset) {
+      return payloadValid && payloadReset === remoteReset ? 'progress' : 'reset';
+    }
+    if (remoteReset === localReset && payloadValid && payloadReset === remoteReset && Number(data.version) > currentCloudVersion) {
+      return 'progress';
+    }
+    return 'none';
+  }
   function cloneState40() {
     return JSON.parse(JSON.stringify({
       answered:state.answered || {},
@@ -121,17 +131,24 @@
       if (resetResult.error) throw resetResult.error;
       const data = progressResult.data;
       const remoteReset = Number(resetResult.data?.reset_version || 0);
-      if (remoteReset > Number(state.cloud_reset_version || 0)) {
+      const localReset = Number(state.cloud_reset_version || 0);
+      const payloadValid = Boolean(data && validState40(data.payload));
+      const decision = choosePull40(data,remoteReset,localReset,cloudVersion40,payloadValid);
+      if (decision === 'progress') {
+        cloudVersion40 = Number(data.version || 0);
+        applyRemote40(data.payload);
+        localStorage.setItem('systemESG40:lastSync', data.updated_at || resetResult.data?.reset_at || new Date().toISOString());
+        setStatus40(remoteReset > localReset ? '已同步新世代资料' : '已同步', 'ok');
+        return;
+      }
+      if (decision === 'reset') {
         applyRemote40(emptyState40(remoteReset));
-        cloudVersion40 = Number(data?.version || 0);
+        // A reset is not a progress version. Keep this at zero so a later
+        // first row in the new generation (normally version 1) is loadable.
+        cloudVersion40 = 0;
         localStorage.setItem('systemESG40:lastSync', resetResult.data?.reset_at || new Date().toISOString());
         setStatus40('已套用云端删除', 'ok');
         return;
-      }
-      if (data && Number(data.version) > cloudVersion40 && validState40(data.payload)) {
-        cloudVersion40 = Number(data.version);
-        applyRemote40(data.payload);
-        localStorage.setItem('systemESG40:lastSync', data.updated_at || new Date().toISOString());
       }
       setStatus40('已同步', 'ok');
     } catch (error) {
