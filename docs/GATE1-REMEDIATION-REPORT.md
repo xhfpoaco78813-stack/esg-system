@@ -19,6 +19,13 @@
 - 新增 A／B 雙裝置刪除整合測試，覆蓋舊進度、歷屆紀錄、考試草稿及刪除後新世代資料。
 - 新增 `tools/build_release.py`：從同一暫存目錄計算 SHA-256 並建立 ZIP，完成後重新讀取 ZIP 逐檔驗證。`version.json` 的雜湊對應 ZIP 內的實際位元組，不再受 Git 換行正規化影響。
 
+## V4.1.3 SQL 競態與舊 RPC 封鎖修復
+
+- 過期裝置呼叫 `esg_merge_learning_state_v40` 時只取得目前伺服器狀態，不再將雲端進度覆寫成空白；刪除後建立的新世代進度會完整保留。
+- `esg_sync_exam_draft_v40` 已改為停用函式，並撤銷 `public`、`anon`、`authenticated` 的執行權限，舊客戶端不能繞過刪除版本檢查。
+- 新版草稿同步、學習進度合併及帳號刪除均先以 `SELECT ... FOR UPDATE` 鎖定同一筆 `esg_data_resets_v41` 記錄。同步先取得鎖時，刪除會在其後清除資料；刪除先取得鎖時，舊世代同步會收到 tombstone 且不能寫入。
+- 新增實際 PostgreSQL 執行測試，依序套用 V4.1 與 V4.1.3 migration，驗證新進度保留、舊 RPC 權限封鎖，以及草稿先於／後於刪除的兩種交錯順序。
+
 ## 修復結果
 
 ### P0｜學習到練習流程
@@ -60,11 +67,12 @@
 
 | 測試 | 結果 |
 |---|---|
-| Gate 1 自動驗收（映射、公開包、題量、狀態、同意、刪除、後端存取） | 19/19 通過 |
-| 本地 HTTP 檔案與舊公開入口檢查 | 5/5 通過；合計 24/24 |
+| Gate 1 自動驗收（映射、公開包、題量、狀態、同意、刪除、後端存取） | 22/22 通過 |
+| 本地 HTTP 檔案與舊公開入口檢查 | 5/5 通過；合計 27/27 |
 | `past37`、刪除世代重新載入與舊狀態升級 | 3/3 通過 |
-| 安全刪除專項檢查 | 8/8 通過 |
+| 安全刪除專項檢查 | 11/11 通過 |
 | A／B 裝置刪除世代整合測試 | 5/5 通過 |
+| 實際 PostgreSQL migration／RPC／ACL 測試 | 9/9 通過 |
 | ZIP 逐檔 SHA-256 校驗 | 全數通過 |
 | JavaScript 語法檢查 | 4/4 通過 |
 | Git whitespace／衝突檢查 | 通過 |
@@ -82,6 +90,7 @@ python tests/gate1_acceptance.py http://127.0.0.1:4174
 node tests/gate1_state_reload_test.js
 node tests/gate1_cloud_delete_test.js
 node tests/gate1_cross_device_delete_test.js
+node tests/gate1_sql_integration_test.mjs
 python tools/build_release.py --output <交付ZIP>
 node --check assets/app-core-v41.js
 node --check assets/sync-v40.js
@@ -92,9 +101,9 @@ git diff --check
 
 ## 尚未完成／重新驗收前須知
 
-1. V4.1 migration 與 Edge Function 尚未部署到正式 Supabase；本輪依要求只完成本地修改。
-2. 因本機沒有啟動可隔離的 Supabase/Postgres 測試環境，SQL 已做結構與存取規則檢查，但尚未在本地資料庫實際執行 migration。
-3. 正式環境跨裝置 E2E 要在部署 migration 後，以兩個裝置完成：各自同意、歷屆作答合併、考試草稿同步及雲端刪除。
+1. V4.1–V4.1.3 migration 與 Edge Function 尚未部署到正式 Supabase；本輪依要求只完成隔離環境修改與驗證。
+2. SQL 已在隔離的 PostgreSQL 執行引擎實際套用並通過 9 項資料與權限測試；目前工作區沒有獨立 Supabase staging 專案，因此尚未宣稱完成 Supabase 雙連線並行 E2E。
+3. Supabase staging 復驗仍應使用兩個實際連線同時觸發同步與刪除，確認資料庫鎖等待與提交順序；通過後才可部署正式環境。
 4. 現有 10 道中國核准題不足 20 題模考，因此模考保持停用。這是修復後的正確行為；若要開放 20／50／100 模式，仍需分別增加足量、已核准且映射知識點的題目。
 5. 舊 5,200 道草稿仍存在 Git 歷史，但已定義為不可發布、不可認證、不可銷售的研發草稿。若法務或資安政策要求從歷史永久移除，需另做 Git 歷史重寫與遠端強制更新。
 6. `esg_question_bank_v41` 尚未匯入 Pro／B2B 題目，也未建立營運端 entitlement 發放流程；本輪完成的是安全骨架。

@@ -19,7 +19,7 @@ def sha256(path):
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--output', required=True)
-parser.add_argument('--version', default='4.1.2-gate1-revalidation')
+parser.add_argument('--version', default='4.1.3-gate1-revalidation')
 args = parser.parse_args()
 
 listed = subprocess.check_output(

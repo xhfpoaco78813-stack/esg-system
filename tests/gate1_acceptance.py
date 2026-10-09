@@ -11,7 +11,9 @@ core = (ROOT / "assets/app-core-v41.js").read_text(encoding="utf-8")
 sync = (ROOT / "assets/sync-v40.js").read_text(encoding="utf-8")
 gate = (ROOT / "assets/gate1-v41.js").read_text(encoding="utf-8")
 index = (ROOT / "index.html").read_text(encoding="utf-8")
-migration = (ROOT / "supabase/migrations/202610090001_gate1_v41_state_privacy_question_access.sql").read_text(encoding="utf-8")
+migration_v41 = (ROOT / "supabase/migrations/202610090001_gate1_v41_state_privacy_question_access.sql").read_text(encoding="utf-8")
+migration_v412 = (ROOT / "supabase/migrations/202610090002_gate1_v412_concurrency.sql").read_text(encoding="utf-8")
+migration = migration_v41 + "\n" + migration_v412
 
 results = []
 def check(name, condition):
@@ -44,6 +46,9 @@ check("cloud deletion targets V4 progress and draft data", "esg_delete_my_learni
 check("cloud deletion uses one handler and pauses sync first", "cloudDelete.onclick = null" in gate and gate.index("pauseAndWait()") < gate.index("esg_delete_my_learning_data_v41"))
 check("cross-device deletion uses an account reset generation", "esg_data_resets_v41" in migration and "v_client_reset < v_reset_version" in migration and "cloud_reset_version" in sync)
 check("stale exam drafts are rejected by reset generation", "esg_sync_exam_draft_v41" in migration and "p_reset_version" in migration and "esg_sync_exam_draft_v41" in sync)
+check("stale progress returns current server state without blanking it", "stale caller receives" in migration_v412 and "return query select p.payload" in migration_v412)
+check("legacy V4.0 draft RPC is closed to authenticated clients", "revoke all on function public.esg_sync_exam_draft_v40(jsonb,uuid,boolean) from public,anon,authenticated" in migration_v412)
+check("draft sync and deletion lock the same reset row", migration_v412.count("from public.esg_data_resets_v41 r where r.user_id=v_uid for update") >= 3)
 check("past-exam answers merge by newest timestamp", "v_past_answers" in migration and "{past37,answers}" in migration and "esg_answer_time_v40(items.value) desc" in migration)
 check("restricted question bank never returns answer_payload in list RPC", "esg_question_bank_v41" in migration and "q.public_question" in migration and "esg_check_answer_v41" in migration)
 check("Edge Function source is present", (ROOT / "supabase/functions/question-bank-v41/index.ts").exists())

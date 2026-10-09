@@ -4,9 +4,9 @@
   const $ = id => document.getElementById(id);
   const escape41 = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 
-  document.querySelector('.brand small').textContent = 'V4.1.2 Gate 1 复验版';
+  document.querySelector('.brand small').textContent = 'V4.1.3 Gate 1 复验版';
   const heroVersion = document.querySelector('#dash .hero .k');
-  if (heroVersion) heroVersion.textContent = 'V4.1.2 跨装置删除保护版';
+  if (heroVersion) heroVersion.textContent = 'V4.1.3 SQL 并发保护版';
 
   // Restore a learner-facing privacy entry after the simplified shell removed it.
   if (!$('nav').querySelector('[data-view="privacy32"]')) {
