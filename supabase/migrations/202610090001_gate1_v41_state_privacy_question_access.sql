@@ -1,7 +1,18 @@
 begin;
 
 alter table public.esg_progress_v40
-  alter column payload set default '{"schema_version":4.1,"answered":{},"learned":{},"wrong":{},"exams":[],"attempts":[],"past37":{"answers":{}}}'::jsonb;
+  alter column payload set default '{"schema_version":4.1,"cloud_reset_version":0,"answered":{},"learned":{},"wrong":{},"exams":[],"attempts":[],"past37":{"answers":{}}}'::jsonb;
+
+create table if not exists public.esg_data_resets_v41 (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  reset_version bigint not null default 0 check (reset_version >= 0),
+  reset_at timestamptz not null default now()
+);
+alter table public.esg_data_resets_v41 enable row level security;
+revoke all on public.esg_data_resets_v41 from anon, authenticated;
+drop policy if exists esg_data_resets_v41_self_read on public.esg_data_resets_v41;
+create policy esg_data_resets_v41_self_read on public.esg_data_resets_v41 for select to authenticated using (user_id=auth.uid());
+grant select on public.esg_data_resets_v41 to authenticated;
 
 create or replace function public.esg_merge_learning_state_v40(p_payload jsonb, p_device_id uuid)
 returns table(payload jsonb, version bigint, updated_at timestamptz)
@@ -20,15 +31,28 @@ declare
   v_exams jsonb;
   v_past_answers jsonb;
   v_merged jsonb;
+  v_reset_version bigint := 0;
+  v_client_reset bigint := 0;
 begin
   if v_uid is null then raise exception 'authentication required'; end if;
   if p_device_id is null then raise exception 'device id required'; end if;
   if jsonb_typeof(v_client) <> 'object' or pg_column_size(v_client) > 5000000 then raise exception 'invalid progress payload'; end if;
 
+  insert into public.esg_data_resets_v41(user_id,reset_version) values(v_uid,0) on conflict(user_id) do nothing;
+  select r.reset_version into v_reset_version from public.esg_data_resets_v41 r where r.user_id=v_uid for update;
+  begin v_client_reset := coalesce((v_client->>'cloud_reset_version')::bigint,0); exception when others then v_client_reset := 0; end;
+
   insert into public.esg_progress_v40(user_id, payload, updated_by_device)
-  values (v_uid, '{"schema_version":4.1,"answered":{},"learned":{},"wrong":{},"exams":[],"attempts":[],"past37":{"answers":{}}}'::jsonb, p_device_id)
+  values (v_uid, jsonb_build_object('schema_version',4.1,'cloud_reset_version',v_reset_version,'answered','{}'::jsonb,'learned','{}'::jsonb,'wrong','{}'::jsonb,'exams','[]'::jsonb,'attempts','[]'::jsonb,'past37',jsonb_build_object('answers','{}'::jsonb)), p_device_id)
   on conflict (user_id) do nothing;
   select p.payload into v_server from public.esg_progress_v40 p where p.user_id = v_uid for update;
+
+  if v_client_reset < v_reset_version then
+    v_merged := jsonb_build_object('schema_version',4.1,'cloud_reset_version',v_reset_version,'answered','{}'::jsonb,'learned','{}'::jsonb,'wrong','{}'::jsonb,'exams','[]'::jsonb,'attempts','[]'::jsonb,'past37',jsonb_build_object('answers','{}'::jsonb));
+    update public.esg_progress_v40 p set payload=v_merged,version=p.version+1,updated_by_device=p_device_id,updated_at=now() where p.user_id=v_uid;
+    return query select p.payload,p.version,p.updated_at from public.esg_progress_v40 p where p.user_id=v_uid;
+    return;
+  end if;
 
   select coalesce(jsonb_object_agg(chosen.key, chosen.value), '{}'::jsonb) into v_answered
   from (
@@ -71,7 +95,7 @@ begin
   ) chosen;
 
   v_merged := jsonb_build_object(
-    'schema_version',4.1,'answered',v_answered,'learned',v_learned,'wrong',v_wrong,
+    'schema_version',4.1,'cloud_reset_version',v_reset_version,'answered',v_answered,'learned',v_learned,'wrong',v_wrong,
     'exams',v_exams,'attempts',v_attempts,'past37',jsonb_build_object('answers',v_past_answers)
   );
   update public.esg_progress_v40 p set payload=v_merged,version=p.version+1,updated_by_device=p_device_id,updated_at=now() where p.user_id=v_uid;
@@ -79,18 +103,75 @@ begin
 end;
 $$;
 
-create or replace function public.esg_delete_my_learning_data_v41()
-returns void
+create or replace function public.esg_sync_exam_draft_v41(
+  p_payload jsonb,
+  p_device_id uuid,
+  p_delete boolean default false,
+  p_reset_version bigint default 0
+)
+returns table(payload jsonb, updated_at timestamptz)
 language plpgsql
 security definer
 set search_path = public
 as $$
-declare v_uid uuid := auth.uid();
+declare
+  v_uid uuid := auth.uid();
+  v_server jsonb;
+  v_server_saved numeric := 0;
+  v_client_saved numeric := 0;
+  v_reset_version bigint := 0;
+  v_tombstone jsonb;
 begin
   if v_uid is null then raise exception 'authentication required'; end if;
+  if p_device_id is null then raise exception 'device id required'; end if;
+  select coalesce(r.reset_version,0) into v_reset_version from public.esg_data_resets_v41 r where r.user_id=v_uid;
+  if coalesce(p_reset_version,0) < v_reset_version then
+    v_tombstone := jsonb_build_object('deleted',true,'savedAt',floor(extract(epoch from clock_timestamp())*1000),'cloudResetVersion',v_reset_version);
+    return query select v_tombstone,now();
+    return;
+  end if;
+  if p_delete then
+    v_tombstone := jsonb_build_object('deleted',true,'savedAt',floor(extract(epoch from clock_timestamp())*1000),'cloudResetVersion',v_reset_version);
+    insert into public.esg_exam_drafts_v40(user_id,payload,updated_by_device)
+    values(v_uid,v_tombstone,p_device_id)
+    on conflict(user_id) do update set payload=excluded.payload,updated_by_device=excluded.updated_by_device,updated_at=now();
+    return query select d.payload,d.updated_at from public.esg_exam_drafts_v40 d where d.user_id=v_uid;
+    return;
+  end if;
+  select d.payload into v_server from public.esg_exam_drafts_v40 d where d.user_id=v_uid for update;
+  if p_payload is not null then
+    if jsonb_typeof(p_payload)<>'object' or pg_column_size(p_payload)>1000000 then raise exception 'invalid exam draft'; end if;
+    begin v_client_saved:=coalesce((p_payload->>'savedAt')::numeric,0); exception when others then v_client_saved:=0; end;
+    begin v_server_saved:=coalesce((v_server->>'savedAt')::numeric,0); exception when others then v_server_saved:=0; end;
+    if v_server is null or v_client_saved>=v_server_saved then
+      insert into public.esg_exam_drafts_v40(user_id,payload,updated_by_device)
+      values(v_uid,p_payload || jsonb_build_object('cloudResetVersion',v_reset_version),p_device_id)
+      on conflict(user_id) do update set payload=excluded.payload,updated_by_device=excluded.updated_by_device,updated_at=now();
+    end if;
+  end if;
+  return query select d.payload,d.updated_at from public.esg_exam_drafts_v40 d where d.user_id=v_uid;
+end;
+$$;
+
+create or replace function public.esg_delete_my_learning_data_v41()
+returns table(reset_version bigint, reset_at timestamptz)
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_uid uuid := auth.uid();
+  v_reset_version bigint;
+  v_reset_at timestamptz;
+begin
+  if v_uid is null then raise exception 'authentication required'; end if;
+  insert into public.esg_data_resets_v41(user_id,reset_version,reset_at) values(v_uid,1,now())
+  on conflict(user_id) do update set reset_version=public.esg_data_resets_v41.reset_version+1,reset_at=now()
+  returning esg_data_resets_v41.reset_version,esg_data_resets_v41.reset_at into v_reset_version,v_reset_at;
   delete from public.esg_exam_drafts_v40 where user_id=v_uid;
   delete from public.esg_progress_v40 where user_id=v_uid;
   if to_regclass('public.esg_progress') is not null then execute 'delete from public.esg_progress where user_id=$1' using v_uid; end if;
+  return query select v_reset_version,v_reset_at;
 end;
 $$;
 
@@ -160,10 +241,12 @@ $$;
 
 revoke all on function public.esg_merge_learning_state_v40(jsonb,uuid) from public;
 revoke all on function public.esg_delete_my_learning_data_v41() from public;
+revoke all on function public.esg_sync_exam_draft_v41(jsonb,uuid,boolean,bigint) from public;
 revoke all on function public.esg_get_questions_v41(text,integer) from public;
 revoke all on function public.esg_check_answer_v41(text,jsonb) from public;
 grant execute on function public.esg_merge_learning_state_v40(jsonb,uuid) to authenticated;
 grant execute on function public.esg_delete_my_learning_data_v41() to authenticated;
+grant execute on function public.esg_sync_exam_draft_v41(jsonb,uuid,boolean,bigint) to authenticated;
 grant execute on function public.esg_get_questions_v41(text,integer) to authenticated;
 grant execute on function public.esg_check_answer_v41(text,jsonb) to authenticated;
 

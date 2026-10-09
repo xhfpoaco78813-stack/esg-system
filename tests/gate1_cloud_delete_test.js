@@ -12,4 +12,6 @@ check('only one V4.1 delete RPC call exists in UI layer', (gate.match(/esg_delet
 check('sync is paused before cloud delete RPC', gate.indexOf('pauseAndWait()') < gate.indexOf("rpc('esg_delete_my_learning_data_v41')"));
 check('pause revokes consent before waiting', sync.indexOf("localStorage.setItem(consentKey40(), 'false')") < sync.indexOf('while ((syncing40 || draftOps40 > 0)'));
 check('pause waits for progress and draft operations', sync.includes('syncing40 || draftOps40 > 0'));
-check('sync remains disabled after deletion', gate.includes('云端同步已关闭，本机资料仍保留'));
+check('cloud deletion clears the active local generation', gate.includes('state = {schema_version:4.1,cloud_reset_version:resetVersion'));
+check('other devices receive the reset generation', sync.includes('remoteReset > Number(state.cloud_reset_version || 0)'));
+check('stale exam drafts use the reset-aware RPC', sync.includes("rpc('esg_sync_exam_draft_v41'"));

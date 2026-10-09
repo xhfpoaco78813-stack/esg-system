@@ -32,7 +32,11 @@
       && value.wrong && typeof value.wrong === 'object'
       && Array.isArray(value.exams) && Array.isArray(value.attempts)
       && value.past37 && typeof value.past37 === 'object'
-      && value.past37.answers && typeof value.past37.answers === 'object';
+      && value.past37.answers && typeof value.past37.answers === 'object'
+      && Number.isFinite(Number(value.cloud_reset_version || 0));
+  }
+  function emptyState40(resetVersion = 0) {
+    return { schema_version:4.1,cloud_reset_version:Number(resetVersion)||0,answered:{},learned:{},wrong:{},exams:[],attempts:[],past37:{answers:{}} };
   }
   function cloneState40() {
     return JSON.parse(JSON.stringify({
@@ -42,6 +46,7 @@
       exams:state.exams || [],
       attempts:state.attempts || [],
       past37:state.past37 || { answers:{} },
+      cloud_reset_version:Number(state.cloud_reset_version) || 0,
       schema_version:4.1
     }));
   }
@@ -59,12 +64,14 @@
   };
   function applyRemote40(payload) {
     if (!validState40(payload)) return;
+    const resetAdvanced = Number(payload.cloud_reset_version || 0) > Number(state.cloud_reset_version || 0);
     applyingRemote40 = true;
     state = payload;
     saveBase40();
     renderLearnList();
     if (typeof renderMastery31 === 'function') renderMastery31();
     if (typeof renderCompetency39 === 'function') renderCompetency39();
+    if (resetAdvanced) window.esgExamDraft38?.applyRemote(null);
     applyingRemote40 = false;
   }
   function scheduleSync40(delay = 700) {
@@ -106,8 +113,21 @@
     if (syncing40 || !sb31 || !user31 || !navigator.onLine || !hasConsent40()) return;
     syncing40 = true;
     try {
-      const { data, error } = await sb31.from('esg_progress_v40').select('payload,version,updated_at').eq('user_id', user31.id).maybeSingle();
-      if (error) throw error;
+      const [progressResult,resetResult] = await Promise.all([
+        sb31.from('esg_progress_v40').select('payload,version,updated_at').eq('user_id', user31.id).maybeSingle(),
+        sb31.from('esg_data_resets_v41').select('reset_version,reset_at').eq('user_id', user31.id).maybeSingle()
+      ]);
+      if (progressResult.error) throw progressResult.error;
+      if (resetResult.error) throw resetResult.error;
+      const data = progressResult.data;
+      const remoteReset = Number(resetResult.data?.reset_version || 0);
+      if (remoteReset > Number(state.cloud_reset_version || 0)) {
+        applyRemote40(emptyState40(remoteReset));
+        cloudVersion40 = Number(data?.version || 0);
+        localStorage.setItem('systemESG40:lastSync', resetResult.data?.reset_at || new Date().toISOString());
+        setStatus40('已套用云端删除', 'ok');
+        return;
+      }
       if (data && Number(data.version) > cloudVersion40 && validState40(data.payload)) {
         cloudVersion40 = Number(data.version);
         applyRemote40(data.payload);
@@ -125,10 +145,11 @@
     draftOps40++;
     try {
       const json = JSON.stringify(localDraft || null);
-      const { data, error } = await sb31.rpc('esg_sync_exam_draft_v40', {
+      const { data, error } = await sb31.rpc('esg_sync_exam_draft_v41', {
         p_payload:localDraft,
         p_device_id:deviceId40,
-        p_delete:false
+        p_delete:false,
+        p_reset_version:Number(state.cloud_reset_version) || 0
       });
       if (error) throw error;
       const row = Array.isArray(data) ? data[0] : data;
@@ -147,10 +168,11 @@
     if (!sb31 || !user31 || !navigator.onLine || !hasConsent40()) return;
     draftOps40++;
     try {
-      const { error } = await sb31.rpc('esg_sync_exam_draft_v40', {
+      const { error } = await sb31.rpc('esg_sync_exam_draft_v41', {
         p_payload:null,
         p_device_id:deviceId40,
-        p_delete:true
+        p_delete:true,
+        p_reset_version:Number(state.cloud_reset_version) || 0
       });
       if (error) throw error;
       lastDraftJson40 = JSON.stringify({ deleted:true });

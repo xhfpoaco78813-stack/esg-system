@@ -4,9 +4,9 @@
   const $ = id => document.getElementById(id);
   const escape41 = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 
-  document.querySelector('.brand small').textContent = 'V4.1.1 Gate 1 复验版';
+  document.querySelector('.brand small').textContent = 'V4.1.2 Gate 1 复验版';
   const heroVersion = document.querySelector('#dash .hero .k');
-  if (heroVersion) heroVersion.textContent = 'V4.1.1 核准题与安全删除版';
+  if (heroVersion) heroVersion.textContent = 'V4.1.2 跨装置删除保护版';
 
   // Restore a learner-facing privacy entry after the simplified shell removed it.
   if (!$('nav').querySelector('[data-view="privacy32"]')) {
@@ -99,16 +99,23 @@
   };
   async function deleteCloud41() {
     if (!sb31 || !user31) { $('#privacyStatus32').textContent = '请先登入。'; return; }
-    if (!confirm('确定删除当前账号的 V4.0/V4.1 云端学习进度与考试草稿？此操作无法撤销。')) return;
+    if (!confirm('确定删除当前账号的云端资料及此装置的本机学习资料？其他装置的旧资料会在连线时清空，此操作无法撤销。')) return;
     const button = $('#privacyCloudDelete32');
     button.disabled = true;
     try {
       await window.esgSync40.pauseAndWait();
-      const { error } = await sb31.rpc('esg_delete_my_learning_data_v41');
+      const { data, error } = await sb31.rpc('esg_delete_my_learning_data_v41');
       if (error) throw error;
+      const row = Array.isArray(data) ? data[0] : data;
+      const resetVersion = Number(row?.reset_version || 0);
+      state = {schema_version:4.1,cloud_reset_version:resetVersion,answered:{},learned:{},wrong:{},exams:[],attempts:[],past37:{answers:{}}};
+      save();
+      renderLearnList();
+      if (typeof renderMastery31 === 'function') renderMastery31();
+      if (typeof renderCompetency39 === 'function') renderCompetency39();
       window.esgExamDraft38?.applyRemote(null);
       refreshConsent41();
-      $('#privacyStatus32').textContent = '云端学习进度与考试草稿已删除；云端同步已关闭，本机资料仍保留。';
+      $('#privacyStatus32').textContent = '云端及本机学习资料已删除；其他装置的旧版本资料会在连线时清空，无法重新上传。';
     } catch (error) {
       console.error('Cloud data deletion failed', error);
       $('#privacyStatus32').textContent = '云端删除失败；请确认 V4.1 migration 已部署。';

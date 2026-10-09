@@ -9,7 +9,15 @@
 - 正式網站版本發布前標識更新為 V4.1.1，部署後可直接辨識，不再誤判為 V4.0。
 - 雲端刪除只保留一條事件路徑，移除 V3.2 舊 `onclick`，避免單次點擊重複執行。
 - 刪除前立即撤銷同步同意、清除排程，並等待進行中的進度及草稿同步結束；確認停止後才呼叫刪除 RPC。
-- 刪除完成後同步維持關閉，本機資料保留，不會在下一次一般儲存時自動重新上傳。
+- 刪除完成後同步維持關閉，A 裝置本機資料同步清空，不會在下一次一般儲存時自動重新上傳。
+
+## V4.1.2 跨裝置刪除與交付校驗修復
+
+- 新增帳號層級 `esg_data_resets_v41.reset_version`。每次刪除會增加世代版本，不能只靠 A 裝置的本機同意狀態。
+- 學習進度及考試草稿同步均攜帶 `cloud_reset_version`；B 裝置若持有較舊世代，後端回傳刪除狀態並拒絕舊資料寫入。
+- A 裝置刪除成功後清空目前本機狀態；B 裝置重新登入、輪詢或同步時也會清空舊進度與草稿，避免復活已刪資料。
+- 新增 A／B 雙裝置刪除整合測試，覆蓋舊進度、歷屆紀錄、考試草稿及刪除後新世代資料。
+- 新增 `tools/build_release.py`：從同一暫存目錄計算 SHA-256 並建立 ZIP，完成後重新讀取 ZIP 逐檔驗證。`version.json` 的雜湊對應 ZIP 內的實際位元組，不再受 Git 換行正規化影響。
 
 ## 修復結果
 
@@ -52,8 +60,12 @@
 
 | 測試 | 結果 |
 |---|---|
-| Gate 1 自動驗收（映射、公開包、題量、狀態、同意、刪除、後端存取、HTTP） | 21/21 通過 |
-| `past37` 重新載入與舊狀態升級 | 2/2 通過 |
+| Gate 1 自動驗收（映射、公開包、題量、狀態、同意、刪除、後端存取） | 19/19 通過 |
+| 本地 HTTP 檔案與舊公開入口檢查 | 5/5 通過；合計 24/24 |
+| `past37`、刪除世代重新載入與舊狀態升級 | 3/3 通過 |
+| 安全刪除專項檢查 | 8/8 通過 |
+| A／B 裝置刪除世代整合測試 | 5/5 通過 |
+| ZIP 逐檔 SHA-256 校驗 | 全數通過 |
 | JavaScript 語法檢查 | 4/4 通過 |
 | Git whitespace／衝突檢查 | 通過 |
 | 全新瀏覽器載入 | 通過，無 console error |
@@ -68,6 +80,9 @@
 ```text
 python tests/gate1_acceptance.py http://127.0.0.1:4174
 node tests/gate1_state_reload_test.js
+node tests/gate1_cloud_delete_test.js
+node tests/gate1_cross_device_delete_test.js
+python tools/build_release.py --output <交付ZIP>
 node --check assets/app-core-v41.js
 node --check assets/sync-v40.js
 node --check assets/gate1-v41.js
