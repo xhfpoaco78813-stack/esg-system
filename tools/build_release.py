@@ -21,6 +21,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--output', required=True)
 parser.add_argument('--version', default='4.1.4-gate1-revalidation')
 parser.add_argument('--gate', default='Gate 1 revalidation')
+parser.add_argument('--deployment-status', default='local-only')
 args = parser.parse_args()
 
 listed = subprocess.check_output(
@@ -30,7 +31,7 @@ files = sorted(path for path in listed if path and path != 'version.json')
 output = Path(args.output).resolve()
 output.parent.mkdir(parents=True, exist_ok=True)
 
-with tempfile.TemporaryDirectory(prefix='system-esg-release-') as tmp:
+with tempfile.TemporaryDirectory(prefix='system-esg-release-', dir=output.parent) as tmp:
     stage = Path(tmp)
     for relative in files:
         source = ROOT / relative
@@ -45,7 +46,7 @@ with tempfile.TemporaryDirectory(prefix='system-esg-release-') as tmp:
         'version':args.version,
         'built_at':datetime.now(timezone.utc).isoformat(),
         'gate':args.gate,
-        'deployment_status':'local-only',
+        'deployment_status':args.deployment_status,
         'hash_scope':'Every packaged file except version.json; hashes use the exact ZIP entry bytes.',
         'files':hashes
     }

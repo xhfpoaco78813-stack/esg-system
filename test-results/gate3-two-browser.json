@@ -1,0 +1,497 @@
+{
+  "started_at": "2026-10-12T22:52:24.830Z",
+  "frontend_url": "http://127.0.0.1:8796/index.html",
+  "staging_backend": "https://cytyjqucdrvjppmimmjs.supabase.co",
+  "checks": {
+    "a_answer_visible_on_b": true,
+    "cloud_delete_control_ready": true,
+    "cloud_delete_rpc_succeeded": true,
+    "b_old_progress_cleared_after_delete": true,
+    "b_loads_new_generation": true,
+    "offline_change_kept_locally": true,
+    "offline_change_syncs_after_reconnect": true,
+    "reload_preserves_synced_progress": true,
+    "relogin_preserves_synced_progress": true,
+    "no_duplicate_answer_keys": true,
+    "desktop_no_overflow": true,
+    "mobile_no_overflow": true,
+    "javascript_console_error_warning_zero": true,
+    "unhandled_http_4xx_5xx_zero": true
+  },
+  "devices": [
+    {
+      "name": "A-desktop-Chrome",
+      "viewport": "1280x900",
+      "browser": "Chrome/154.0.8037.99",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36"
+    },
+    {
+      "name": "B-mobile-Edge",
+      "viewport": "390x844",
+      "browser": "Edg/155.0.4283.45",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0"
+    }
+  ],
+  "events": [
+    {
+      "event": "A answered; B pulled",
+      "question_id": "GT-CN-010",
+      "at": "2026-10-12T22:52:41.476Z"
+    },
+    {
+      "event": "A invoked the visible cloud-delete control during sync",
+      "control": {
+        "disabled": false,
+        "handler": "function",
+        "gate1": ""
+      },
+      "at": "2026-10-12T22:52:41.484Z"
+    },
+    {
+      "event": "A delete during sync; B applied reset",
+      "at": "2026-10-12T22:52:43.679Z"
+    },
+    {
+      "event": "B offline answer; reconnect; A pulled",
+      "at": "2026-10-12T22:52:50.173Z"
+    }
+  ],
+  "result": "PASS",
+  "finished_at": "2026-10-12T22:52:53.634Z",
+  "staging_requests": [
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/auth/v1/token?grant_type=password",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/auth/v1/token?grant_type=password",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_data_resets_v41?select=reset_version%2Creset_at&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_progress_v40?select=payload%2Cversion%2Cupdated_at&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_progress_v40?select=payload%2Cversion%2Cupdated_at&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_data_resets_v41?select=reset_version%2Creset_at&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_delete_my_learning_data_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_delete_my_learning_data_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/auth/v1/token?grant_type=password",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/auth/v1/token?grant_type=password",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_progress_v40?select=payload%2Cversion%2Cupdated_at&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_data_resets_v41?select=reset_version%2Creset_at&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_progress_v40?select=payload%2Cversion%2Cupdated_at&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_data_resets_v41?select=reset_version%2Creset_at&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/auth/v1/logout?scope=global",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/auth/v1/logout?scope=global",
+      "status": 204
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/auth/v1/token?grant_type=password",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/auth/v1/token?grant_type=password",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    }
+  ],
+  "http_failures": {
+    "device_a": [],
+    "device_b": []
+  },
+  "network_failures": {
+    "device_a": [],
+    "device_b": [
+      {
+        "error": "net::ERR_ABORTED",
+        "blocked_reason": "",
+        "canceled": true
+      }
+    ]
+  },
+  "console_problems": {
+    "device_a": [],
+    "device_b": []
+  }
+}

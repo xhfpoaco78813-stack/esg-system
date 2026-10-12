@@ -45,6 +45,18 @@ function Invoke-Api {
   Complete-ApiRequest (Start-ApiRequest -Name $Name -Endpoint $Endpoint -Method $Method -Token $Token)
 }
 function Invoke-Rpc($Name,$Token,$Body,$Label) { Invoke-Api -Name $Label -Endpoint "/rest/v1/rpc/$Name" -Method POST -Token $Token -Body $Body }
+function Invoke-CorsProbe($Name,$Endpoint,$Origin) {
+  $request = [System.Net.Http.HttpRequestMessage]::new([System.Net.Http.HttpMethod]::Options, $url + $Endpoint)
+  [void]$request.Headers.TryAddWithoutValidation('Origin', $Origin)
+  [void]$request.Headers.TryAddWithoutValidation('Access-Control-Request-Method', 'POST')
+  [void]$request.Headers.TryAddWithoutValidation('Access-Control-Request-Headers', 'authorization,apikey,content-type')
+  $watch = [Diagnostics.Stopwatch]::StartNew(); $response = $client.SendAsync($request).GetAwaiter().GetResult(); $watch.Stop()
+  $statusCode = [int]$response.StatusCode
+  $evidence.requests.Add([ordered]@{name=$Name;method='OPTIONS';status=$statusCode;duration_ms=$watch.ElapsedMilliseconds})
+  $allowOrigin = if ($response.Headers.Contains('Access-Control-Allow-Origin')) { @($response.Headers.GetValues('Access-Control-Allow-Origin'))[0] } else { '' }
+  $request.Dispose(); $response.Dispose()
+  [pscustomobject]@{Success=($statusCode -ge 200 -and $statusCode -lt 400);AllowOrigin=$allowOrigin}
+}
 function Get-Row($Value) { @($Value)[0] }
 function Confirm-Check($Name,$Value) {
   $evidence.checks[$Name] = [bool]$Value
@@ -69,6 +81,13 @@ try {
   Confirm-Check 'same_account_two_sessions' ($sessionA.user.id -eq $sessionB.user.id)
   $tokenA=$sessionA.access_token; $tokenB=$sessionB.access_token
   $deviceA=[guid]::NewGuid().ToString(); $deviceB=[guid]::NewGuid().ToString()
+
+  $questionCors = Invoke-CorsProbe 'question-bank-cors' '/functions/v1/question-bank-v41' 'https://xhfpoaco78813-stack.github.io'
+  Confirm-Check 'question_bank_edge_function_cors' ($questionCors.Success -and $questionCors.AllowOrigin -eq '*')
+  $adminCors = Invoke-CorsProbe 'account-admin-cors' '/functions/v1/account-admin' 'https://xhfpoaco78813-stack.github.io'
+  Confirm-Check 'account_admin_edge_function_cors' ($adminCors.Success -and $adminCors.AllowOrigin -eq 'https://xhfpoaco78813-stack.github.io')
+  $questionList = Invoke-Api -Name 'question-bank-list' -Endpoint '/functions/v1/question-bank-v41' -Method POST -Token $tokenA -Body @{action='list';jurisdiction='CN';limit=5}
+  Confirm-Check 'question_bank_edge_function_returns_authorized_response' ($questionList.PSObject.Properties.Name -contains 'questions')
 
   $baseline = Get-Row (Invoke-Rpc 'esg_delete_my_learning_data_v41' $tokenA @{} 'baseline-delete')
   $generation0 = [long]$baseline.reset_version

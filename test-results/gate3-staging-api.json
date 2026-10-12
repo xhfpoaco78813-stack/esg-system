@@ -1,118 +1,139 @@
 {
-  "started_at": "2026-10-12T12:39:23.5147366+00:00",
+  "started_at": "2026-10-12T22:57:28.4004725+00:00",
   "project_ref": "cytyjqucdrvjppmimmjs",
   "requests": [
     {
       "name": "login-device-a",
       "method": "POST",
       "status": 200,
-      "duration_ms": 2880
+      "duration_ms": 966
     },
     {
       "name": "login-device-b",
       "method": "POST",
       "status": 200,
-      "duration_ms": 1254
+      "duration_ms": 369
+    },
+    {
+      "name": "question-bank-cors",
+      "method": "OPTIONS",
+      "status": 200,
+      "duration_ms": 345
+    },
+    {
+      "name": "account-admin-cors",
+      "method": "OPTIONS",
+      "status": 200,
+      "duration_ms": 387
+    },
+    {
+      "name": "question-bank-list",
+      "method": "POST",
+      "status": 200,
+      "duration_ms": 380
     },
     {
       "name": "baseline-delete",
       "method": "POST",
       "status": 200,
-      "duration_ms": 1456
+      "duration_ms": 352
     },
     {
       "name": "a-write-old-progress",
       "method": "POST",
       "status": 200,
-      "duration_ms": 725
+      "duration_ms": 329
     },
     {
       "name": "b-pull-old-progress",
       "method": "GET",
       "status": 200,
-      "duration_ms": 783
+      "duration_ms": 262
     },
     {
       "name": "a-write-old-draft",
       "method": "POST",
       "status": 200,
-      "duration_ms": 782
+      "duration_ms": 247
     },
     {
       "name": "b-racing-write",
       "method": "POST",
       "status": 200,
-      "duration_ms": 836
+      "duration_ms": 263
     },
     {
       "name": "a-racing-delete",
       "method": "POST",
       "status": 200,
-      "duration_ms": 1936
+      "duration_ms": 500
     },
     {
       "name": "b-stale-progress-after-delete",
       "method": "POST",
       "status": 200,
-      "duration_ms": 1079
+      "duration_ms": 251
     },
     {
       "name": "b-stale-draft-after-delete",
       "method": "POST",
       "status": 200,
-      "duration_ms": 603
+      "duration_ms": 247
     },
     {
       "name": "a-write-new-generation",
       "method": "POST",
       "status": 200,
-      "duration_ms": 1120
+      "duration_ms": 248
     },
     {
       "name": "b-pull-new-generation",
       "method": "GET",
       "status": 200,
-      "duration_ms": 1063
+      "duration_ms": 257
     },
     {
       "name": "b-stale-write-after-new-progress",
       "method": "POST",
       "status": 200,
-      "duration_ms": 1092
+      "duration_ms": 292
     },
     {
       "name": "a-write-new-draft",
       "method": "POST",
       "status": 200,
-      "duration_ms": 1195
+      "duration_ms": 241
     },
     {
       "name": "b-stale-draft-after-new-draft",
       "method": "POST",
       "status": 200,
-      "duration_ms": 614
+      "duration_ms": 242
     },
     {
       "name": "final-draft-state",
       "method": "GET",
       "status": 200,
-      "duration_ms": 607
+      "duration_ms": 247
     },
     {
       "name": "final-progress-state",
       "method": "GET",
       "status": 200,
-      "duration_ms": 587
+      "duration_ms": 235
     },
     {
       "name": "final-reset-state",
       "method": "GET",
       "status": 200,
-      "duration_ms": 1005
+      "duration_ms": 245
     }
   ],
   "checks": {
     "same_account_two_sessions": true,
+    "question_bank_edge_function_cors": true,
+    "account_admin_edge_function_cors": true,
+    "question_bank_edge_function_returns_authorized_response": true,
     "a_write_visible_to_b": true,
     "delete_write_race_requests_completed": true,
     "reset_generation_advanced": true,
@@ -128,13 +149,13 @@
     "no_unhandled_http_4xx_5xx": true
   },
   "final_state": {
-    "reset_version": 2,
+    "reset_version": 7,
     "progress_version": 2,
     "answer_ids": [
       "G3-NEW"
     ],
-    "draft_saved_at": "2026-10-12T20:39:39.653364+08:00"
+    "draft_saved_at": "2026-10-13T06:57:34.574323+08:00"
   },
   "result": "PASS",
-  "finished_at": "2026-10-12T12:39:42.4808586+00:00"
+  "finished_at": "2026-10-12T22:57:35.3434622+00:00"
 }

@@ -43,7 +43,7 @@ check("V4 sync payload includes past37", "past37:state.past37" in sync and "valu
 check("all progress and draft sync paths require consent", sync.count("hasConsent40()") >= 7 and "同步未开启" in sync)
 check("privacy UI is learner-accessible", "privacyTop41" in gate and "data-mobile-view38" in gate and "privacy32" in gate)
 check("cloud deletion targets V4 progress and draft data", "esg_delete_my_learning_data_v41" in migration and "delete from public.esg_progress_v40" in migration and "delete from public.esg_exam_drafts_v40" in migration)
-check("cloud deletion uses one handler and pauses sync first", "cloudDelete.onclick = null" in gate and gate.index("pauseAndWait()") < gate.index("esg_delete_my_learning_data_v41"))
+check("cloud deletion uses one explicit handler and pauses sync first", "privacyCloudDelete32').onclick=async event=>" in core and "esg_delete_my_learning_data_v41" in core and core.index("pauseAndWait()") < core.index("esg_delete_my_learning_data_v41") and "esg_delete_my_learning_data_v41" not in gate and "privacyCloudDelete32').onclick" not in gate)
 check("cross-device deletion uses an account reset generation", "esg_data_resets_v41" in migration and "v_client_reset < v_reset_version" in migration and "cloud_reset_version" in sync)
 check("stale exam drafts are rejected by reset generation", "esg_sync_exam_draft_v41" in migration and "p_reset_version" in migration and "esg_sync_exam_draft_v41" in sync)
 check("stale progress returns current server state without blanking it", "stale caller receives" in migration_v412 and "return query select p.payload" in migration_v412)

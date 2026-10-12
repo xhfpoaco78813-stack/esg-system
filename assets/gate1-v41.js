@@ -89,40 +89,6 @@
     } finally { event.target.disabled = !user31; }
   };
 
-  const configureCloudDelete41 = () => {
-    const cloudDelete = $('#privacyCloudDelete32');
-    if (!cloudDelete) return false;
-    // app-core contains the legacy V3.2 handler. Remove it and keep one delegated V4.1 path.
-    cloudDelete.onclick = null;
-    cloudDelete.dataset.gate1Delete = 'ready';
-    return true;
-  };
-  async function deleteCloud41() {
-    if (!sb31 || !user31) { $('#privacyStatus32').textContent = '请先登入。'; return; }
-    if (!confirm('确定删除当前账号的云端资料及此装置的本机学习资料？其他装置的旧资料会在连线时清空，此操作无法撤销。')) return;
-    const button = $('#privacyCloudDelete32');
-    button.disabled = true;
-    try {
-      await window.esgSync40.pauseAndWait();
-      const { data, error } = await sb31.rpc('esg_delete_my_learning_data_v41');
-      if (error) throw error;
-      const row = Array.isArray(data) ? data[0] : data;
-      const resetVersion = Number(row?.reset_version || 0);
-      state = {schema_version:4.1,cloud_reset_version:resetVersion,answered:{},learned:{},wrong:{},exams:[],attempts:[],past37:{answers:{}}};
-      save();
-      renderLearnList();
-      if (typeof renderMastery31 === 'function') renderMastery31();
-      if (typeof renderCompetency39 === 'function') renderCompetency39();
-      window.esgExamDraft38?.applyRemote(null);
-      refreshConsent41();
-      $('#privacyStatus32').textContent = '云端及本机学习资料已删除；其他装置的旧版本资料会在连线时清空，无法重新上传。';
-    } catch (error) {
-      console.error('Cloud data deletion failed', error);
-      $('#privacyStatus32').textContent = '云端删除失败；请确认 V4.1 migration 已部署。';
-    } finally { button.disabled = false; }
-  }
-  if (!configureCloudDelete41()) document.addEventListener('DOMContentLoaded', configureCloudDelete41, { once:true });
-
   const priorApplySession41 = applySession31;
   applySession31 = async function(session) {
     await priorApplySession41(session);
@@ -135,7 +101,6 @@
     renderExamAvailability41();
   });
   document.addEventListener('click', event => {
-    if (event.target.closest('#privacyCloudDelete32')) { event.preventDefault(); deleteCloud41(); return; }
     if (event.target.closest('[data-view="privacy32"], [data-mobile-view38="privacy32"], #privacyTop41')) {
       setTimeout(() => { configureCloudDelete41(); refreshConsent41(); }, 0);
     }
@@ -153,7 +118,6 @@
   let lateChecks41 = 0;
   const lateTimer41 = setInterval(() => {
     ensureMobilePrivacy41();
-    configureCloudDelete41();
     refreshConsent41();
     renderExamAvailability41();
     lateChecks41++;
