@@ -1,0 +1,26 @@
+{
+  "participants_entered": 0,
+  "participants_valid": 0,
+  "segments": [],
+  "core_task_pass": 0,
+  "core_task_total": 0,
+  "core_task_completion_percent": 0,
+  "average_improvement_percentage_points": null,
+  "average_sus": null,
+  "data_loss_count": 0,
+  "unrecoverable_block_count": 0,
+  "p0_count": 0,
+  "p1_count": 0,
+  "checks": {
+    "sample_at_least_10": false,
+    "both_target_segments": false,
+    "task_completion_at_least_95": false,
+    "data_loss_zero": true,
+    "unrecoverable_blocks_zero": true,
+    "average_improvement_at_least_15pp": false,
+    "average_sus_at_least_70": false,
+    "p0_zero": true,
+    "p1_zero": true
+  },
+  "decision": "HOLD"
+}

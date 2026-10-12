@@ -1,0 +1,26 @@
+import {spawn} from 'node:child_process';
+import {mkdir,readFile,rm,writeFile} from 'node:fs/promises';
+import http from 'node:http';
+import path from 'node:path';
+
+const root=path.resolve(import.meta.dirname,'..'),edge=process.env.EDGE_PATH||'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',port=9353,webPort=8786,profile=path.join(root,`.edge-gate3-trial-${Date.now()}`),failures=[],consoleProblems=[];
+await mkdir(path.join(root,'test-results'),{recursive:true});
+const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml'};
+const server=http.createServer(async(req,res)=>{try{const pathname=decodeURIComponent(new URL(req.url,'http://127.0.0.1').pathname),file=path.resolve(root,`.${pathname}`);if(!file.startsWith(root+path.sep)){res.writeHead(403).end();return;}const bytes=await readFile(file);res.writeHead(200,{'content-type':mime[path.extname(file)]||'application/octet-stream','cache-control':'no-store'}).end(bytes);}catch{res.writeHead(404).end();}});
+await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(webPort,'127.0.0.1',resolve);});
+const browser=spawn(edge,['--headless=new','--disable-gpu','--no-first-run','--disable-breakpad','--disable-features=msEdgeFirstRunExperience','--remote-allow-origins=*',`--remote-debugging-port=${port}`,`--user-data-dir=${profile}`,'about:blank'],{stdio:'ignore'}),delay=ms=>new Promise(r=>setTimeout(r,ms));
+let target;for(let i=0;i<60;i++){try{target=(await fetch(`http://127.0.0.1:${port}/json`).then(r=>r.json())).find(x=>x.type==='page');if(target)break;}catch{}await delay(100);}if(!target)throw new Error('Edge DevTools target did not start');
+const ws=new WebSocket(target.webSocketDebuggerUrl);await new Promise((resolve,reject)=>{ws.onopen=resolve;ws.onerror=reject;});let seq=0;const pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.method==='Network.responseReceived'&&m.params.response.status>=400)failures.push({url:m.params.response.url,status:m.params.response.status});if(m.method==='Runtime.consoleAPICalled'&&['error','warning'].includes(m.params.type))consoleProblems.push(m.params.args.map(x=>x.value||x.description).join(' '));if(m.method==='Runtime.exceptionThrown')consoleProblems.push(m.params.exceptionDetails.text);if(!m.id)return;const p=pending.get(m.id);if(!p)return;pending.delete(m.id);m.error?p.reject(new Error(m.error.message)):p.resolve(m.result);};
+function send(method,params={}){const id=++seq;ws.send(JSON.stringify({id,method,params}));return new Promise((resolve,reject)=>pending.set(id,{resolve,reject}));}
+const evaluate=async expression=>(await send('Runtime.evaluate',{expression,awaitPromise:true,returnByValue:true})).result.value;
+await send('Page.enable');await send('Runtime.enable');await send('Network.enable');await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
+try{
+  await send('Page.navigate',{url:`http://127.0.0.1:${webPort}/trial.html?t=${Date.now()}`});await delay(900);
+  await evaluate(`localStorage.removeItem('systemESG2:trial:v1');location.reload()`);await delay(900);
+  const action=await evaluate(`(()=>{document.getElementById('completeLesson').click();document.querySelector('[data-go="practice"]').click();document.querySelector('[data-option="1"]').click();document.getElementById('submitAnswer').click();document.querySelector('[data-view="past"]').click();document.querySelector('[data-past-option="1"]').click();document.getElementById('pastSubmit').click();return JSON.parse(localStorage.getItem('systemESG2:trial:v1'));})()`);
+  await send('Page.reload',{ignoreCache:true});await delay(900);
+  const after=await evaluate(`(()=>({state:JSON.parse(localStorage.getItem('systemESG2:trial:v1')),learned:document.getElementById('learnedCount').textContent,answered:document.getElementById('answeredCount').textContent,past:document.getElementById('pastReviewedCount').textContent,scrollWidth:document.documentElement.scrollWidth,innerWidth}))()`);
+  const shot=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});await writeFile(path.join(root,'test-results','gate3-trial-mobile-390.png'),Buffer.from(shot.data,'base64'));
+  const checks={lesson_saved:after.state.learned.includes('kp01'),practice_saved:after.state.answers.q01===true,past_saved:after.state.pastAnswers.pq01?.correct===true,reload_metrics:after.learned.includes('1 / 4')&&after.answered.includes('1 / 10')&&after.past.includes('1 / 6'),no_overflow:after.scrollWidth<=after.innerWidth,no_console_problems:consoleProblems.length===0,no_http_failures:failures.length===0};
+  const result={result:Object.values(checks).every(Boolean)?'PASS':'FAIL',viewport:'390x844',checks,httpFailures:failures,consoleProblems,actionState:action,reloadedState:after.state};await writeFile(path.join(root,'test-results','gate3-trial-browser.json'),JSON.stringify(result,null,2)+'\n');console.log(`${result.result}  trial learning, practice, past exam and reload  ${JSON.stringify(result)}`);if(result.result!=='PASS')process.exitCode=1;
+}finally{ws.close();browser.kill();await new Promise(r=>server.close(r));await rm(profile,{recursive:true,force:true}).catch(()=>{});}

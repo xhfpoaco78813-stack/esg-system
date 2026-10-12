@@ -56,7 +56,7 @@
 
   const adminPanel = document.createElement('div');
   adminPanel.className = 'feedback-admin34';
-  adminPanel.innerHTML = `<hr><div class="head"><h3>使用者意见</h3><span>仅管理角色可阅览</span></div><div class="controls"><select class="sel" id="feedbackFilter34"><option value="">全部状态</option><option value="new">新留言</option><option value="reviewing">处理中</option><option value="planned">已纳入计划</option><option value="resolved">已解决</option><option value="closed">已关闭</option></select><button class="btn soft" id="feedbackReload34" type="button">读取意见</button></div><p id="feedbackAdminStatus34" aria-live="polite"></p><div id="feedbackList34"></div>`;
+  adminPanel.innerHTML = `<hr><div class="head"><h3>使用者意见</h3><span>仅管理角色可阅览</span></div><div class="controls"><label class="sr-only" for="feedbackFilter34">意见状态</label><select class="sel" id="feedbackFilter34"><option value="">全部状态</option><option value="new">新留言</option><option value="reviewing">处理中</option><option value="planned">已纳入计划</option><option value="resolved">已解决</option><option value="closed">已关闭</option></select><button class="btn soft" id="feedbackReload34" type="button">读取意见</button></div><p id="feedbackAdminStatus34" aria-live="polite"></p><div id="feedbackList34"></div>`;
   el('admin31').append(adminPanel);
 
   function makeFeedbackRow(row) {
@@ -78,12 +78,14 @@
     controls.className = 'feedback-review-controls';
     const status = document.createElement('select');
     status.className = 'sel';
+    status.setAttribute('aria-label', `意见状态：${categoryLabels[row.category] || row.category}`);
     Object.entries(statusLabels).forEach(([value, label]) => {
       const option = document.createElement('option');
       option.value = value; option.textContent = label; option.selected = row.status === value; status.append(option);
     });
     const note = document.createElement('textarea');
     note.className = 'search'; note.maxLength = 2000; note.placeholder = '内部处理备注（选填）'; note.value = row.admin_note || '';
+    note.setAttribute('aria-label', `内部处理备注：${categoryLabels[row.category] || row.category}`);
     const save = document.createElement('button');
     save.className = 'btn soft'; save.type = 'button'; save.textContent = '保存处理结果';
     save.addEventListener('click', async () => {

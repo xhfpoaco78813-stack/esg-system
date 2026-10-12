@@ -1,0 +1,43 @@
+{
+  "result": "PASS",
+  "viewport": "390x844",
+  "checks": {
+    "lesson_saved": true,
+    "practice_saved": true,
+    "past_saved": true,
+    "reload_metrics": true,
+    "no_overflow": true,
+    "no_console_problems": true,
+    "no_http_failures": true
+  },
+  "httpFailures": [],
+  "consoleProblems": [],
+  "actionState": {
+    "learned": [
+      "kp01"
+    ],
+    "answers": {
+      "q01": true
+    },
+    "pastAnswers": {
+      "pq01": {
+        "selected": 1,
+        "correct": true
+      }
+    }
+  },
+  "reloadedState": {
+    "learned": [
+      "kp01"
+    ],
+    "answers": {
+      "q01": true
+    },
+    "pastAnswers": {
+      "pq01": {
+        "selected": 1,
+        "correct": true
+      }
+    }
+  }
+}

@@ -1,2 +1,3 @@
-window.SYSTEM_ESG_PUBLIC_CONFIG={"supabaseAnonKey":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRma2ZlYXRseXhuZ3ljYXpxaHlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwNzc3NDcsImV4cCI6MjA5NjY1Mzc0N30.dnOiJbkLynuHyn-eJ6dlO27dP7d7KLEup6_4MDek73U","supabaseUrl":"https://tfkfeatlyxngycazqhyg.supabase.co"};
+// Gate 3 staging only. This file contains a browser-safe publishable key, never a secret/service-role key.
+window.SYSTEM_ESG_PUBLIC_CONFIG={"supabaseAnonKey":"sb_publishable_xApWjXQOUn_xppBzmOcboA_40JqnYoa","supabaseUrl":"https://cytyjqucdrvjppmimmjs.supabase.co","environment":"gate3-staging"};
 localStorage.setItem("systemESG31:config",JSON.stringify({url:window.SYSTEM_ESG_PUBLIC_CONFIG.supabaseUrl,key:window.SYSTEM_ESG_PUBLIC_CONFIG.supabaseAnonKey}));

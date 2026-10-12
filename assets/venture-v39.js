@@ -43,7 +43,7 @@
     titles.dash = ['实战学习总览', '从核准题练习到实务训练，持续追踪制造业 ESG 学习表现。'];
     titles.learn = ['个性化学习', '依能力弱点学习法规、标准与制造业工作知识。'];
     titles.practice = ['实务情境训练', '以碳盘查、披露、供应链与客户稽核情境训练判断能力。'];
-    titles.wrong = ['错题诊断', '分析知识缺口并安排针对性回补。'];
+    titles.wrong = ['错题回补', '复习错题并完成针对性回补。'];
     titles.ability = ['学习报告', '持续追踪六项实战能力与下一步学习建议。'];
     const hero = document.querySelector('#dash .hero');
     if (hero) hero.innerHTML = `<div><div class="k" style="color:#a8d8c8">V4.1.5 Gate 2 复验版</div><h2>中国制造业 ESG 实战学习平台</h2><p>面向台资、外贸与供应链企业中的 ESG、碳管理、稽核及永续从业者。</p><button class="btn" style="margin-top:13px;background:#fff;color:#103b30" data-onclick="go('practice')">开始练习</button></div><div class="big" id="heroProg">0%</div>`;
