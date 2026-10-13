@@ -1,132 +1,132 @@
 {
-  "started_at": "2026-10-12T22:57:28.4004725+00:00",
+  "started_at": "2026-10-13T23:02:55.4810674+00:00",
   "project_ref": "cytyjqucdrvjppmimmjs",
   "requests": [
     {
       "name": "login-device-a",
       "method": "POST",
       "status": 200,
-      "duration_ms": 966
+      "duration_ms": 1093
     },
     {
       "name": "login-device-b",
       "method": "POST",
       "status": 200,
-      "duration_ms": 369
+      "duration_ms": 281
     },
     {
       "name": "question-bank-cors",
       "method": "OPTIONS",
       "status": 200,
-      "duration_ms": 345
+      "duration_ms": 255
     },
     {
       "name": "account-admin-cors",
       "method": "OPTIONS",
       "status": 200,
-      "duration_ms": 387
+      "duration_ms": 324
     },
     {
       "name": "question-bank-list",
       "method": "POST",
       "status": 200,
-      "duration_ms": 380
+      "duration_ms": 1289
     },
     {
       "name": "baseline-delete",
       "method": "POST",
       "status": 200,
-      "duration_ms": 352
+      "duration_ms": 259
     },
     {
       "name": "a-write-old-progress",
       "method": "POST",
       "status": 200,
-      "duration_ms": 329
+      "duration_ms": 224
     },
     {
       "name": "b-pull-old-progress",
       "method": "GET",
       "status": 200,
-      "duration_ms": 262
+      "duration_ms": 247
     },
     {
       "name": "a-write-old-draft",
       "method": "POST",
       "status": 200,
-      "duration_ms": 247
+      "duration_ms": 233
     },
     {
       "name": "b-racing-write",
       "method": "POST",
       "status": 200,
-      "duration_ms": 263
+      "duration_ms": 137
     },
     {
       "name": "a-racing-delete",
       "method": "POST",
       "status": 200,
-      "duration_ms": 500
+      "duration_ms": 275
     },
     {
       "name": "b-stale-progress-after-delete",
       "method": "POST",
       "status": 200,
-      "duration_ms": 251
+      "duration_ms": 141
     },
     {
       "name": "b-stale-draft-after-delete",
       "method": "POST",
       "status": 200,
-      "duration_ms": 247
+      "duration_ms": 135
     },
     {
       "name": "a-write-new-generation",
       "method": "POST",
       "status": 200,
-      "duration_ms": 248
+      "duration_ms": 168
     },
     {
       "name": "b-pull-new-generation",
       "method": "GET",
       "status": 200,
-      "duration_ms": 257
+      "duration_ms": 165
     },
     {
       "name": "b-stale-write-after-new-progress",
       "method": "POST",
       "status": 200,
-      "duration_ms": 292
+      "duration_ms": 128
     },
     {
       "name": "a-write-new-draft",
       "method": "POST",
       "status": 200,
-      "duration_ms": 241
+      "duration_ms": 152
     },
     {
       "name": "b-stale-draft-after-new-draft",
       "method": "POST",
       "status": 200,
-      "duration_ms": 242
+      "duration_ms": 125
     },
     {
       "name": "final-draft-state",
       "method": "GET",
       "status": 200,
-      "duration_ms": 247
+      "duration_ms": 127
     },
     {
       "name": "final-progress-state",
       "method": "GET",
       "status": 200,
-      "duration_ms": 235
+      "duration_ms": 125
     },
     {
       "name": "final-reset-state",
       "method": "GET",
       "status": 200,
-      "duration_ms": 245
+      "duration_ms": 132
     }
   ],
   "checks": {
@@ -149,13 +149,13 @@
     "no_unhandled_http_4xx_5xx": true
   },
   "final_state": {
-    "reset_version": 7,
+    "reset_version": 15,
     "progress_version": 2,
     "answer_ids": [
       "G3-NEW"
     ],
-    "draft_saved_at": "2026-10-13T06:57:34.574323+08:00"
+    "draft_saved_at": "2026-10-14T07:03:01.377469+08:00"
   },
   "result": "PASS",
-  "finished_at": "2026-10-12T22:57:35.3434622+00:00"
+  "finished_at": "2026-10-13T23:03:01.6855087+00:00"
 }

@@ -1,0 +1,35 @@
+{
+  "tested_at": "2026-10-13T23:04:17.8541353+00:00",
+  "staging_url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/",
+  "staging_commit": "6e38424b983847bd07b9b56ae449362ab0dc431e",
+  "checks": [
+    {
+      "url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/?v=4.1.9",
+      "status": 200,
+      "bytes": 10201,
+      "v419": true
+    },
+    {
+      "url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/assets/gate3-v419.js",
+      "status": 200,
+      "bytes": 4112,
+      "v419": true
+    },
+    {
+      "url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/trial.html?v=4.1.9",
+      "status": 200,
+      "bytes": 4683,
+      "v419": false
+    },
+    {
+      "url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/assets/favicon.svg",
+      "status": 200,
+      "bytes": 291,
+      "v419": false
+    }
+  ],
+  "all_http_200": true,
+  "formal_url": "https://xhfpoaco78813-stack.github.io/esg-system/",
+  "formal_status": 200,
+  "formal_contains_v419": false
+}

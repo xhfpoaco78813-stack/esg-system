@@ -9,7 +9,10 @@
 - Dashboard: `https://supabase.com/dashboard/project/cytyjqucdrvjppmimmjs`
 - Runtime config uses the staging publishable key only. No service-role or secret key is packaged.
 - Production project and the V4.0 public site were not modified.
-- Public staging frontend URL: **pending explicit authorization to publish the candidate bundle to the public GitHub staging repository**.
+- Public staging frontend URL: `https://xhfpoaco78813-stack.github.io/esgtestsystem/`
+- Staging frontend commit: `6e38424b983847bd07b9b56ae449362ab0dc431e`
+- HTTPS verification: entry page, V4.1.9 layer, trial page, and favicon all returned HTTP 200 on 2026-10-14 (Asia/Shanghai).
+- Production project and `https://xhfpoaco78813-stack.github.io/esg-system/` remain unchanged; the production response does not contain V4.1.9.
 
 ## Applied migrations
 
@@ -47,6 +50,8 @@ The retired `esg_sync_exam_draft_v40` RPC remains as a compatibility rejection s
 
 ## Runtime and CORS verification
 
-`test-results/gate3-staging-api.json` records 17/17 checks and 21 successful HTTPS requests, including both Edge Function preflights, the authorized question-bank response, two authenticated sessions, RPC concurrency, reset generation, draft tombstone, and final database state.
+`test-results/gate3-staging-frontend.json` records the public staging deployment, four successful HTTP 200 checks, the deployed commit, and the production-isolation check.
+
+`test-results/gate3-staging-api.json` records a fresh 17/17 run and 21 successful HTTPS requests, including both Edge Function preflights, the authorized question-bank response, two authenticated sessions, RPC concurrency, reset generation, draft tombstone, and final database state.
 
 `test-results/gate3-two-browser.json` records 14/14 checks from Chrome desktop and Edge mobile emulation directly connected to this staging backend. All 104 recorded staging requests returned HTTP 200 or 204.
