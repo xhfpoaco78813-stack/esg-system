@@ -7,7 +7,9 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 INDEX = (ROOT / 'index.html').read_text(encoding='utf-8')
 TRIAL = (ROOT / 'trial.html').read_text(encoding='utf-8')
-GATE3 = (ROOT / 'assets/gate3-v416.js').read_text(encoding='utf-8')
+GATE3 = (ROOT / 'assets/gate3-v417.js').read_text(encoding='utf-8')
+GATE1 = (ROOT / 'assets/gate1-v41.js').read_text(encoding='utf-8')
+CORE = (ROOT / 'assets/app-core-v41.js').read_text(encoding='utf-8')
 VENTURE = (ROOT / 'assets/venture-v39.js').read_text(encoding='utf-8')
 ADMIN = (ROOT / 'assets/account-admin-v36.js').read_text(encoding='utf-8')
 FEEDBACK = (ROOT / 'assets/feedback.js').read_text(encoding='utf-8')
@@ -18,8 +20,8 @@ def check(name, condition):
     checks.append((name, bool(condition)))
     print(('PASS' if condition else 'FAIL') + '  ' + name)
 
-check('version marked V4.1.6 Gate 3 candidate', 'V4.1.6 Gate 3 Revalidation Candidate' in INDEX and 'V4.1.6' in GATE3)
-check('Gate 3 layer loaded last', INDEX.rfind('gate3-v416.js') > INDEX.rfind('gate2-v415.js'))
+check('version marked V4.1.7 Gate 3 candidate', 'V4.1.7 Gate 3 Revalidation Candidate' in INDEX and 'V4.1.7' in GATE3)
+check('Gate 3 layer loaded last', INDEX.rfind('gate3-v417.js') > INDEX.rfind('gate2-v415.js'))
 check('formal wrong-answer name is navigation label', '>错题回补<' in INDEX)
 check('venture title no longer says wrong-answer diagnosis', "titles.wrong = ['错题回补'" in VENTURE and '错题诊断' not in VENTURE)
 check('Gate 3 dynamic language guard exists', "titles.wrong = ['错题回补'" in GATE3 and "replaceAll('错题诊断', '错题回补')" in GATE3)
@@ -41,6 +43,8 @@ check('dynamic role controls have aria-label', 'data-role-id=' in ADMIN and 'ari
 check('feedback status filter has associated label', 'for="feedbackFilter34">意见状态</label>' in FEEDBACK)
 check('dynamic feedback controls have names', "status.setAttribute('aria-label'" in FEEDBACK and "note.setAttribute('aria-label'" in FEEDBACK)
 check('all conditional controls receive fallback programmatic names', "querySelectorAll('input:not([type=\"hidden\"]), select, textarea')" in GATE3 and "setAttribute('aria-label'" in GATE3)
+check('privacy entry does not call removed cloud-delete configurator', 'configureCloudDelete41' not in GATE1 and 'refreshConsent41();' in GATE1)
+check('privacy status has a safe initial message', 'id="privacyStatus32" aria-live="polite">请先登入' in CORE)
 
 pilot_files = [
     'docs/GATE3-PILOT-PROTOCOL.md','docs/GATE3-PILOT-ASSESSMENT.md',
@@ -54,9 +58,13 @@ with (ROOT / 'data/gate3-pilot-raw.csv').open(encoding='utf-8-sig', newline='') 
     reader = csv.DictReader(handle)
     headers = set(reader.fieldnames or [])
     rows = list(reader)
-required_headers = {'participant_id','segment','device','browser','browser_version','pre_score','post_score','operation_error_count','help_count','data_loss_count','unrecoverable_block_count','feedback','notes'} | {f'sus_q{i}' for i in range(1,11)}
+required_headers = {'participant_id','pilot_started','segment','device','browser','browser_version','pre_score','post_score','operation_error_count','help_count','data_loss_count','unrecoverable_block_count','feedback','notes'} | {f'sus_q{i}' for i in range(1,11)}
 check('pilot raw data contains required fields', required_headers <= headers)
 check('pilot template provides 20 participant rows', len(rows) == 20)
+analyzer = (ROOT / 'tools/analyze_gate3_pilot.py').read_text(encoding='utf-8')
+check('pilot denominator includes every started participant', 'task_total = len(rows) * len(TASKS)' in analyzer)
+check('incomplete pilot records force HOLD', 'all_started_participants_have_complete_records' in analyzer)
+check('pilot analyzer adversarial regression exists', (ROOT / 'tests/gate3_pilot_analyzer_test.py').is_file())
 check('staging concurrency test is included', (ROOT / 'tests/gate3_staging_api_test.ps1').is_file())
 
 scripts = sorted((ROOT / 'assets').glob('*.js'))

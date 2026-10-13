@@ -3,6 +3,11 @@
   const init41 = () => {
   const $ = id => document.getElementById(id);
   const escape41 = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+  const openPrivacy41 = () => {
+    go('privacy32');
+    refreshConsent41();
+    document.documentElement.dataset.privacyRefresh41 = 'complete';
+  };
 
   document.querySelector('.brand small').textContent = 'V4.1.4 Gate 1 复验版';
   const heroVersion = document.querySelector('#dash .hero .k');
@@ -13,7 +18,7 @@
     const button = document.createElement('button');
     button.dataset.view = 'privacy32';
     button.innerHTML = '🛡️ <span class="lab">隐私与同步</span>';
-    button.addEventListener('click', () => go('privacy32'));
+    button.addEventListener('click', openPrivacy41);
     $('nav').append(button);
   }
   if (!$('privacyTop41')) {
@@ -22,7 +27,7 @@
     button.className = 'btn soft';
     button.type = 'button';
     button.textContent = '隐私与同步';
-    button.addEventListener('click', () => go('privacy32'));
+    button.addEventListener('click', openPrivacy41);
     document.querySelector('.top-actions35')?.insertBefore(button, $('logout35'));
   }
   const ensureMobilePrivacy41 = () => {
@@ -32,7 +37,7 @@
     button.type = 'button';
     button.dataset.mobileView38 = 'privacy32';
     button.textContent = '🛡️ 隐私与同步';
-    button.addEventListener('click', () => { go('privacy32'); $('#mobileMore38').hidden = true; });
+    button.addEventListener('click', () => { openPrivacy41(); $('#mobileMore38').hidden = true; });
     mobileMore.insertBefore(button, mobileMore.querySelector('small'));
   };
   ensureMobilePrivacy41();
@@ -102,7 +107,7 @@
   });
   document.addEventListener('click', event => {
     if (event.target.closest('[data-view="privacy32"], [data-mobile-view38="privacy32"], #privacyTop41')) {
-      setTimeout(() => { configureCloudDelete41(); refreshConsent41(); }, 0);
+      refreshConsent41();
     }
     if (event.target.closest('[data-view="exam"], [data-mobile-view38="exam"]')) setTimeout(renderExamAvailability41, 0);
   });

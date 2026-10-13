@@ -1,6 +1,6 @@
-# System-ESG V4.1.6 Gate 3 使用者試點操作手冊
+# System-ESG V4.1.7 Gate 3 使用者試點操作手冊
 
-版本：V4.1.6 Gate 3 Revalidation Candidate  
+版本：V4.1.7 Gate 3 Revalidation Candidate
 用途：10–20 名目標使用者的真人試點；自動測試不得代替本試點。
 
 ## 1. 樣本與分組
@@ -74,9 +74,10 @@
 
 ## 8. 原始資料與判定
 
-- 每位參與者填寫 `data/gate3-pilot-raw.csv` 一列。
+- 每位參與者開始第一項任務時，將 `pilot_started` 填為 `yes`，並完成 `data/gate3-pilot-raw.csv` 對應的一列。
 - 不得刪除失敗樣本；未完成欄位留空並在 `notes` 說明。
+- 已開始試點的參與者一律納入核心任務完成率分母；中途退出、漏填任務或問卷不會被分析器排除。
 - 執行 `python tools/analyze_gate3_pilot.py data/gate3-pilot-raw.csv --output test-results/gate3-pilot-summary.json`。
 - Gate 3 建議門檻：核心任務完成率 ≥95%、資料遺失 0、不可恢復中斷 0、平均提升 ≥15 個百分點、平均 SUS ≥70、P0=0、P1=0。
-- 少於 10 位有效參與者時，分析工具必定輸出 `HOLD`。
+- 少於 10 位參與者、任何已開始者紀錄不完整，或兩個目標分組未同時具備完整紀錄時，分析工具必定輸出 `HOLD`。
 

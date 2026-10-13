@@ -28,7 +28,7 @@ parser.add_argument("--output")
 args = parser.parse_args()
 
 with Path(args.csv_path).open(encoding="utf-8-sig", newline="") as handle:
-    rows = [row for row in csv.DictReader(handle) if (row.get("participant_id") or "").strip() and any(str(value or "").strip() for key, value in row.items() if key not in {"participant_id", None})]
+    rows = [row for row in csv.DictReader(handle) if (row.get("participant_id") or "").strip() and truth(row.get("pilot_started"))]
 
 valid = []
 for row in rows:
@@ -36,18 +36,23 @@ for row in rows:
     if pre is not None and post is not None and score is not None and all((row.get(task) or "").strip() for task in TASKS):
         valid.append((row, pre, post, score))
 
-task_total = len(valid) * len(TASKS)
-task_pass = sum(truth(row[task]) for row, *_ in valid for task in TASKS)
+task_total = len(rows) * len(TASKS)
+task_pass = sum(truth(row.get(task)) for row in rows for task in TASKS)
 completion = (task_pass / task_total * 100) if task_total else 0
 improvements = [post - pre for _, pre, post, _ in valid]
 sus_scores = [score for *_, score in valid]
-data_loss = sum(int(number(row, "data_loss_count") or 0) for row, *_ in valid)
-blocks = sum(int(number(row, "unrecoverable_block_count") or 0) for row, *_ in valid)
-p0 = sum(int(number(row, "p0_count") or 0) for row, *_ in valid)
-p1 = sum(int(number(row, "p1_count") or 0) for row, *_ in valid)
-segments = sorted({row["segment"].strip() for row, *_ in valid if row["segment"].strip()})
+data_loss = sum(int(number(row, "data_loss_count") or 0) for row in rows)
+blocks = sum(int(number(row, "unrecoverable_block_count") or 0) for row in rows)
+p0 = sum(int(number(row, "p0_count") or 0) for row in rows)
+p1 = sum(int(number(row, "p1_count") or 0) for row in rows)
+segments = sorted({row["segment"].strip() for row in rows if row["segment"].strip()})
+valid_segments = sorted({row["segment"].strip() for row, *_ in valid if row["segment"].strip()})
+valid_row_ids = {id(row) for row, *_ in valid}
+incomplete_ids = [row["participant_id"].strip() for row in rows if id(row) not in valid_row_ids]
 result = {
-    "participants_entered": len(rows), "participants_valid": len(valid), "segments": segments,
+    "participants_entered": len(rows), "participants_valid": len(valid),
+    "participants_incomplete": len(rows) - len(valid), "incomplete_participant_ids": incomplete_ids,
+    "segments": segments, "valid_segments": valid_segments,
     "core_task_pass": task_pass, "core_task_total": task_total,
     "core_task_completion_percent": round(completion, 2),
     "average_improvement_percentage_points": round(sum(improvements) / len(improvements), 2) if improvements else None,
@@ -55,8 +60,9 @@ result = {
     "data_loss_count": data_loss, "unrecoverable_block_count": blocks, "p0_count": p0, "p1_count": p1,
 }
 checks = {
-    "sample_at_least_10": len(valid) >= 10,
-    "both_target_segments": len(segments) >= 2,
+    "sample_at_least_10": len(rows) >= 10,
+    "all_started_participants_have_complete_records": len(valid) == len(rows),
+    "both_target_segments": len(valid_segments) >= 2,
     "task_completion_at_least_95": completion >= 95,
     "data_loss_zero": data_loss == 0,
     "unrecoverable_blocks_zero": blocks == 0,

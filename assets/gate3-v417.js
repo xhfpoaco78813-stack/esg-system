@@ -1,4 +1,4 @@
-/* System-ESG V4.1.6 Gate 3 remediation and evidence layer. Staging candidate only. */
+/* System-ESG V4.1.7 Gate 3 revalidation remediation layer. Staging candidate only. */
 (() => {
   const $ = id => document.getElementById(id);
   const controlNames416 = {
@@ -49,9 +49,9 @@
   }
   function setVersion416() {
     const brand = document.querySelector('.brand small');
-    if (brand) brand.textContent = 'V4.1.6 Gate 3 复验候选版';
+    if (brand) brand.textContent = 'V4.1.7 Gate 3 复验候选版';
     const version = document.querySelector('#dash .hero .k');
-    if (version) version.textContent = 'V4.1.6 Gate 3 Revalidation Candidate';
+    if (version) version.textContent = 'V4.1.7 Gate 3 Revalidation Candidate';
   }
   function init416() {
     unifyWrongAnswerLanguage416();
@@ -68,7 +68,7 @@
       if (target) requestAnimationFrame(unifyWrongAnswerLanguage416);
     });
   }
-  window.esgGate3V416 = {labelControls:labelControls416, unifyLanguage:unifyWrongAnswerLanguage416};
+  window.esgGate3V417 = {labelControls:labelControls416, unifyLanguage:unifyWrongAnswerLanguage416};
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init416, {once:true});
   else init416();
 })();

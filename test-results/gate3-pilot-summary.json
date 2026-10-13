@@ -1,7 +1,10 @@
 {
   "participants_entered": 0,
   "participants_valid": 0,
+  "participants_incomplete": 0,
+  "incomplete_participant_ids": [],
   "segments": [],
+  "valid_segments": [],
   "core_task_pass": 0,
   "core_task_total": 0,
   "core_task_completion_percent": 0,
@@ -13,6 +16,7 @@
   "p1_count": 0,
   "checks": {
     "sample_at_least_10": false,
+    "all_started_participants_have_complete_records": true,
     "both_target_segments": false,
     "task_completion_at_least_95": false,
     "data_loss_zero": true,
