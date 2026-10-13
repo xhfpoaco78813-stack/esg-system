@@ -4,7 +4,10 @@
   "participants_incomplete": 0,
   "incomplete_participant_ids": [],
   "segments": [],
-  "valid_segments": [],
+  "valid_segment_counts": {
+    "beginner": 0,
+    "practitioner": 0
+  },
   "core_task_pass": 0,
   "core_task_total": 0,
   "core_task_completion_percent": 0,
@@ -14,10 +17,13 @@
   "unrecoverable_block_count": 0,
   "p0_count": 0,
   "p1_count": 0,
+  "validation_errors": [],
   "checks": {
-    "sample_at_least_10": false,
+    "input_data_valid": true,
+    "sample_between_10_and_20": false,
+    "beginner_at_least_5": false,
+    "practitioner_at_least_5": false,
     "all_started_participants_have_complete_records": true,
-    "both_target_segments": false,
     "task_completion_at_least_95": false,
     "data_loss_zero": true,
     "unrecoverable_blocks_zero": true,

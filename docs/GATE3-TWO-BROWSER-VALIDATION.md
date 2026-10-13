@@ -5,7 +5,7 @@
 - Test window: `2026-10-12T22:52:24.830Z` to `2026-10-12T22:52:53.634Z` (`2026-10-13 06:52:24` to `06:52:53`, Asia/Shanghai)
 - Device A: Chrome `154.0.8037.99`, desktop viewport `1280 × 900`
 - Device B: Edge `155.0.4283.45`, mobile viewport `390 × 844`
-- Frontend: local V4.1.7 candidate served with cache disabled
+- Frontend: local V4.1.8 candidate served with cache disabled
 - Backend: isolated Supabase staging project `cytyjqucdrvjppmimmjs` over HTTPS
 - Identity: the same synthetic staging validation account in two isolated browser profiles
 

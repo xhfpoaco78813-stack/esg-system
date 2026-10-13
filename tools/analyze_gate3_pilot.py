@@ -1,26 +1,96 @@
 import argparse
 import csv
 import json
+import math
+from collections import Counter
 from pathlib import Path
 
+SEGMENTS = {"beginner", "practitioner"}
 TASKS = [f"t{i}_{name}_success" for i, name in [
     (1, "login"), (2, "learning"), (3, "practice"), (4, "wrong_created"),
     (5, "wrong_recovery"), (6, "report"), (7, "resume"), (8, "sync")
 ]]
+TASK_SECONDS = [f"t{i}_seconds" for i in range(1, 9)]
+COUNT_FIELDS = [
+    "operation_error_count", "help_count", "data_loss_count",
+    "unrecoverable_block_count", "p0_count", "p1_count",
+]
+REQUIRED_TEXT_FIELDS = ["segment", "device", "os", "browser", "browser_version"]
 
-def number(row, key):
-    value = (row.get(key) or "").strip()
-    return float(value) if value else None
 
-def truth(value):
-    return str(value or "").strip().lower() in {"1", "true", "yes", "y", "pass", "成功", "通過"}
+def text(row, key):
+    return str(row.get(key) or "").strip()
 
-def sus(row):
-    scores = [number(row, f"sus_q{i}") for i in range(1, 11)]
-    if any(score is None or score < 1 or score > 5 for score in scores):
+
+def add_error(errors, row, field, code, message):
+    errors.append({
+        "participant_id": text(row, "participant_id"),
+        "field": field,
+        "code": code,
+        "value": text(row, field),
+        "message": message,
+    })
+
+
+def finite_number(row, key, errors, minimum=None, maximum=None, integer=False):
+    raw = text(row, key)
+    if not raw:
+        add_error(errors, row, key, "required", "欄位不可留空")
         return None
-    adjusted = [(score - 1) if index % 2 == 1 else (5 - score) for index, score in enumerate(scores, 1)]
-    return sum(adjusted) * 2.5
+    try:
+        value = float(raw)
+    except ValueError:
+        add_error(errors, row, key, "not_numeric", "必須是數字")
+        return None
+    if not math.isfinite(value):
+        add_error(errors, row, key, "not_finite", "必須是有限數字")
+        return None
+    if integer and not value.is_integer():
+        add_error(errors, row, key, "not_integer", "必須是整數")
+        return None
+    if minimum is not None and value < minimum:
+        add_error(errors, row, key, "below_minimum", f"不得小於 {minimum}")
+        return None
+    if maximum is not None and value > maximum:
+        add_error(errors, row, key, "above_maximum", f"不得大於 {maximum}")
+        return None
+    return int(value) if integer else value
+
+
+def validate_row(row, duplicate_ids):
+    errors = []
+    participant_id = text(row, "participant_id")
+    if participant_id in duplicate_ids:
+        add_error(errors, row, "participant_id", "duplicate", "參與者編號不得重複")
+    if text(row, "pilot_started").lower() != "yes":
+        add_error(errors, row, "pilot_started", "invalid_choice", "已開始試點者必須填 yes")
+    for field in REQUIRED_TEXT_FIELDS:
+        if not text(row, field):
+            add_error(errors, row, field, "required", "欄位不可留空")
+    if text(row, "segment") not in SEGMENTS:
+        add_error(errors, row, "segment", "invalid_choice", "分組只能是 beginner 或 practitioner")
+    for field in TASKS:
+        if text(row, field).lower() not in {"pass", "fail"}:
+            add_error(errors, row, field, "invalid_choice", "任務結果只能是 pass 或 fail")
+    for field in TASK_SECONDS:
+        finite_number(row, field, errors, minimum=0)
+    pre = finite_number(row, "pre_score", errors, minimum=0, maximum=100)
+    post = finite_number(row, "post_score", errors, minimum=0, maximum=100)
+    sus_answers = [finite_number(row, f"sus_q{i}", errors, minimum=1, maximum=5, integer=True) for i in range(1, 11)]
+    counts = {field: finite_number(row, field, errors, minimum=0, integer=True) for field in COUNT_FIELDS}
+    sus_score = None
+    if all(score is not None for score in sus_answers):
+        adjusted = [(score - 1) if index % 2 == 1 else (5 - score) for index, score in enumerate(sus_answers, 1)]
+        sus_score = sum(adjusted) * 2.5
+    return {
+        "row": row,
+        "errors": errors,
+        "pre": pre,
+        "post": post,
+        "sus": sus_score,
+        "counts": counts,
+    }
+
 
 parser = argparse.ArgumentParser(description="Analyze System-ESG Gate 3 human pilot data")
 parser.add_argument("csv_path")
@@ -28,41 +98,54 @@ parser.add_argument("--output")
 args = parser.parse_args()
 
 with Path(args.csv_path).open(encoding="utf-8-sig", newline="") as handle:
-    rows = [row for row in csv.DictReader(handle) if (row.get("participant_id") or "").strip() and truth(row.get("pilot_started"))]
+    source_rows = list(csv.DictReader(handle))
 
-valid = []
-for row in rows:
-    pre, post, score = number(row, "pre_score"), number(row, "post_score"), sus(row)
-    if pre is not None and post is not None and score is not None and all((row.get(task) or "").strip() for task in TASKS):
-        valid.append((row, pre, post, score))
+# Blank template rows are ignored. Any non-empty pilot_started value means the
+# participant entered the study and must remain in the denominator.
+rows = [row for row in source_rows if text(row, "participant_id") and text(row, "pilot_started")]
+id_counts = Counter(text(row, "participant_id") for row in rows)
+duplicate_ids = {participant_id for participant_id, count in id_counts.items() if count > 1}
+assessments = [validate_row(row, duplicate_ids) for row in rows]
+validation_errors = [error for item in assessments for error in item["errors"]]
+valid = [item for item in assessments if not item["errors"]]
 
 task_total = len(rows) * len(TASKS)
-task_pass = sum(truth(row.get(task)) for row in rows for task in TASKS)
+task_pass = sum(text(row, task).lower() == "pass" for row in rows for task in TASKS)
 completion = (task_pass / task_total * 100) if task_total else 0
-improvements = [post - pre for _, pre, post, _ in valid]
-sus_scores = [score for *_, score in valid]
-data_loss = sum(int(number(row, "data_loss_count") or 0) for row in rows)
-blocks = sum(int(number(row, "unrecoverable_block_count") or 0) for row in rows)
-p0 = sum(int(number(row, "p0_count") or 0) for row in rows)
-p1 = sum(int(number(row, "p1_count") or 0) for row in rows)
-segments = sorted({row["segment"].strip() for row in rows if row["segment"].strip()})
-valid_segments = sorted({row["segment"].strip() for row, *_ in valid if row["segment"].strip()})
-valid_row_ids = {id(row) for row, *_ in valid}
-incomplete_ids = [row["participant_id"].strip() for row in rows if id(row) not in valid_row_ids]
+improvements = [item["post"] - item["pre"] for item in valid]
+sus_scores = [item["sus"] for item in valid]
+data_loss = sum(item["counts"]["data_loss_count"] or 0 for item in assessments)
+blocks = sum(item["counts"]["unrecoverable_block_count"] or 0 for item in assessments)
+p0 = sum(item["counts"]["p0_count"] or 0 for item in assessments)
+p1 = sum(item["counts"]["p1_count"] or 0 for item in assessments)
+segments = sorted({text(row, "segment") for row in rows if text(row, "segment")})
+valid_segment_counts = Counter(text(item["row"], "segment") for item in valid)
+incomplete_ids = [text(item["row"], "participant_id") for item in assessments if item["errors"]]
+
 result = {
-    "participants_entered": len(rows), "participants_valid": len(valid),
-    "participants_incomplete": len(rows) - len(valid), "incomplete_participant_ids": incomplete_ids,
-    "segments": segments, "valid_segments": valid_segments,
-    "core_task_pass": task_pass, "core_task_total": task_total,
+    "participants_entered": len(rows),
+    "participants_valid": len(valid),
+    "participants_incomplete": len(rows) - len(valid),
+    "incomplete_participant_ids": incomplete_ids,
+    "segments": segments,
+    "valid_segment_counts": {segment: valid_segment_counts.get(segment, 0) for segment in sorted(SEGMENTS)},
+    "core_task_pass": task_pass,
+    "core_task_total": task_total,
     "core_task_completion_percent": round(completion, 2),
     "average_improvement_percentage_points": round(sum(improvements) / len(improvements), 2) if improvements else None,
     "average_sus": round(sum(sus_scores) / len(sus_scores), 2) if sus_scores else None,
-    "data_loss_count": data_loss, "unrecoverable_block_count": blocks, "p0_count": p0, "p1_count": p1,
+    "data_loss_count": data_loss,
+    "unrecoverable_block_count": blocks,
+    "p0_count": p0,
+    "p1_count": p1,
+    "validation_errors": validation_errors,
 }
 checks = {
-    "sample_at_least_10": len(rows) >= 10,
+    "input_data_valid": not validation_errors,
+    "sample_between_10_and_20": 10 <= len(rows) <= 20,
+    "beginner_at_least_5": valid_segment_counts.get("beginner", 0) >= 5,
+    "practitioner_at_least_5": valid_segment_counts.get("practitioner", 0) >= 5,
     "all_started_participants_have_complete_records": len(valid) == len(rows),
-    "both_target_segments": len(valid_segments) >= 2,
     "task_completion_at_least_95": completion >= 95,
     "data_loss_zero": data_loss == 0,
     "unrecoverable_blocks_zero": blocks == 0,

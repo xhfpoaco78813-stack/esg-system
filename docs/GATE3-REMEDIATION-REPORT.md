@@ -1,6 +1,6 @@
-# System-ESG V4.1.7 Gate 3 Remediation Report
+# System-ESG V4.1.8 Gate 3 Remediation Report
 
-> Latest focused revalidation: `docs/GATE3-REVALIDATION-V417-REPORT.md`.
+> Latest focused revalidation: `docs/GATE3-REVALIDATION-V418-REPORT.md`.
 
 ## Decision
 

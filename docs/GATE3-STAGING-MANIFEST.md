@@ -1,8 +1,8 @@
-# System-ESG V4.1.7 Gate 3 Staging Manifest
+# System-ESG V4.1.8 Gate 3 Staging Manifest
 
 ## Environment separation
 
-- Candidate: **V4.1.7 Gate 3 Revalidation Candidate**
+- Candidate: **V4.1.8 Gate 3 Revalidation Candidate**
 - Supabase staging project: `esg-system-gate3-staging`
 - Project ref: `cytyjqucdrvjppmimmjs`
 - API URL: `https://cytyjqucdrvjppmimmjs.supabase.co`
