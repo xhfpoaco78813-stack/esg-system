@@ -1,8 +1,8 @@
-# System-ESG V4.1.8 Gate 3 Staging Manifest
+# System-ESG V4.1.9 Gate 3 Staging Manifest
 
 ## Environment separation
 
-- Candidate: **V4.1.8 Gate 3 Revalidation Candidate**
+- Candidate: **V4.1.9 Gate 3 Revalidation Candidate**
 - Supabase staging project: `esg-system-gate3-staging`
 - Project ref: `cytyjqucdrvjppmimmjs`
 - API URL: `https://cytyjqucdrvjppmimmjs.supabase.co`
@@ -50,4 +50,3 @@ The retired `esg_sync_exam_draft_v40` RPC remains as a compatibility rejection s
 `test-results/gate3-staging-api.json` records 17/17 checks and 21 successful HTTPS requests, including both Edge Function preflights, the authorized question-bank response, two authenticated sessions, RPC concurrency, reset generation, draft tombstone, and final database state.
 
 `test-results/gate3-two-browser.json` records 14/14 checks from Chrome desktop and Edge mobile emulation directly connected to this staging backend. All 104 recorded staging requests returned HTTP 200 or 204.
-

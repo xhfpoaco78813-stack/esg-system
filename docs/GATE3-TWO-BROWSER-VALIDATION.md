@@ -5,7 +5,7 @@
 - Test window: `2026-10-12T22:52:24.830Z` to `2026-10-12T22:52:53.634Z` (`2026-10-13 06:52:24` to `06:52:53`, Asia/Shanghai)
 - Device A: Chrome `154.0.8037.99`, desktop viewport `1280 × 900`
 - Device B: Edge `155.0.4283.45`, mobile viewport `390 × 844`
-- Frontend: local V4.1.8 candidate served with cache disabled
+- Frontend: local V4.1.9 candidate served with cache disabled
 - Backend: isolated Supabase staging project `cytyjqucdrvjppmimmjs` over HTTPS
 - Identity: the same synthetic staging validation account in two isolated browser profiles
 
@@ -33,4 +33,3 @@ The browser trace contains 104 staging requests; every recorded response was HTT
 ## Database-level concurrency supplement
 
 The separate staging API suite ran 17/17 checks. It issued the old-generation write and account deletion concurrently, then verified the reset version, rejected stale progress and drafts, loaded new-generation data, preserved the new draft, and confirmed one final progress row. Final database state recorded reset generation 7, progress version 2, and only the `G3-NEW` answer.
-

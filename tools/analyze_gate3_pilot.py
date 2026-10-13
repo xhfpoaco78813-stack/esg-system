@@ -16,6 +16,9 @@ COUNT_FIELDS = [
     "unrecoverable_block_count", "p0_count", "p1_count",
 ]
 REQUIRED_TEXT_FIELDS = ["segment", "device", "os", "browser", "browser_version"]
+PILOT_ACTIVITY_FIELDS = set(TASKS + TASK_SECONDS + COUNT_FIELDS + REQUIRED_TEXT_FIELDS + [
+    "pre_score", "post_score", "feedback", "notes",
+] + [f"sus_q{i}" for i in range(1, 11)])
 
 
 def text(row, key):
@@ -24,6 +27,7 @@ def text(row, key):
 
 def add_error(errors, row, field, code, message):
     errors.append({
+        "row_number": row.get("_row_number"),
         "participant_id": text(row, "participant_id"),
         "field": field,
         "code": code,
@@ -60,6 +64,8 @@ def finite_number(row, key, errors, minimum=None, maximum=None, integer=False):
 def validate_row(row, duplicate_ids):
     errors = []
     participant_id = text(row, "participant_id")
+    if not participant_id:
+        add_error(errors, row, "participant_id", "required", "參與者編號不可留空")
     if participant_id in duplicate_ids:
         add_error(errors, row, "participant_id", "duplicate", "參與者編號不得重複")
     if text(row, "pilot_started").lower() != "yes":
@@ -100,10 +106,20 @@ args = parser.parse_args()
 with Path(args.csv_path).open(encoding="utf-8-sig", newline="") as handle:
     source_rows = list(csv.DictReader(handle))
 
-# Blank template rows are ignored. Any non-empty pilot_started value means the
-# participant entered the study and must remain in the denominator.
-rows = [row for row in source_rows if text(row, "participant_id") and text(row, "pilot_started")]
-id_counts = Counter(text(row, "participant_id") for row in rows)
+# Untouched template rows contain only a reserved participant_id and are ignored.
+# Once a row contains pilot_started or any substantive pilot datum it is included,
+# even if participant_id/pilot_started was cleared. Invalid started rows therefore
+# cannot disappear from the denominator or bypass validation.
+for row_number, row in enumerate(source_rows, start=2):
+    row["_row_number"] = row_number
+
+
+def has_pilot_activity(row):
+    return bool(text(row, "pilot_started") or any(text(row, field) for field in PILOT_ACTIVITY_FIELDS))
+
+
+rows = [row for row in source_rows if has_pilot_activity(row)]
+id_counts = Counter(text(row, "participant_id") for row in rows if text(row, "participant_id"))
 duplicate_ids = {participant_id for participant_id, count in id_counts.items() if count > 1}
 assessments = [validate_row(row, duplicate_ids) for row in rows]
 validation_errors = [error for item in assessments for error in item["errors"]]
@@ -120,7 +136,10 @@ p0 = sum(item["counts"]["p0_count"] or 0 for item in assessments)
 p1 = sum(item["counts"]["p1_count"] or 0 for item in assessments)
 segments = sorted({text(row, "segment") for row in rows if text(row, "segment")})
 valid_segment_counts = Counter(text(item["row"], "segment") for item in valid)
-incomplete_ids = [text(item["row"], "participant_id") for item in assessments if item["errors"]]
+incomplete_ids = [
+    text(item["row"], "participant_id") or f"row:{item['row'].get('_row_number')}"
+    for item in assessments if item["errors"]
+]
 
 result = {
     "participants_entered": len(rows),

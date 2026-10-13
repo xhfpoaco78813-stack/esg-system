@@ -14,7 +14,7 @@ setTimeout(async () => {
     results.privacyOpened = document.getElementById('privacy32')?.classList.contains('active') === true;
     document.getElementById('accountAdmin36').hidden = false;
     document.getElementById('mfaModal36').hidden = false;
-    window.esgGate3V418?.labelControls(document);
+    window.esgGate3V419?.labelControls(document);
     const hasName = control => {
       if (control.getAttribute('aria-label') || control.getAttribute('aria-labelledby')) return true;
       if (control.id && document.querySelector(`label[for="${CSS.escape(control.id)}"]`)) return true;
@@ -36,7 +36,7 @@ setTimeout(async () => {
   const passed = results.practiceQuestion && results.wrongTitle && results.noWrongDiagnosis && results.wrongNav
     && results.privacyTopPresent && results.privacyOpened && results.privacyStatus.length > 0 && results.privacyRefresh === 'complete'
     && results.unlabeledControls.length === 0 && results.faviconHref === 'assets/favicon.svg'
-    && results.version.includes('V4.1.8') && results.consoleErrors.length === 0 && results.consoleWarnings.length === 0;
+    && results.version.includes('V4.1.9') && results.consoleErrors.length === 0 && results.consoleWarnings.length === 0;
   document.documentElement.dataset.gate3Result = passed ? 'PASS' : 'FAIL';
   document.documentElement.dataset.gate3Details = JSON.stringify(results);
 }, 1500);

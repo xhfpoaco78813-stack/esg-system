@@ -117,6 +117,30 @@ oversized_result = analyze([
 assert oversized_result["checks"]["sample_between_10_and_20"] is False
 assert oversized_result["decision"] == "HOLD"
 
+blank_id = [row.copy() for row in complete]
+blank_id[0]["participant_id"] = ""
+blank_id_result = analyze(blank_id, fields)
+assert blank_id_result["participants_entered"] == 10
+assert blank_id_result["participants_valid"] == 9
+blank_id_errors = [
+    error for error in blank_id_result["validation_errors"]
+    if error["field"] == "participant_id" and error["code"] == "required"
+]
+assert blank_id_errors and blank_id_errors[0]["row_number"] == 2
+assert blank_id_result["incomplete_participant_ids"] == ["row:2"]
+assert blank_id_result["decision"] == "HOLD"
+
+blank_started = [row.copy() for row in complete]
+blank_started[0]["pilot_started"] = ""
+blank_started_result = analyze(blank_started, fields)
+assert blank_started_result["participants_entered"] == 10
+assert blank_started_result["participants_valid"] == 9
+assert any(
+    error["field"] == "pilot_started" and error["row_number"] == 2
+    for error in blank_started_result["validation_errors"]
+)
+assert blank_started_result["decision"] == "HOLD"
+
 print("PASS  complete 10-person pilot can satisfy all Gate 3 thresholds")
 print("PASS  incomplete participants remain in the task-completion denominator")
 print("PASS  10 completed plus 10 incomplete participants returns HOLD")
@@ -124,3 +148,5 @@ print("PASS  arbitrary segment labels cannot satisfy the two-group gate")
 print("PASS  each fixed segment requires at least five valid participants")
 print("PASS  out-of-range scores, SUS, time, and counts produce validation_errors and HOLD")
 print("PASS  samples larger than 20 participants return HOLD")
+print("PASS  started rows with a blank participant ID remain included and force HOLD")
+print("PASS  rows with pilot data cannot bypass validation by clearing pilot_started")
