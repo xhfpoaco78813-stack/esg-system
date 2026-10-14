@@ -1,4 +1,5 @@
 import csv
+import json
 import re
 import subprocess
 import sys
@@ -61,6 +62,22 @@ with (ROOT / "data" / "gate3-pilot-invites.csv").open(encoding="utf-8-sig", newl
 check("twenty anonymous pilot links are prepared", len(invitations) == 20 and len({row["participant_id"] for row in invitations}) == 20)
 check("pilot links provide ten participants per fixed segment", sum(row["segment"] == "beginner" for row in invitations) == 10 and sum(row["segment"] == "practitioner" for row in invitations) == 10)
 check("pilot links target isolated staging", all("/esgtestsystem/pilot.html?participant=" in row["pilot_url"] for row in invitations))
+check("each pilot slot has a staging account", all(row["account_assigned"] == f"gate3-{row['participant_id'].lower()}@pilot.invalid" for row in invitations))
+
+account_evidence_text = (ROOT / "test-results" / "gate3-pilot-accounts-validation.json").read_text(encoding="utf-8")
+account_evidence = json.loads(account_evidence_text)
+check(
+    "twenty unique staging accounts passed login and learner-role checks",
+    account_evidence.get("participant_count") == 20
+    and account_evidence.get("unique_user_count") == 20
+    and account_evidence.get("login_pass_count") == 20
+    and account_evidence.get("role_pass_count") == 20,
+)
+check(
+    "tracked account evidence contains no credentials",
+    account_evidence.get("credentials_in_git_or_zip") is False
+    and all(token not in account_evidence_text.lower() for token in ("password", "service_role", "sb_secret_")),
+)
 
 for script in [ROOT / "assets" / "pilot-v1.js"]:
     result = subprocess.run(["node", "--check", str(script)], capture_output=True, text=True)

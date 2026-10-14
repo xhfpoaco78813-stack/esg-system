@@ -15,7 +15,7 @@ Staging 記錄入口：`pilot.html?participant=Pxx`。頁面會在本機保存�
 
 ## 2. 測試前準備
 
-1. 為每位參與者建立獨立 staging 帳號。
+1. 使用已配置的 P01–P20 獨立 staging 學員帳號；帳號已完成唯一性、登入及 `learner` 角色驗證，密碼僅由主持人的私密交接表提供。
 2. 確認 staging 網址、Supabase 專案及正式站完全隔離。
 3. 清除該帳號既有 staging 進度。
 4. 準備計時器、任務單、前後測與 SUS 問卷。

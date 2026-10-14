@@ -1,0 +1,172 @@
+{
+  "generated_at": "2026-10-14T13:13:46.8337589Z",
+  "environment": "Supabase staging only",
+  "project_ref": "cytyjqucdrvjppmimmjs",
+  "participant_count": 20,
+  "unique_user_count": 20,
+  "login_pass_count": 20,
+  "role_pass_count": 20,
+  "credentials_in_git_or_zip": false,
+  "participants": [
+    {
+      "participant_id": "P01",
+      "cohort": "beginner",
+      "user_id": "a531af47-e2eb-47a0-bc21-293d483d7185",
+      "provisioning": "updated",
+      "login_pass": true,
+      "role_pass": true
+    },
+    {
+      "participant_id": "P02",
+      "cohort": "beginner",
+      "user_id": "c8ffaf3e-a53c-48b1-8d53-62c22f1f58fc",
+      "provisioning": "updated",
+      "login_pass": true,
+      "role_pass": true
+    },
+    {
+      "participant_id": "P03",
+      "cohort": "beginner",
+      "user_id": "ae8345e1-db67-44b6-81a3-9db06abc2424",
+      "provisioning": "updated",
+      "login_pass": true,
+      "role_pass": true
+    },
+    {
+      "participant_id": "P04",
+      "cohort": "beginner",
+      "user_id": "04d05077-6e32-4b32-96b4-1ae6cb4a3955",
+      "provisioning": "updated",
+      "login_pass": true,
+      "role_pass": true
+    },
+    {
+      "participant_id": "P05",
+      "cohort": "beginner",
+      "user_id": "3e648e7b-57a3-436d-9e44-29510571fc10",
+      "provisioning": "updated",
+      "login_pass": true,
+      "role_pass": true
+    },
+    {
+      "participant_id": "P06",
+      "cohort": "beginner",
+      "user_id": "986729b0-c03f-40c1-8307-955e0be66a5b",
+      "provisioning": "updated",
+      "login_pass": true,
+      "role_pass": true
+    },
+    {
+      "participant_id": "P07",
+      "cohort": "beginner",
+      "user_id": "1211dc1f-5c8e-4cb5-9765-b522609e26c8",
+      "provisioning": "updated",
+      "login_pass": true,
+      "role_pass": true
+    },
+    {
+      "participant_id": "P08",
+      "cohort": "beginner",
+      "user_id": "83b3f2fa-a82a-4733-81f8-a089b27eec72",
+      "provisioning": "updated",
+      "login_pass": true,
+      "role_pass": true
+    },
+    {
+      "participant_id": "P09",
+      "cohort": "beginner",
+      "user_id": "21fa4da1-55fa-4837-8950-d100095beb42",
+      "provisioning": "updated",
+      "login_pass": true,
+      "role_pass": true
+    },
+    {
+      "participant_id": "P10",
+      "cohort": "beginner",
+      "user_id": "bdba5f59-0a77-453a-9690-4c0104809809",
+      "provisioning": "updated",
+      "login_pass": true,
+      "role_pass": true
+    },
+    {
+      "participant_id": "P11",
+      "cohort": "practitioner",
+      "user_id": "ff9c18f6-b0a8-4604-8cd2-a85a26cbf692",
+      "provisioning": "updated",
+      "login_pass": true,
+      "role_pass": true
+    },
+    {
+      "participant_id": "P12",
+      "cohort": "practitioner",
+      "user_id": "2b7e4e2a-433c-4b23-b2de-707532e98b0c",
+      "provisioning": "updated",
+      "login_pass": true,
+      "role_pass": true
+    },
+    {
+      "participant_id": "P13",
+      "cohort": "practitioner",
+      "user_id": "f520375e-4cc0-4723-9c41-99154ae882f1",
+      "provisioning": "updated",
+      "login_pass": true,
+      "role_pass": true
+    },
+    {
+      "participant_id": "P14",
+      "cohort": "practitioner",
+      "user_id": "9f405831-aa79-43c1-b2c5-2cccfbf6f4b7",
+      "provisioning": "updated",
+      "login_pass": true,
+      "role_pass": true
+    },
+    {
+      "participant_id": "P15",
+      "cohort": "practitioner",
+      "user_id": "4df4fe96-d76b-4cda-88c5-d0d1211a7882",
+      "provisioning": "updated",
+      "login_pass": true,
+      "role_pass": true
+    },
+    {
+      "participant_id": "P16",
+      "cohort": "practitioner",
+      "user_id": "9771fc93-965b-4532-8a69-6faa520a9616",
+      "provisioning": "updated",
+      "login_pass": true,
+      "role_pass": true
+    },
+    {
+      "participant_id": "P17",
+      "cohort": "practitioner",
+      "user_id": "4128704c-ea43-4979-95ba-b57987e611ae",
+      "provisioning": "updated",
+      "login_pass": true,
+      "role_pass": true
+    },
+    {
+      "participant_id": "P18",
+      "cohort": "practitioner",
+      "user_id": "96e376ae-f31d-407c-8c93-8b5c311ed1b0",
+      "provisioning": "updated",
+      "login_pass": true,
+      "role_pass": true
+    },
+    {
+      "participant_id": "P19",
+      "cohort": "practitioner",
+      "user_id": "a6f69cee-6db4-49e2-ae9a-d12d4eecbe16",
+      "provisioning": "updated",
+      "login_pass": true,
+      "role_pass": true
+    },
+    {
+      "participant_id": "P20",
+      "cohort": "practitioner",
+      "user_id": "42df05e6-3324-4608-82ff-1c6d9f4eac2f",
+      "provisioning": "updated",
+      "login_pass": true,
+      "role_pass": true
+    }
+  ]
+}
