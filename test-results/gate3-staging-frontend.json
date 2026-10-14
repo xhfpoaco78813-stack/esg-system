@@ -1,35 +1,60 @@
 {
-  "tested_at": "2026-10-13T23:04:17.8541353+00:00",
+  "checked_at": "2026-10-14T23:07:44.4846129+00:00",
+  "candidate_version": "V4.1.10 Gate 3 Revalidation Candidate",
   "staging_url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/",
-  "staging_commit": "6e38424b983847bd07b9b56ae449362ab0dc431e",
-  "checks": [
+  "pilot_url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/pilot.html",
+  "staging_files": [
     {
-      "url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/?v=4.1.9",
+      "path": "index.html",
+      "url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/index.html",
       "status": 200,
-      "bytes": 10201,
-      "v419": true
+      "bytes": 10218,
+      "normalized_match": true,
+      "local_sha256": "821c80900f0814ca0c4a83416c067c6b5e055e884db70672420b9682111c4508"
     },
     {
-      "url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/assets/gate3-v419.js",
+      "path": "pilot.html",
+      "url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/pilot.html",
       "status": 200,
-      "bytes": 4112,
-      "v419": true
+      "bytes": 6865,
+      "normalized_match": true,
+      "local_sha256": "65a013c31ba9048cd90892902608367ba6ffb08da1ca73d50cb92ce0ef6dcc2c"
     },
     {
-      "url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/trial.html?v=4.1.9",
+      "path": "assets/sync-v40.js",
+      "url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/assets/sync-v40.js",
       "status": 200,
-      "bytes": 4683,
-      "v419": false
+      "bytes": 12752,
+      "normalized_match": true,
+      "local_sha256": "5c67e0282bedc000ee492d2e10a428a1767040397e1a354caf09d5ec9b179eae"
     },
     {
-      "url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/assets/favicon.svg",
+      "path": "assets/pilot-v1.js",
+      "url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/assets/pilot-v1.js",
       "status": 200,
-      "bytes": 291,
-      "v419": false
+      "bytes": 10819,
+      "normalized_match": true,
+      "local_sha256": "5f43a923a74fde442fa130b45241a8d35c3b0d1ba38049192b0e1f9d8a5c1899"
+    },
+    {
+      "path": "assets/gate3-v4110.js",
+      "url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/assets/gate3-v4110.js",
+      "status": 200,
+      "bytes": 4119,
+      "normalized_match": true,
+      "local_sha256": "9a4c748b7f0f87237f354953bb02b0f19458ba8ffa524a8af5f180ec25126e72"
     }
   ],
-  "all_http_200": true,
-  "formal_url": "https://xhfpoaco78813-stack.github.io/esg-system/",
-  "formal_status": 200,
-  "formal_contains_v419": false
+  "production": {
+    "url": "https://xhfpoaco78813-stack.github.io/esg-system/",
+    "status": 200,
+    "contains_v4110": false,
+    "unchanged": true
+  },
+  "checks": {
+    "staging_http_200": true,
+    "staging_matches_candidate": true,
+    "production_not_overwritten": true
+  },
+  "result": "PASS"
 }

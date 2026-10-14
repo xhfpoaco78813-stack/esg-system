@@ -8,6 +8,7 @@ const credentials = JSON.parse(await readFile(path.join(root, '.tools', 'staging
 const edge = process.env.EDGE_PATH || 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
 const chrome = process.env.CHROME_PATH || 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
 const webPort = 8796;
+const frontendUrl = process.env.FRONTEND_URL || `http://127.0.0.1:${webPort}/index.html`;
 const artifactDir = path.join(root, 'test-results');
 await mkdir(artifactDir, { recursive:true });
 const mime = {'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json','.png':'image/png','.svg':'image/svg+xml','.ico':'image/x-icon'};
@@ -50,7 +51,8 @@ async function openDevice(name, port, width, height, mobile, binary) {
   return {name,width,height,mobile,profile,processHandle,ws,send,evaluate,waitFor,httpFailures,networkFailures,consoleProblems,responses,version};
 }
 async function login(device) {
-  await device.send('Page.navigate',{url:`http://127.0.0.1:${webPort}/index.html?device=${device.name}&t=${Date.now()}`});
+  const joiner = frontendUrl.includes('?') ? '&' : '?';
+  await device.send('Page.navigate',{url:`${frontendUrl}${joiner}device=${device.name}&t=${Date.now()}`});
   await device.waitFor(`document.readyState==='complete'&&Boolean(document.getElementById('loginEmail35'))&&Boolean(window.esgSync40)`,'application ready');
   await device.evaluate(`(()=>{const email=document.getElementById('loginEmail35'),password=document.getElementById('loginPassword35');email.value=${JSON.stringify(credentials.email)};password.value=${JSON.stringify(credentials.password)};document.getElementById('loginForm35').requestSubmit();return true;})()`);
   await device.waitFor(`typeof user31!=='undefined'&&Boolean(user31?.id)&&!document.body.classList.contains('auth-required')`,'authenticated');
@@ -68,7 +70,7 @@ async function closeDevice(device) {
   await rm(device.profile,{recursive:true,force:true}).catch(()=>{});
 }
 
-const evidence={started_at:new Date().toISOString(),frontend_url:`http://127.0.0.1:${webPort}/index.html`,staging_backend:'https://cytyjqucdrvjppmimmjs.supabase.co',checks:{},devices:[],events:[]};
+const evidence={started_at:new Date().toISOString(),frontend_url:frontendUrl,staging_backend:'https://cytyjqucdrvjppmimmjs.supabase.co',checks:{},devices:[],events:[]};
 const check=(name,value)=>{evidence.checks[name]=Boolean(value);if(!value)throw new Error(`check failed: ${name}`);};
 let a,b,exitCode=0;
 try {
@@ -80,10 +82,14 @@ try {
   await a.evaluate(`window.esgSync40.syncNow()`);await b.evaluate(`window.esgSync40.syncNow()`);
   check('a_answer_visible_on_b',await b.evaluate(`Boolean(state.answered[${JSON.stringify(firstId)}])`));
   evidence.events.push({event:'A answered; B pulled',question_id:firstId,at:new Date().toISOString()});
+  const deleteStarted=Date.now();
   const deleteControl=await a.evaluate(`(()=>{state.answered['G3-UI-RACE']={correct:false,at:Date.now(),module:'esg',kp:'race'};state.wrong['G3-UI-RACE']=true;save();window.esgSync40.syncNow().catch(()=>{});window.confirm=()=>true;go('privacy32');const button=document.getElementById('privacyCloudDelete32');const detail={disabled:button.disabled,handler:typeof button.onclick,gate1:button.dataset.gate1Delete||''};if(typeof button.onclick==='function')button.onclick(new MouseEvent('click',{bubbles:true,cancelable:true}));return detail;})()`);
   evidence.events.push({event:'A invoked the visible cloud-delete control during sync',control:deleteControl,at:new Date().toISOString()});
   check('cloud_delete_control_ready',!deleteControl.disabled&&deleteControl.handler==='function');
   await a.waitFor(`document.getElementById('privacyStatus32').textContent.includes('已删除')||document.getElementById('privacyStatus32').textContent.includes('删除失败')`,'cloud delete completed');
+  const deleteDurationMs=Date.now()-deleteStarted;
+  evidence.events.push({event:'Visible delete completed without waiting for stale sync',duration_ms:deleteDurationMs,at:new Date().toISOString()});
+  check('cloud_delete_not_blocked_by_active_sync',deleteDurationMs<5000);
   check('cloud_delete_rpc_succeeded',await a.evaluate(`document.getElementById('privacyStatus32').textContent.includes('已删除')`));
   await b.evaluate(`window.esgSync40.syncNow()`);
   check('b_old_progress_cleared_after_delete',await b.evaluate(`Object.keys(state.answered||{}).length===0&&Object.keys(state.wrong||{}).length===0`));

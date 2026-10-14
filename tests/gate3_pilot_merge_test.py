@@ -66,9 +66,38 @@ with tempfile.TemporaryDirectory(dir=ROOT / "test-results") as directory:
     )
     assert duplicate_result.returncode != 0 and "duplicate participant_id" in duplicate_result.stderr
 
+    partial_folder = folder / "partial"
+    partial_folder.mkdir()
+    for path in paths:
+        (partial_folder / path.name).write_bytes(path.read_bytes())
+    partial_fields = [*fields, "record_status", "validation_errors", "exported_at"]
+    partial_row = {field: "" for field in partial_fields}
+    partial_row.update({
+        "participant_id": "P11", "pilot_started": "yes", "segment": "practitioner",
+        "device": "mobile", "os": "Android", "browser": "Chrome", "browser_version": "155",
+        "operation_error_count": "0", "help_count": "0", "data_loss_count": "0",
+        "unrecoverable_block_count": "0", "p0_count": "0", "p1_count": "0",
+        "record_status": "incomplete", "validation_errors": "t1_login_success required",
+        "exported_at": "2026-10-15T00:00:00.000Z",
+    })
+    write_one(partial_folder / "gate3-pilot-P11.csv", partial_fields, partial_row)
+    partial_output = folder / "partial-combined.csv"
+    partial_summary = folder / "partial-summary.json"
+    partial_merge = subprocess.run(
+        [sys.executable, str(MERGER), str(partial_folder), "--output", str(partial_output), "--summary", str(partial_summary)],
+        capture_output=True, text=True,
+    )
+    assert partial_merge.returncode == 0, partial_merge.stderr
+    partial_result = json.loads(partial_summary.read_text(encoding="utf-8"))
+    assert partial_result["participants_entered"] == 11
+    assert partial_result["participants_incomplete"] == 1
+    assert "P11" in partial_result["incomplete_participant_ids"]
+    assert partial_result["decision"] == "HOLD"
+
 print("PASS  ten individual participant exports merge without field loss")
 print("PASS  merged participant IDs remain unique")
 print("PASS  merged output preserves the canonical CSV field order")
 print("PASS  merged valid pilot data is analyzed as PASS")
 print("PASS  duplicate participant exports are rejected")
+print("PASS  incomplete export metadata is accepted and retained as a HOLD sample")
 

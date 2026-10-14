@@ -39,7 +39,7 @@ def check(name, condition):
     print(("PASS" if condition else "FAIL") + "  " + name)
 
 
-check("pilot page is staging-labelled", "V4.1.9 · STAGING ONLY" in HTML)
+check("pilot page is staging-labelled", "V4.1.10 · STAGING ONLY" in HTML)
 check("pilot page declares local-only collection", "不会自动上传" in HTML and "no network submission" in JS)
 check("pilot page does not load Supabase", "supabase" not in HTML.lower() and "fetch(" not in JS)
 check("participant ID is constrained to P01-P20", "P(?:0[1-9]|1\\d|20)" in JS)
@@ -48,7 +48,8 @@ check("all eight tasks are present", all(f"t{i}_" in JS for i in range(1, 9)))
 check("task timer controls have accessible names", "aria-label=\"T${index+1}" in JS)
 check("ten SUS questions are present", JS.count("我觉得") >= 5 and "sus_q'+(i+1)" in JS)
 check("strict score and count validation exists", "n<0||n>100" in JS and "必须是非负整数" in JS)
-check("CSV export is blocked until validation passes", "if(result.errors.length)return" in JS)
+check("incomplete CSV can be exported after ID and consent checks", "record_status:result.errors.length?'incomplete':'complete'" in JS and "if(result.errors.length)return" not in JS)
+check("incomplete CSV retains validation errors", "validation_errors:result.errors.join(' | ')" in JS and "EXPORT_HEADERS" in JS)
 check("draft persistence is participant-scoped", "systemESG:gate3-pilot:" in JS)
 audit = LabelAudit()
 audit.feed(HTML)
@@ -87,4 +88,3 @@ passed = sum(ok for _, ok in checks)
 print(f"\n{passed}/{len(checks)} checks passed")
 if passed != len(checks):
     sys.exit(1)
-

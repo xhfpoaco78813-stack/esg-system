@@ -4,7 +4,8 @@
   const deviceKey40 = 'systemESG40:deviceId';
   let deviceId40 = localStorage.getItem(deviceKey40);
   if (!deviceId40) { deviceId40 = crypto.randomUUID(); localStorage.setItem(deviceKey40, deviceId40); }
-  let syncing40 = false;
+  let syncEpoch40 = 0;
+  let activeProgressEpoch40 = -1;
   let dirty40 = false;
   let revision40 = 0;
   let timer40 = 0;
@@ -89,9 +90,10 @@
     timer40 = setTimeout(() => syncProgress40('change'), delay);
   }
   async function syncProgress40(reason = 'poll') {
-    if (syncing40 || !sb31 || !user31 || !navigator.onLine || !hasConsent40()) return;
+    if (activeProgressEpoch40 === syncEpoch40 || !sb31 || !user31 || !navigator.onLine || !hasConsent40()) return;
     if (reason === 'poll' && !dirty40) return pullProgress40();
-    syncing40 = true;
+    const operationEpoch = syncEpoch40;
+    activeProgressEpoch40 = operationEpoch;
     const startedRevision = revision40;
     const snapshot = cloneState40();
     setStatus40('同步中…', 'pending');
@@ -101,6 +103,7 @@
         p_device_id:deviceId40
       });
       if (error) throw error;
+      if (operationEpoch !== syncEpoch40 || !hasConsent40()) return;
       const row = Array.isArray(data) ? data[0] : data;
       if (!row || !validState40(row.payload)) throw Error('云端返回的进度格式不正确');
       cloudVersion40 = Number(row.version || cloudVersion40);
@@ -114,14 +117,16 @@
       localStorage.setItem('systemESG40:lastSync', row.updated_at || new Date().toISOString());
       setStatus40(dirty40 ? '等待同步' : '已同步', dirty40 ? 'pending' : 'ok');
     } catch (error) {
+      if (operationEpoch !== syncEpoch40) return;
       console.warn('Cross-device progress sync failed', error);
       dirty40 = true;
       setStatus40('同步待重试', 'error');
-    } finally { syncing40 = false; }
+    } finally { if (activeProgressEpoch40 === operationEpoch) activeProgressEpoch40 = -1; }
   }
   async function pullProgress40() {
-    if (syncing40 || !sb31 || !user31 || !navigator.onLine || !hasConsent40()) return;
-    syncing40 = true;
+    if (activeProgressEpoch40 === syncEpoch40 || !sb31 || !user31 || !navigator.onLine || !hasConsent40()) return;
+    const operationEpoch = syncEpoch40;
+    activeProgressEpoch40 = operationEpoch;
     try {
       const [progressResult,resetResult] = await Promise.all([
         sb31.from('esg_progress_v40').select('payload,version,updated_at').eq('user_id', user31.id).maybeSingle(),
@@ -129,6 +134,7 @@
       ]);
       if (progressResult.error) throw progressResult.error;
       if (resetResult.error) throw resetResult.error;
+      if (operationEpoch !== syncEpoch40 || !hasConsent40()) return;
       const data = progressResult.data;
       const remoteReset = Number(resetResult.data?.reset_version || 0);
       const localReset = Number(state.cloud_reset_version || 0);
@@ -152,13 +158,15 @@
       }
       setStatus40('已同步', 'ok');
     } catch (error) {
+      if (operationEpoch !== syncEpoch40) return;
       console.warn('Cross-device progress pull failed', error);
       setStatus40('同步待重试', 'error');
-    } finally { syncing40 = false; }
+    } finally { if (activeProgressEpoch40 === operationEpoch) activeProgressEpoch40 = -1; }
   }
 
   async function syncDraft40(localDraft = window.esgExamDraft38?.read?.()) {
     if (!sb31 || !user31 || !navigator.onLine || !window.esgExamDraft38 || !hasConsent40()) return;
+    const operationEpoch = syncEpoch40;
     draftOps40++;
     try {
       const json = JSON.stringify(localDraft || null);
@@ -169,6 +177,7 @@
         p_reset_version:Number(state.cloud_reset_version) || 0
       });
       if (error) throw error;
+      if (operationEpoch !== syncEpoch40 || !hasConsent40()) return;
       const row = Array.isArray(data) ? data[0] : data;
       if (row?.payload?.deleted) {
         lastDraftJson40 = JSON.stringify(row.payload);
@@ -178,11 +187,12 @@
         lastDraftJson40 = remoteJson;
         if (remoteJson !== json) window.esgExamDraft38.applyRemote(row.payload);
       }
-    } catch (error) { console.warn('Cross-device exam draft sync failed', error); }
+    } catch (error) { if (operationEpoch === syncEpoch40) console.warn('Cross-device exam draft sync failed', error); }
     finally { draftOps40--; }
   }
   async function deleteDraft40() {
     if (!sb31 || !user31 || !navigator.onLine || !hasConsent40()) return;
+    const operationEpoch = syncEpoch40;
     draftOps40++;
     try {
       const { error } = await sb31.rpc('esg_sync_exam_draft_v41', {
@@ -192,19 +202,23 @@
         p_reset_version:Number(state.cloud_reset_version) || 0
       });
       if (error) throw error;
+      if (operationEpoch !== syncEpoch40 || !hasConsent40()) return;
       lastDraftJson40 = JSON.stringify({ deleted:true });
-    } catch (error) { console.warn('Cloud exam draft deletion failed', error); }
+    } catch (error) { if (operationEpoch === syncEpoch40) console.warn('Cloud exam draft deletion failed', error); }
     finally { draftOps40--; }
   }
   async function pauseAndWait40() {
     if (!user31) throw Error('请先登录');
     localStorage.setItem(consentKey40(), 'false');
+    syncEpoch40++;
     clearTimeout(timer40);
     clearTimeout(draftTimer40);
     setStatus40('同步已暂停', 'local');
-    const deadline = Date.now() + 10000;
-    while ((syncing40 || draftOps40 > 0) && Date.now() < deadline) await new Promise(resolve => setTimeout(resolve, 25));
-    if (syncing40 || draftOps40 > 0) throw Error('同步仍在进行，请稍后重试删除');
+    // Server RPCs serialize on the reset row. Invalidating this epoch prevents
+    // any already-started response from reapplying stale data, so deletion can
+    // proceed immediately without waiting on a slow or disconnected request.
+    await Promise.resolve();
+    return { paused:true, epoch:syncEpoch40 };
   }
   document.addEventListener('esg:exam-draft-changed', event => {
     clearTimeout(draftTimer40);

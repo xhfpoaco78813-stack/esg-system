@@ -6,6 +6,7 @@
   ],
   "checks": {
     "valid_complete_record": true,
+    "incomplete_record_exportable": true,
     "beginner_assignment": true,
     "practitioner_assignment": true,
     "draft_saved": true,
@@ -68,12 +69,20 @@
         "notes": ""
       },
       "consent": true,
-      "saved_at": "2026-10-14T13:25:14.959Z"
+      "saved_at": "2026-10-14T23:06:13.897Z"
     },
     "unlabeled": [],
     "scrollWidth": 390,
     "innerWidth": 390,
     "completion": "100%"
+  },
+  "partial": {
+    "allowed": true,
+    "status": "incomplete",
+    "errorCount": 28,
+    "hasValidationErrors": true,
+    "hasExportedAt": true,
+    "csvIncludesStatus": true
   },
   "reloaded": {
     "participant": "P01",

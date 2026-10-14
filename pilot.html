@@ -12,12 +12,12 @@
 <body>
   <header class="topbar">
     <a class="brand" href="index.html" aria-label="返回 System-ESG staging 首页"><span>ESG</span><b>Gate 3 真人试点</b></a>
-    <div class="top-actions"><span class="badge">V4.1.9 · STAGING ONLY</span><a href="index.html">返回候选版</a></div>
+    <div class="top-actions"><span class="badge">V4.1.10 · STAGING ONLY</span><a href="index.html">返回候选版</a></div>
   </header>
 
   <main>
     <section class="hero" aria-labelledby="pilotTitle">
-      <div><p class="eyebrow">CONTROLLED REAL-USER PILOT</p><h1 id="pilotTitle">一次完成任务、问卷与原始记录</h1><p>本页只协助记录真实参与者操作。资料保存在这台装置，完成后由参与者下载一列 CSV 交给主持人；不会自动上传姓名、邮箱或联系方式。</p></div>
+      <div><p class="eyebrow">CONTROLLED REAL-USER PILOT</p><h1 id="pilotTitle">一次完成任务、问卷与原始记录</h1><p>本页只协助记录真实参与者操作。资料保存在这台装置；完整、失败或中途退出的记录都可下载一列 CSV 交给主持人，不会自动上传姓名、邮箱或联系方式。</p></div>
       <div class="hero-score" aria-label="完成进度"><strong id="completionPercent">0%</strong><span>记录完成度</span></div>
     </section>
 
@@ -74,7 +74,7 @@
         <label>使用者意见<textarea id="feedback" rows="4" maxlength="1000" placeholder="哪一步最清楚、最困难？还需要什么？"></textarea></label>
         <label>主持人备注<textarea id="notes" rows="3" maxlength="1000" placeholder="中途退出、替代题目或异常情形"></textarea></label>
         <div class="validation" id="validationResult" role="status" aria-live="polite">尚未执行完整检查。</div>
-        <div class="actions"><button class="secondary" id="validatePilot" type="button">检查资料</button><button class="primary" id="exportPilot" type="button">下载个人 CSV</button><button class="danger" id="resetPilot" type="button">清除本机记录</button></div>
+        <div class="actions"><button class="secondary" id="validatePilot" type="button">检查资料</button><button class="primary" id="exportPilot" type="button">下载目前记录（含未完成）</button><button class="danger" id="resetPilot" type="button">清除本机记录</button></div>
       </section>
     </form>
   </main>

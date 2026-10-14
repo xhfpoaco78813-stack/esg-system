@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The V4.1.9 product candidate already passes all technical Gate 3 checks. This auxiliary staging package removes the remaining operational friction for the required 10–20 person real-user pilot. It does not alter the production site and does not fabricate participant outcomes.
+The V4.1.10 product candidate already passes all technical Gate 3 checks. This auxiliary staging package removes the remaining operational friction for the required 10–20 person real-user pilot. It does not alter the production site and does not fabricate participant outcomes.
 
 ## Delivered workflow
 
@@ -22,7 +22,7 @@ The V4.1.9 product candidate already passes all technical Gate 3 checks. This au
 - The participant must explicitly consent before a record can pass validation.
 - Drafts remain in participant-scoped browser local storage.
 - No pilot response is automatically sent to Supabase or another service.
-- A CSV can be exported only after all required fields satisfy the allowed ranges.
+- A CSV can be exported after the participant ID and consent checks pass. Incomplete or failed records are explicitly marked `record_status=incomplete` and retain `validation_errors`, so they cannot disappear from the denominator.
 - Failed and incomplete tasks remain part of the record.
 - Participant IDs are restricted to P01–P20; group assignment follows the approved fixed code rule.
 - The merger rejects duplicate or blank participant IDs before analysis.
@@ -31,24 +31,27 @@ The V4.1.9 product candidate already passes all technical Gate 3 checks. This au
 
 | Suite | Result |
 |---|---:|
-| Pilot operations static acceptance | 22/22 |
-| Individual CSV merge and analyzer integration | 5/5 |
-| Desktop/mobile browser flow | 10/10 |
+| Pilot operations static acceptance | 23/23 |
+| Individual CSV merge and analyzer integration | 6/6 |
+| Desktop/mobile browser flow | 11/11 |
 | Gate 1 regression | 23/23 |
 | Gate 2 regression | 38/38 |
 | Gate 3 regression | 53/53 |
 | Existing pilot analyzer adversarial regression | 9/9 |
-| State, deletion, cross-device, generation, and SQL regression | 36/36 |
-| Public staging files and production isolation | 5/5 |
+| State, deletion, cross-device, generation, and SQL regression | 45/45 |
+| P1 incomplete-export and sync-preemption regression | 9/9 |
+| Public staging files and production isolation | 6/6 |
+| Real Chrome/Edge cross-device deletion race | 15/15 |
+| Staging API/CORS/RPC/Edge Function | 17/17 |
 | Staging account uniqueness, login, and learner-role verification | 20/20 |
 
-The browser run confirmed draft save/reload, fixed segment assignment, complete-record validation, accessible control names, no horizontal overflow at 390×844 and 1440×1000, zero console problems, and zero HTTP failures.
+The browser run confirmed draft save/reload, fixed segment assignment, complete-record validation, incomplete-record export with error metadata, accessible control names, no horizontal overflow at 390×844 and 1440×1000, zero console problems, and zero HTTP failures.
 
-The public staging entry, CSS, JavaScript, and original V4.1.9 entry page returned HTTP 200 and matched the local files byte-for-byte. The formal site returned HTTP 200 and does not contain the pilot-operations page.
+The public staging entry and all five changed V4.1.10 files returned HTTP 200 and matched the local candidate after newline normalization. The formal site returned HTTP 200 and does not contain V4.1.10.
 
 All twenty staging accounts have distinct Supabase user IDs, passed password login, and were verified against `esg_roles` as `learner`. The tracked validation evidence contains no passwords or service keys. The private credential handoff is excluded by `.gitignore` and excluded from every project ZIP.
 
-Combined verification result: **221/221 passed** across product regressions, pilot tooling, browser flows, staging isolation, and account readiness.
+The V4.1.10 two-browser run used Chrome 155 and Edge 155 against the public staging frontend and isolated Supabase project. All 15 checks passed; visible cloud deletion completed in 802 ms while an older sync request was active, old-generation data did not return, and the new generation survived offline reconnect, reload, and re-login.
 
 ## Gate decision
 
