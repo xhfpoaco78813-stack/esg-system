@@ -6,6 +6,8 @@ The V4.1.9 product candidate already passes all technical Gate 3 checks. This au
 
 ## Delivered workflow
 
+- Public staging entry: `https://xhfpoaco78813-stack.github.io/esgtestsystem/pilot.html`
+- Staging deployment commit: `3d5c30c3d63f3d50792c5a68b159e24d1ca6f775`
 - `pilot.html`: responsive participant recorder for desktop and mobile.
 - `assets/pilot-v1.js`: participant assignment, timers, strict validation, local draft recovery, and canonical CSV export.
 - `assets/pilot-v1.css`: accessible desktop and 390px mobile layout.
@@ -36,8 +38,11 @@ The V4.1.9 product candidate already passes all technical Gate 3 checks. This au
 | Gate 3 regression | 53/53 |
 | Existing pilot analyzer adversarial regression | 9/9 |
 | State, deletion, cross-device, generation, and SQL regression | 36/36 |
+| Public staging files and production isolation | 5/5 |
 
 The browser run confirmed draft save/reload, fixed segment assignment, complete-record validation, accessible control names, no horizontal overflow at 390×844 and 1440×1000, zero console problems, and zero HTTP failures.
+
+The public staging entry, CSS, JavaScript, and original V4.1.9 entry page returned HTTP 200 and matched the local files byte-for-byte. The formal site returned HTTP 200 and does not contain the pilot-operations page.
 
 ## Gate decision
 

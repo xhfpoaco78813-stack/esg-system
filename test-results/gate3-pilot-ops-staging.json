@@ -1,0 +1,32 @@
+{
+  "tested_at": "2026-10-14T12:57:29.2337947+00:00",
+  "staging_url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/pilot.html",
+  "staging_commit": "3d5c30c3d63f3d50792c5a68b159e24d1ca6f775",
+  "checks": [
+    {
+      "path": "pilot.html?participant=P01",
+      "status": 200,
+      "exact_match": true
+    },
+    {
+      "path": "assets/pilot-v1.css?v=1.0.0",
+      "status": 200,
+      "exact_match": true
+    },
+    {
+      "path": "assets/pilot-v1.js?v=1.0.0",
+      "status": 200,
+      "exact_match": true
+    },
+    {
+      "path": "index.html",
+      "status": 200,
+      "exact_match": true
+    }
+  ],
+  "all_http_200": true,
+  "all_exact_match": true,
+  "formal_url": "https://xhfpoaco78813-stack.github.io/esg-system/",
+  "formal_status": 200,
+  "formal_contains_pilot_ops": false
+}
