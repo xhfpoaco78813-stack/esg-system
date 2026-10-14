@@ -1,0 +1,91 @@
+{
+  "result": "PASS",
+  "viewports": [
+    "390x844",
+    "1440x1000"
+  ],
+  "checks": {
+    "valid_complete_record": true,
+    "beginner_assignment": true,
+    "practitioner_assignment": true,
+    "draft_saved": true,
+    "reload_restores_record": true,
+    "accessible_controls": true,
+    "mobile_no_overflow": true,
+    "desktop_no_overflow": true,
+    "no_console_problems": true,
+    "no_http_failures": true
+  },
+  "httpFailures": [],
+  "consoleProblems": [],
+  "action": {
+    "errors": [],
+    "segment": "beginner",
+    "saved": {
+      "row": {
+        "participant_id": "P01",
+        "pilot_started": "yes",
+        "segment": "beginner",
+        "device": "mobile",
+        "os": "Windows 10/11",
+        "browser": "Edge",
+        "browser_version": "155.0.0.0",
+        "t1_login_success": "pass",
+        "t1_login_seconds": "30",
+        "t2_learning_success": "pass",
+        "t2_learning_seconds": "30",
+        "t3_practice_success": "pass",
+        "t3_practice_seconds": "30",
+        "t4_wrong_created_success": "pass",
+        "t4_wrong_created_seconds": "30",
+        "t5_wrong_recovery_success": "pass",
+        "t5_wrong_recovery_seconds": "30",
+        "t6_report_success": "pass",
+        "t6_report_seconds": "30",
+        "t7_resume_success": "pass",
+        "t7_resume_seconds": "30",
+        "t8_sync_success": "pass",
+        "t8_sync_seconds": "30",
+        "operation_error_count": "0",
+        "help_count": "0",
+        "pre_score": "50",
+        "post_score": "70",
+        "sus_q1": "5",
+        "sus_q2": "1",
+        "sus_q3": "5",
+        "sus_q4": "1",
+        "sus_q5": "5",
+        "sus_q6": "1",
+        "sus_q7": "5",
+        "sus_q8": "1",
+        "sus_q9": "5",
+        "sus_q10": "1",
+        "data_loss_count": "0",
+        "unrecoverable_block_count": "0",
+        "p0_count": "0",
+        "p1_count": "0",
+        "feedback": "",
+        "notes": ""
+      },
+      "consent": true,
+      "saved_at": "2026-10-14T12:47:49.087Z"
+    },
+    "unlabeled": [],
+    "scrollWidth": 390,
+    "innerWidth": 390,
+    "completion": "100%"
+  },
+  "reloaded": {
+    "participant": "P01",
+    "segment": "beginner",
+    "pre": "50",
+    "consent": true,
+    "scrollWidth": 390,
+    "innerWidth": 390
+  },
+  "desktop": {
+    "participant": "P01",
+    "scrollWidth": 1425,
+    "innerWidth": 1440
+  }
+}

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+  <title>System-ESG｜Gate 3 真人试点记录</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/pilot-v1.css?v=1.0.0">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="返回 System-ESG staging 首页"><span>ESG</span><b>Gate 3 真人试点</b></a>
+    <div class="top-actions"><span class="badge">V4.1.9 · STAGING ONLY</span><a href="index.html">返回候选版</a></div>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="pilotTitle">
+      <div><p class="eyebrow">CONTROLLED REAL-USER PILOT</p><h1 id="pilotTitle">一次完成任务、问卷与原始记录</h1><p>本页只协助记录真实参与者操作。资料保存在这台装置，完成后由参与者下载一列 CSV 交给主持人；不会自动上传姓名、邮箱或联系方式。</p></div>
+      <div class="hero-score" aria-label="完成进度"><strong id="completionPercent">0%</strong><span>记录完成度</span></div>
+    </section>
+
+    <aside class="notice" aria-label="试点资料规则">
+      <b>资料规则</b>
+      <span>只使用主持人提供的匿名编号 P01–P20。P01–P10 为初学者组，P11–P20 为实务人员组。不得填写姓名、电话或私人邮箱。</span>
+    </aside>
+
+    <nav class="steps" aria-label="试点记录步骤">
+      <a href="#setup">1. 基本资料</a><a href="#tasks">2. 八项任务</a><a href="#scores">3. 前后测</a><a href="#sus">4. SUS 问卷</a><a href="#export">5. 检查与导出</a>
+    </nav>
+
+    <form id="pilotForm" novalidate>
+      <section class="panel" id="setup" aria-labelledby="setupTitle">
+        <div class="section-head"><div><p>STEP 1</p><h2 id="setupTitle">匿名资料与同意</h2></div><span>约 1 分钟</span></div>
+        <div class="grid two">
+          <label>参与者编号<select id="participant_id" required aria-describedby="participantHelp"><option value="">请选择</option></select><small id="participantHelp">使用主持人分配的编号，不填写个人身份资料。</small></label>
+          <label>固定分组<input id="segment" readonly aria-readonly="true"><small>由参与者编号自动决定，不能自行更改。</small></label>
+          <label>装置类型<select id="device" required><option value="">请选择</option><option value="desktop">电脑</option><option value="mobile">手机</option><option value="tablet">平板</option></select></label>
+          <label>操作系统<input id="os" required autocomplete="off"></label>
+          <label>浏览器<input id="browser" required autocomplete="off"></label>
+          <label>浏览器版本<input id="browser_version" required autocomplete="off"></label>
+        </div>
+        <label class="consent"><input id="pilotConsent" type="checkbox" required> <span>我了解这是产品试点，并同意记录匿名任务结果、操作时间、问卷与意见。我可随时停止，未导出的本机资料可直接清除。</span></label>
+      </section>
+
+      <section class="panel" id="tasks" aria-labelledby="tasksTitle">
+        <div class="section-head"><div><p>STEP 2</p><h2 id="tasksTitle">八项核心任务</h2></div><a class="launch" href="index.html" target="_blank" rel="noopener">另开候选版 ↗</a></div>
+        <p class="help">依主持人任务单操作。每项先按“开始计时”，完成后按“停止”，再选择成功或失败。失败样本不得删除。</p>
+        <div class="task-list" id="taskList"></div>
+      </section>
+
+      <section class="panel" id="scores" aria-labelledby="scoresTitle">
+        <div class="section-head"><div><p>STEP 3</p><h2 id="scoresTitle">前测、后测与事件计数</h2></div><span>分数范围 0–100</span></div>
+        <div class="grid two">
+          <label>前测分数<input id="pre_score" type="number" min="0" max="100" step="1" inputmode="numeric" required></label>
+          <label>后测分数<input id="post_score" type="number" min="0" max="100" step="1" inputmode="numeric" required></label>
+          <label>操作错误次数<input id="operation_error_count" type="number" min="0" step="1" value="0" inputmode="numeric" required></label>
+          <label>主动求助次数<input id="help_count" type="number" min="0" step="1" value="0" inputmode="numeric" required></label>
+          <label>资料遗失次数<input id="data_loss_count" type="number" min="0" step="1" value="0" inputmode="numeric" required></label>
+          <label>不可恢复中断次数<input id="unrecoverable_block_count" type="number" min="0" step="1" value="0" inputmode="numeric" required></label>
+          <label>P0 数量<input id="p0_count" type="number" min="0" step="1" value="0" inputmode="numeric" required></label>
+          <label>P1 数量<input id="p1_count" type="number" min="0" step="1" value="0" inputmode="numeric" required></label>
+        </div>
+      </section>
+
+      <section class="panel" id="sus" aria-labelledby="susTitle">
+        <div class="section-head"><div><p>STEP 4</p><h2 id="susTitle">SUS 易用性问卷</h2></div><span>1 非常不同意 · 5 非常同意</span></div>
+        <div id="susList" class="sus-list"></div>
+      </section>
+
+      <section class="panel" id="export" aria-labelledby="exportTitle">
+        <div class="section-head"><div><p>STEP 5</p><h2 id="exportTitle">意见、检查与导出</h2></div><span>不会自动上传</span></div>
+        <label>使用者意见<textarea id="feedback" rows="4" maxlength="1000" placeholder="哪一步最清楚、最困难？还需要什么？"></textarea></label>
+        <label>主持人备注<textarea id="notes" rows="3" maxlength="1000" placeholder="中途退出、替代题目或异常情形"></textarea></label>
+        <div class="validation" id="validationResult" role="status" aria-live="polite">尚未执行完整检查。</div>
+        <div class="actions"><button class="secondary" id="validatePilot" type="button">检查资料</button><button class="primary" id="exportPilot" type="button">下载个人 CSV</button><button class="danger" id="resetPilot" type="button">清除本机记录</button></div>
+      </section>
+    </form>
+  </main>
+
+  <footer><span>Gate 3 Pilot Operations v1.0</span><span id="saveState" role="status" aria-live="polite">尚未保存</span></footer>
+  <script src="assets/pilot-v1.js?v=1.0.0" defer></script>
+</body>
+</html>
