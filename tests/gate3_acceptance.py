@@ -20,7 +20,7 @@ def check(name, condition):
     checks.append((name, bool(condition)))
     print(('PASS' if condition else 'FAIL') + '  ' + name)
 
-check('version marked V4.1.10 Gate 3 candidate', 'V4.1.10 Gate 3 Revalidation Candidate' in INDEX and 'V4.1.10' in GATE3)
+check('version marked V4.1.11 technical candidate', 'V4.1.11 Technical Acceptance Candidate' in INDEX and 'V4.1.11' in GATE3)
 check('Gate 3 layer loaded last', INDEX.rfind('gate3-v4110.js') > INDEX.rfind('gate2-v415.js'))
 check('formal wrong-answer name is navigation label', '>错题回补<' in INDEX)
 check('venture title no longer says wrong-answer diagnosis', "titles.wrong = ['错题回补'" in VENTURE and '错题诊断' not in VENTURE)

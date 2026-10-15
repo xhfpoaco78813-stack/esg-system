@@ -36,7 +36,7 @@ setTimeout(async () => {
   const passed = results.practiceQuestion && results.wrongTitle && results.noWrongDiagnosis && results.wrongNav
     && results.privacyTopPresent && results.privacyOpened && results.privacyStatus.length > 0 && results.privacyRefresh === 'complete'
     && results.unlabeledControls.length === 0 && results.faviconHref === 'assets/favicon.svg'
-    && results.version.includes('V4.1.10') && results.consoleErrors.length === 0 && results.consoleWarnings.length === 0;
+    && results.version.includes('V4.1.11') && results.consoleErrors.length === 0 && results.consoleWarnings.length === 0;
   document.documentElement.dataset.gate3Result = passed ? 'PASS' : 'FAIL';
   document.documentElement.dataset.gate3Details = JSON.stringify(results);
 }, 1500);

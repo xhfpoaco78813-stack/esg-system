@@ -56,7 +56,7 @@ with tempfile.TemporaryDirectory(dir=ROOT / "test-results") as directory:
     assert result["decision"] == "PASS"
     with output.open(encoding="utf-8-sig", newline="") as handle:
         combined = list(csv.DictReader(handle))
-    assert len(combined) == 10 and list(combined[0]) == fields
+    assert len(combined) == 10 and list(combined[0]) == [*fields, "record_status", "validation_errors", "exported_at"]
 
     duplicate = folder / "gate3-pilot-P20.csv"
     write_one(duplicate, fields, completed_row(fields, "P01", "beginner"))
@@ -93,6 +93,24 @@ with tempfile.TemporaryDirectory(dir=ROOT / "test-results") as directory:
     assert partial_result["participants_incomplete"] == 1
     assert "P11" in partial_result["incomplete_participant_ids"]
     assert partial_result["decision"] == "HOLD"
+    with partial_output.open(encoding="utf-8-sig", newline="") as handle:
+        retained = next(row for row in csv.DictReader(handle) if row["participant_id"] == "P11")
+    assert retained["record_status"] == "incomplete"
+    assert retained["validation_errors"] == "t1_login_success required"
+    assert retained["exported_at"] == "2026-10-15T00:00:00.000Z"
+
+    browser_export = folder / "gate3-pilot-P12.csv"
+    browser_fields = [field for field in partial_fields if not field.startswith("t") or not field.endswith("_seconds")]
+    browser_fields += [f"{task_id}_seconds" for task_id in ["t1_login", "t2_learning", "t3_practice", "t4_wrong_created", "t5_wrong_recovery", "t6_report", "t7_resume", "t8_sync"]]
+    browser_row = completed_row(partial_fields, "P12", "practitioner")
+    for index, task_id in enumerate(["t1_login", "t2_learning", "t3_practice", "t4_wrong_created", "t5_wrong_recovery", "t6_report", "t7_resume", "t8_sync"], 1):
+        browser_row[f"{task_id}_seconds"] = browser_row.pop(f"t{index}_seconds")
+    write_one(browser_export, browser_fields, browser_row)
+    browser_result = subprocess.run(
+        [sys.executable, str(MERGER), str(browser_export), "--output", str(folder / "browser.csv"), "--summary", str(folder / "browser.json")],
+        capture_output=True, text=True,
+    )
+    assert browser_result.returncode == 0, browser_result.stderr
 
 print("PASS  ten individual participant exports merge without field loss")
 print("PASS  merged participant IDs remain unique")
@@ -100,4 +118,6 @@ print("PASS  merged output preserves the canonical CSV field order")
 print("PASS  merged valid pilot data is analyzed as PASS")
 print("PASS  duplicate participant exports are rejected")
 print("PASS  incomplete export metadata is accepted and retained as a HOLD sample")
+print("PASS  incomplete export audit metadata survives the merge")
+print("PASS  browser task-specific timing headers map to canonical analyzer headers")
 
