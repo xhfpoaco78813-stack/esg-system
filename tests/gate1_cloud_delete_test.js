@@ -13,7 +13,7 @@ check('only one V4.1 delete RPC call exists in UI layer', (core.match(/esg_delet
 check('sync is paused before cloud delete RPC', core.indexOf('pauseAndWait()') < core.indexOf("rpc('esg_delete_my_learning_data_v41')"));
 check('pause revokes consent before invalidating active work', sync.indexOf("localStorage.setItem(consentKey40(), 'false')") < sync.indexOf('syncEpoch40++'));
 check('pause invalidates active responses instead of waiting on the network', sync.includes('syncEpoch40++') && !sync.includes('while ((syncing40 || draftOps40 > 0)'));
-check('progress and draft responses reject a stale pause epoch', (sync.match(/operationEpoch !== syncEpoch40/g) || []).length >= 4);
+check('progress and draft responses reject a stale pause epoch and account', (sync.match(/operationCurrent40\(operationEpoch, operationUserId\)/g) || []).length >= 4);
 check('cloud deletion clears the active local generation', core.includes('state={schema_version:4.1,cloud_reset_version:resetVersion'));
 check('other devices receive the reset generation', sync.includes('remoteReset > localReset') && sync.includes('applyRemote40(emptyState40(remoteReset))'));
 check('stale exam drafts use the reset-aware RPC', sync.includes("rpc('esg_sync_exam_draft_v41'"));

@@ -1,54 +1,55 @@
 {
-  "checked_at": "2026-10-14T23:07:44.4846129+00:00",
-  "candidate_version": "V4.1.10 Gate 3 Revalidation Candidate",
+  "checked_at": "2026-10-15T23:20:09.9767361+00:00",
+  "candidate_version": "V4.1.11 Gate 3 Revalidation Candidate",
   "staging_url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/",
   "pilot_url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/pilot.html",
+  "staging_deployment_tip": "a47fe7fb09c957663a19530dd7097074ed577354",
   "staging_files": [
     {
       "path": "index.html",
       "url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/index.html",
       "status": 200,
-      "bytes": 10218,
+      "bytes": 10217,
       "normalized_match": true,
-      "local_sha256": "821c80900f0814ca0c4a83416c067c6b5e055e884db70672420b9682111c4508"
+      "local_sha256": "2d8d8b20b12019ff51629ab71d16dc3dce5cdb52d59feba6d16be135fa8c2d8d"
     },
     {
       "path": "pilot.html",
       "url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/pilot.html",
       "status": 200,
-      "bytes": 6865,
+      "bytes": 6863,
       "normalized_match": true,
-      "local_sha256": "65a013c31ba9048cd90892902608367ba6ffb08da1ca73d50cb92ce0ef6dcc2c"
+      "local_sha256": "3f73d68779d7b730f1677dd9285c1855caeb6e7658542ed518f28fc6a2d28944"
     },
     {
       "path": "assets/sync-v40.js",
       "url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/assets/sync-v40.js",
       "status": 200,
-      "bytes": 12752,
+      "bytes": 13589,
       "normalized_match": true,
-      "local_sha256": "5c67e0282bedc000ee492d2e10a428a1767040397e1a354caf09d5ec9b179eae"
+      "local_sha256": "71cb214879c50ca21bc53d8d75d561dd93a74448580567323633efdca9a690a5"
     },
     {
-      "path": "assets/pilot-v1.js",
-      "url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/assets/pilot-v1.js",
+      "path": "assets/simplify-v35.js",
+      "url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/assets/simplify-v35.js",
       "status": 200,
-      "bytes": 10819,
+      "bytes": 7933,
       "normalized_match": true,
-      "local_sha256": "5f43a923a74fde442fa130b45241a8d35c3b0d1ba38049192b0e1f9d8a5c1899"
+      "local_sha256": "7a561fcb9576546d8b3f187538bdc798fe2d29a3b91890ba6cc519cddba62dda"
     },
     {
-      "path": "assets/gate3-v4110.js",
-      "url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/assets/gate3-v4110.js",
+      "path": "assets/gate3-v4111.js",
+      "url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/assets/gate3-v4111.js",
       "status": 200,
-      "bytes": 4119,
+      "bytes": 4112,
       "normalized_match": true,
-      "local_sha256": "9a4c748b7f0f87237f354953bb02b0f19458ba8ffa524a8af5f180ec25126e72"
+      "local_sha256": "69114f6fa61927d007ba26e4d41a7f34f2d8e60f8d8a852e1574cd0a4b06ef9b"
     }
   ],
   "production": {
     "url": "https://xhfpoaco78813-stack.github.io/esg-system/",
     "status": 200,
-    "contains_v4110": false,
+    "contains_v4111": false,
     "unchanged": true
   },
   "checks": {

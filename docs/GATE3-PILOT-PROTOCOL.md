@@ -1,6 +1,6 @@
-# System-ESG V4.1.10 Gate 3 使用者試點操作手冊
+# System-ESG V4.1.11 Gate 3 使用者試點操作手冊
 
-版本：V4.1.10 Gate 3 Revalidation Candidate
+版本：V4.1.11 Gate 3 Revalidation Candidate
 用途：10–20 名目標使用者的真人試點；自動測試不得代替本試點。
 
 Staging 記錄入口：`pilot.html?participant=Pxx`。頁面會在本機保存草稿、檢查欄位並匯出與分析器相容的單人 CSV；完整主持流程與合併方式見 `GATE3-PILOT-EXECUTION.md`。

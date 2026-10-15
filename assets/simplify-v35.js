@@ -32,6 +32,19 @@
     node.textContent = message;
     node.className = `login-status35 ${kind}`.trim();
   };
+  const wait35 = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
+  const transientLoginError35 = error => error?.name === 'AuthRetryableFetchError'
+    || error?.status === 0
+    || /failed to fetch|network|connection (?:closed|reset)|timed out/i.test(`${error?.message || ''} ${error?.cause?.message || ''}`);
+  const signInWithRetry35 = async credentials => {
+    for (let attempt=1; attempt<=3; attempt++) {
+      const result = await sb31.auth.signInWithPassword(credentials);
+      if (!result.error) return result;
+      if (!transientLoginError35(result.error) || attempt === 3) throw result.error;
+      status(`连接波动，正在重试登入（${attempt + 1}/3）…`);
+      await wait35(400 * attempt);
+    }
+  };
   const setRecovery = active => {
     el('loginMode35').hidden = active;
     el('recoveryMode35').hidden = !active;
@@ -60,8 +73,7 @@
     button.disabled = true;
     status('正在登入…');
     try {
-      const { error } = await sb31.auth.signInWithPassword({ email: el('loginEmail35').value.trim(), password: el('loginPassword35').value });
-      if (error) throw error;
+      await signInWithRetry35({ email: el('loginEmail35').value.trim(), password: el('loginPassword35').value });
       el('loginPassword35').value = '';
     } catch (error) {
       console.error('Login failed', error);

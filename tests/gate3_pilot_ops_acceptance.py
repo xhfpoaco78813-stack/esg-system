@@ -39,7 +39,7 @@ def check(name, condition):
     print(("PASS" if condition else "FAIL") + "  " + name)
 
 
-check("pilot page is clearly optional", "V4.1.11 · OPTIONAL PILOT" in HTML)
+check("pilot page is clearly identified as Gate 3 evidence", "V4.1.11 · GATE 3 PILOT" in HTML)
 check("pilot page declares local-only collection", "不会自动上传" in HTML and "no network submission" in JS)
 check("pilot page does not load Supabase", "supabase" not in HTML.lower() and "fetch(" not in JS)
 check("participant ID is constrained to P01-P20", "P(?:0[1-9]|1\\d|20)" in JS)

@@ -23,6 +23,24 @@ const server = http.createServer(async (request, response) => {
 });
 await new Promise((resolve, reject) => { server.once('error', reject); server.listen(webPort, '127.0.0.1', resolve); });
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+const transientErrors = new Set(['net::ERR_CONNECTION_CLOSED','net::ERR_CONNECTION_RESET','net::ERR_NETWORK_CHANGED','net::ERR_TIMED_OUT']);
+
+async function preflightFrontend() {
+  const attempts=[];
+  for(let attempt=1;attempt<=4;attempt++) {
+    const started=Date.now();
+    try {
+      const joiner=frontendUrl.includes('?')?'&':'?';
+      const response=await fetch(`${frontendUrl}${joiner}preflight=${Date.now()}`,{cache:'no-store'});
+      attempts.push({attempt,status:response.status,duration_ms:Date.now()-started});
+      if(response.ok) return attempts;
+    } catch(error) {
+      attempts.push({attempt,error:String(error?.cause?.code||error?.message||error),duration_ms:Date.now()-started});
+    }
+    await delay(400*attempt);
+  }
+  throw new Error(`frontend preflight failed: ${JSON.stringify(attempts)}`);
+}
 
 async function openDevice(name, port, width, height, mobile, binary) {
   const profile = path.join(root, `.browser-gate3-device-${name}-${Date.now()}`);
@@ -34,10 +52,11 @@ async function openDevice(name, port, width, height, mobile, binary) {
   await new Promise((resolve,reject)=>{ws.onopen=resolve;ws.onerror=reject;});
   let sequence=0;
   const pending=new Map(), httpFailures=[], networkFailures=[], consoleProblems=[], responses=[];
+  const networkState={intentionalOffline:false};
   ws.onmessage = event => {
     const message=JSON.parse(event.data);
     if(message.method==='Network.responseReceived') { const response=message.params.response;responses.push({url:response.url,status:response.status});if(response.status>=400)httpFailures.push({url:response.url,status:response.status}); }
-    if(message.method==='Network.loadingFailed') networkFailures.push({error:message.params.errorText,blocked_reason:message.params.blockedReason||'',canceled:Boolean(message.params.canceled)});
+    if(message.method==='Network.loadingFailed') networkFailures.push({error:message.params.errorText,blocked_reason:message.params.blockedReason||'',canceled:Boolean(message.params.canceled),intentional_offline:networkState.intentionalOffline});
     if(message.method==='Runtime.consoleAPICalled'&&['error','warning'].includes(message.params.type)) consoleProblems.push(message.params.args.map(x=>x.value||x.description).join(' '));
     if(message.method==='Runtime.exceptionThrown') consoleProblems.push(message.params.exceptionDetails.text);
     if(!message.id)return;
@@ -48,14 +67,31 @@ async function openDevice(name, port, width, height, mobile, binary) {
   const waitFor=async(expression,label,attempts=140)=>{for(let i=0;i<attempts;i++){try{if(await evaluate(expression))return;}catch{}await delay(150);}throw new Error(`${name} timeout: ${label}`);};
   await send('Page.enable');await send('Runtime.enable');await send('Network.enable');await send('Network.setCacheDisabled',{cacheDisabled:true});await send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile});
   const version=await send('Browser.getVersion');
-  return {name,width,height,mobile,profile,processHandle,ws,send,evaluate,waitFor,httpFailures,networkFailures,consoleProblems,responses,version};
+  return {name,width,height,mobile,profile,processHandle,ws,send,evaluate,waitFor,httpFailures,networkFailures,consoleProblems,responses,version,networkState,navigationAttempts:[],stableNetworkFailureStart:0};
 }
 async function login(device) {
   const joiner = frontendUrl.includes('?') ? '&' : '?';
-  await device.send('Page.navigate',{url:`${frontendUrl}${joiner}device=${device.name}&t=${Date.now()}`});
-  await device.waitFor(`document.readyState==='complete'&&Boolean(document.getElementById('loginEmail35'))&&Boolean(window.esgSync40)`,'application ready');
+  let ready=false;
+  for(let attempt=1;attempt<=3&&!ready;attempt++) {
+    const failureStart=device.networkFailures.length;
+    await device.send('Page.navigate',{url:`${frontendUrl}${joiner}device=${device.name}&attempt=${attempt}&t=${Date.now()}`});
+    try {
+      await device.waitFor(`document.readyState==='complete'&&Boolean(document.getElementById('loginEmail35'))&&Boolean(window.esgSync40)`,`application ready attempt ${attempt}`,50);
+      device.navigationAttempts.push({attempt,recovered:true,failures:device.networkFailures.slice(failureStart)});
+      ready=true;
+    } catch(error) {
+      const failures=device.networkFailures.slice(failureStart);
+      const recoverable=failures.length>0&&failures.every(item=>transientErrors.has(item.error)||item.canceled);
+      device.navigationAttempts.push({attempt,recovered:false,recoverable,failures});
+      if(!recoverable||attempt===3) throw error;
+      await delay(500*attempt);
+    }
+  }
+  device.stableNetworkFailureStart=device.networkFailures.length;
   await device.evaluate(`(()=>{const email=document.getElementById('loginEmail35'),password=document.getElementById('loginPassword35');email.value=${JSON.stringify(credentials.email)};password.value=${JSON.stringify(credentials.password)};document.getElementById('loginForm35').requestSubmit();return true;})()`);
   await device.waitFor(`typeof user31!=='undefined'&&Boolean(user31?.id)&&!document.body.classList.contains('auth-required')`,'authenticated');
+  device.recoveredAuthNetworkFailures=device.networkFailures.slice(device.stableNetworkFailureStart);
+  device.stableNetworkFailureStart=device.networkFailures.length;
 }
 async function enableConsent(device) {
   await device.evaluate(`window.esgSync40.setConsent(true)`);
@@ -70,14 +106,15 @@ async function closeDevice(device) {
   await rm(device.profile,{recursive:true,force:true}).catch(()=>{});
 }
 
-const evidence={started_at:new Date().toISOString(),frontend_url:frontendUrl,staging_backend:'https://cytyjqucdrvjppmimmjs.supabase.co',checks:{},devices:[],events:[]};
+const evidence={started_at:new Date().toISOString(),frontend_url:frontendUrl,staging_backend:'https://cytyjqucdrvjppmimmjs.supabase.co',checks:{},devices:[],events:[],frontend_preflight:[]};
 const check=(name,value)=>{evidence.checks[name]=Boolean(value);if(!value)throw new Error(`check failed: ${name}`);};
 let a,b,exitCode=0;
 try {
+  evidence.frontend_preflight=await preflightFrontend();
   a=await openDevice('A-desktop-Chrome',9363,1280,900,false,chrome);await delay(500);
   b=await openDevice('B-mobile-Edge',9364,390,844,true,edge);
   await login(a);await login(b);await enableConsent(a);await enableConsent(b);
-  evidence.devices=[{name:a.name,viewport:'1280x900',browser:a.version.product,userAgent:a.version.userAgent},{name:b.name,viewport:'390x844',browser:b.version.product,userAgent:b.version.userAgent}];
+  evidence.devices=[{name:a.name,viewport:'1280x900',browser:a.version.product,userAgent:a.version.userAgent,navigation_attempts:a.navigationAttempts,recovered_auth_network_failures:a.recoveredAuthNetworkFailures||[]},{name:b.name,viewport:'390x844',browser:b.version.product,userAgent:b.version.userAgent,navigation_attempts:b.navigationAttempts,recovered_auth_network_failures:b.recoveredAuthNetworkFailures||[]}];
   const firstId=await a.evaluate(`(()=>{startApprovedPractice415();const q=pool[0];choosePractice(q.correct_answer??q.answer);return q.id;})()`);
   await a.evaluate(`window.esgSync40.syncNow()`);await b.evaluate(`window.esgSync40.syncNow()`);
   check('a_answer_visible_on_b',await b.evaluate(`Boolean(state.answered[${JSON.stringify(firstId)}])`));
@@ -98,10 +135,12 @@ try {
   await a.evaluate(`(()=>{state.answered['G3-UI-NEW']={correct:true,at:Date.now(),module:'esg',kp:'new-generation'};delete state.wrong['G3-UI-NEW'];save();return window.esgSync40.syncNow();})()`);
   await b.evaluate(`window.esgSync40.syncNow()`);
   check('b_loads_new_generation',await b.evaluate(`Boolean(state.answered['G3-UI-NEW']?.correct)&&!state.answered['G3-UI-RACE']`));
+  b.networkState.intentionalOffline=true;
   await b.send('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:0,uploadThroughput:0});
   await b.evaluate(`(()=>{state.answered['G3-OFFLINE']={correct:true,at:Date.now(),module:'scope',kp:'offline'};save();return true;})()`);
   check('offline_change_kept_locally',await b.evaluate(`Boolean(state.answered['G3-OFFLINE'])&&document.getElementById('syncStatus40').textContent.includes('离线')`));
   await b.send('Network.emulateNetworkConditions',{offline:false,latency:20,downloadThroughput:5000000,uploadThroughput:2000000});
+  b.networkState.intentionalOffline=false;
   await b.evaluate(`(()=>{window.dispatchEvent(new Event('online'));return window.esgSync40.syncNow();})()`);await a.evaluate(`window.esgSync40.syncNow()`);
   check('offline_change_syncs_after_reconnect',await a.evaluate(`Boolean(state.answered['G3-OFFLINE']?.correct)`));
   evidence.events.push({event:'B offline answer; reconnect; A pulled',at:new Date().toISOString()});
@@ -118,6 +157,8 @@ try {
   await Promise.all([writeFile(path.join(artifactDir,'gate3-device-a-desktop.png'),Buffer.from(screenshotA.data,'base64')),writeFile(path.join(artifactDir,'gate3-device-b-mobile.png'),Buffer.from(screenshotB.data,'base64'))]);
   check('javascript_console_error_warning_zero',a.consoleProblems.length===0&&b.consoleProblems.length===0);
   check('unhandled_http_4xx_5xx_zero',a.httpFailures.length===0&&b.httpFailures.length===0);
+  const unhandledNetworkFailures=[...a.networkFailures.slice(a.stableNetworkFailureStart),...b.networkFailures.slice(b.stableNetworkFailureStart)].filter(item=>!item.canceled&&!item.intentional_offline);
+  check('unhandled_network_failures_zero',unhandledNetworkFailures.length===0);
   evidence.result='PASS';
 } catch(error) { evidence.result='FAIL';evidence.error=String(error.stack||error);exitCode=1; }
 finally { if(a)await closeDevice(a);if(b)await closeDevice(b);await new Promise(resolve=>server.close(resolve)); }

@@ -7,13 +7,15 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 INDEX = (ROOT / 'index.html').read_text(encoding='utf-8')
 TRIAL = (ROOT / 'trial.html').read_text(encoding='utf-8')
-GATE3 = (ROOT / 'assets/gate3-v4110.js').read_text(encoding='utf-8')
+GATE3 = (ROOT / 'assets/gate3-v4111.js').read_text(encoding='utf-8')
 GATE1 = (ROOT / 'assets/gate1-v41.js').read_text(encoding='utf-8')
 CORE = (ROOT / 'assets/app-core-v41.js').read_text(encoding='utf-8')
 VENTURE = (ROOT / 'assets/venture-v39.js').read_text(encoding='utf-8')
 ADMIN = (ROOT / 'assets/account-admin-v36.js').read_text(encoding='utf-8')
 FEEDBACK = (ROOT / 'assets/feedback.js').read_text(encoding='utf-8')
 RUNTIME = (ROOT / 'assets/runtime-config.js').read_text(encoding='utf-8')
+TWO_BROWSER = (ROOT / 'tests/gate3_two_browser_test.mjs').read_text(encoding='utf-8')
+SIMPLIFY = (ROOT / 'assets/simplify-v35.js').read_text(encoding='utf-8')
 
 checks = []
 def check(name, condition):
@@ -21,7 +23,7 @@ def check(name, condition):
     print(('PASS' if condition else 'FAIL') + '  ' + name)
 
 check('version marked V4.1.11 technical candidate', 'V4.1.11 Technical Acceptance Candidate' in INDEX and 'V4.1.11' in GATE3)
-check('Gate 3 layer loaded last', INDEX.rfind('gate3-v4110.js') > INDEX.rfind('gate2-v415.js'))
+check('Gate 3 layer loaded last', INDEX.rfind('gate3-v4111.js') > INDEX.rfind('gate2-v415.js'))
 check('formal wrong-answer name is navigation label', '>错题回补<' in INDEX)
 check('venture title no longer says wrong-answer diagnosis', "titles.wrong = ['错题回补'" in VENTURE and '错题诊断' not in VENTURE)
 check('Gate 3 dynamic language guard exists', "titles.wrong = ['错题回补'" in GATE3 and "replaceAll('错题诊断', '错题回补')" in GATE3)
@@ -70,6 +72,10 @@ check('pilot activity cannot disappear behind a blank identifier', 'has_pilot_ac
 check('pilot validation errors identify the source row', '"row_number": row.get("_row_number")' in analyzer)
 check('pilot analyzer adversarial regression exists', (ROOT / 'tests/gate3_pilot_analyzer_test.py').is_file())
 check('staging concurrency test is included', (ROOT / 'tests/gate3_staging_api_test.ps1').is_file())
+check('online two-browser test performs retryable frontend preflight', 'preflightFrontend' in TWO_BROWSER and 'ERR_CONNECTION_CLOSED' in TWO_BROWSER)
+check('online two-browser test rejects unrecovered network failures', "check('unhandled_network_failures_zero'" in TWO_BROWSER and 'stableNetworkFailureStart' in TWO_BROWSER)
+check('login retries only bounded transient failures', 'transientLoginError35' in SIMPLIFY and 'attempt<=3' in SIMPLIFY)
+check('login retry communicates connection recovery', '连接波动，正在重试登入' in SIMPLIFY)
 
 scripts = sorted((ROOT / 'assets').glob('*.js'))
 for script in scripts:

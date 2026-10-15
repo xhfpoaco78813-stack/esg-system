@@ -1,5 +1,5 @@
 {
-  "started_at": "2026-10-14T22:59:34.890Z",
+  "started_at": "2026-10-15T23:12:20.538Z",
   "frontend_url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/index.html",
   "staging_backend": "https://cytyjqucdrvjppmimmjs.supabase.co",
   "checks": {
@@ -17,27 +17,44 @@
     "desktop_no_overflow": true,
     "mobile_no_overflow": true,
     "javascript_console_error_warning_zero": true,
-    "unhandled_http_4xx_5xx_zero": true
+    "unhandled_http_4xx_5xx_zero": true,
+    "unhandled_network_failures_zero": true
   },
   "devices": [
     {
       "name": "A-desktop-Chrome",
       "viewport": "1280x900",
-      "browser": "Chrome/155.0.8059.41",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36"
+      "browser": "Edg/155.0.4283.45",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "navigation_attempts": [
+        {
+          "attempt": 1,
+          "recovered": true,
+          "failures": []
+        }
+      ],
+      "recovered_auth_network_failures": []
     },
     {
       "name": "B-mobile-Edge",
       "viewport": "390x844",
       "browser": "Edg/155.0.4283.45",
-      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0"
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "navigation_attempts": [
+        {
+          "attempt": 1,
+          "recovered": true,
+          "failures": []
+        }
+      ],
+      "recovered_auth_network_failures": []
     }
   ],
   "events": [
     {
       "event": "A answered; B pulled",
-      "question_id": "GT-CN-003",
-      "at": "2026-10-14T23:00:20.272Z"
+      "question_id": "GT-CN-007",
+      "at": "2026-10-15T23:12:38.993Z"
     },
     {
       "event": "A invoked the visible cloud-delete control during sync",
@@ -46,27 +63,122 @@
         "handler": "function",
         "gate1": ""
       },
-      "at": "2026-10-14T23:00:20.281Z"
+      "at": "2026-10-15T23:12:39.007Z"
     },
     {
       "event": "Visible delete completed without waiting for stale sync",
-      "duration_ms": 802,
-      "at": "2026-10-14T23:00:21.074Z"
+      "duration_ms": 813,
+      "at": "2026-10-15T23:12:39.806Z"
     },
     {
       "event": "A delete during sync; B applied reset",
-      "at": "2026-10-14T23:00:22.875Z"
+      "at": "2026-10-15T23:12:41.668Z"
     },
     {
       "event": "B offline answer; reconnect; A pulled",
-      "at": "2026-10-14T23:00:32.423Z"
+      "at": "2026-10-15T23:12:49.645Z"
+    }
+  ],
+  "frontend_preflight": [
+    {
+      "attempt": 1,
+      "status": 200,
+      "duration_ms": 946
     }
   ],
   "result": "PASS",
-  "finished_at": "2026-10-14T23:00:43.744Z",
+  "finished_at": "2026-10-15T23:12:57.919Z",
   "staging_requests": [
     {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_progress_v40?select=payload%2Cversion%2Cupdated_at&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_data_resets_v41?select=reset_version%2Creset_at&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_data_resets_v41?select=reset_version%2Creset_at&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_progress_v40?select=payload%2Cversion%2Cupdated_at&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
       "url": "https://cytyjqucdrvjppmimmjs.supabase.co/auth/v1/token?grant_type=password",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
       "status": 200
     },
     {
@@ -114,23 +226,15 @@
       "status": 200
     },
     {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_data_resets_v41?select=reset_version%2Creset_at&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
       "status": 200
     },
     {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_progress_v40?select=payload%2Cversion%2Cupdated_at&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
       "status": 200
     },
     {
       "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_data_resets_v41?select=reset_version%2Creset_at&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_progress_v40?select=payload%2Cversion%2Cupdated_at&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
       "status": 200
     },
     {
@@ -147,6 +251,22 @@
     },
     {
       "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
       "status": 200
     },
     {
@@ -186,14 +306,6 @@
       "status": 200
     },
     {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
-      "status": 200
-    },
-    {
       "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
       "status": 200
     },
@@ -234,11 +346,11 @@
       "status": 200
     },
     {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_data_resets_v41?select=reset_version%2Creset_at&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
       "status": 200
     },
     {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_progress_v40?select=payload%2Cversion%2Cupdated_at&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
       "status": 200
     },
     {
@@ -258,7 +370,11 @@
       "status": 200
     },
     {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
       "status": 200
     },
     {
@@ -266,19 +382,7 @@
       "status": 200
     },
     {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_data_resets_v41?select=reset_version%2Creset_at&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_progress_v40?select=payload%2Cversion%2Cupdated_at&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/auth/v1/token?grant_type=password",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/auth/v1/token?grant_type=password",
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
       "status": 200
     },
     {
@@ -290,7 +394,47 @@
       "status": 200
     },
     {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/auth/v1/token?grant_type=password",
       "status": 200
     },
     {
@@ -298,7 +442,23 @@
       "status": 200
     },
     {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/auth/v1/token?grant_type=password",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
       "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
       "status": 200
     },
     {
@@ -307,98 +467,6 @@
     },
     {
       "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_data_resets_v41?select=reset_version%2Creset_at&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_progress_v40?select=payload%2Cversion%2Cupdated_at&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_progress_v40?select=payload%2Cversion%2Cupdated_at&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_data_resets_v41?select=reset_version%2Creset_at&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
-      "status": 200
-    },
-    {
-      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
       "status": 200
     },
     {
@@ -426,6 +494,30 @@
       "status": 200
     },
     {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
       "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
       "status": 200
     },
@@ -439,6 +531,66 @@
     },
     {
       "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_merge_learning_state_v40",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/rpc/esg_sync_exam_draft_v41",
       "status": 200
     },
     {
@@ -455,6 +607,14 @@
     },
     {
       "url": "https://cytyjqucdrvjppmimmjs.supabase.co/auth/v1/logout?scope=global",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
+      "status": 200
+    },
+    {
+      "url": "https://cytyjqucdrvjppmimmjs.supabase.co/rest/v1/esg_roles?select=role&user_id=eq.aa63ae35-5252-4a99-9e94-dd35d21f5806",
       "status": 200
     },
     {
@@ -486,19 +646,16 @@
     "device_a": [],
     "device_b": [
       {
-        "error": "net::ERR_CONNECTION_CLOSED",
+        "error": "net::ERR_ABORTED",
         "blocked_reason": "",
-        "canceled": false
+        "canceled": true,
+        "intentional_offline": false
       },
       {
         "error": "net::ERR_ABORTED",
         "blocked_reason": "",
-        "canceled": true
-      },
-      {
-        "error": "net::ERR_ABORTED",
-        "blocked_reason": "",
-        "canceled": true
+        "canceled": true,
+        "intentional_offline": false
       }
     ]
   },

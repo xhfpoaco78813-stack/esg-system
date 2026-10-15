@@ -1,134 +1,135 @@
 {
-  "started_at": "2026-10-14T23:01:22.2570794+00:00",
+  "started_at": "2026-10-15T23:19:33.0107984+00:00",
   "project_ref": "cytyjqucdrvjppmimmjs",
   "requests": [
     {
       "name": "login-device-a",
       "method": "POST",
       "status": 200,
-      "duration_ms": 1217
+      "duration_ms": 1551
     },
     {
       "name": "login-device-b",
       "method": "POST",
       "status": 200,
-      "duration_ms": 547
+      "duration_ms": 583
     },
     {
       "name": "question-bank-cors",
       "method": "OPTIONS",
       "status": 200,
-      "duration_ms": 335
+      "duration_ms": 359
     },
     {
       "name": "account-admin-cors",
       "method": "OPTIONS",
       "status": 200,
-      "duration_ms": 391
+      "duration_ms": 493
     },
     {
       "name": "question-bank-list",
       "method": "POST",
       "status": 200,
-      "duration_ms": 1284
+      "duration_ms": 1220
     },
     {
       "name": "baseline-delete",
       "method": "POST",
       "status": 200,
-      "duration_ms": 461
+      "duration_ms": 1023
     },
     {
       "name": "a-write-old-progress",
       "method": "POST",
       "status": 200,
-      "duration_ms": 925
+      "duration_ms": 517
     },
     {
       "name": "b-pull-old-progress",
       "method": "GET",
       "status": 200,
-      "duration_ms": 943
+      "duration_ms": 981
     },
     {
       "name": "a-write-old-draft",
       "method": "POST",
       "status": 200,
-      "duration_ms": 911
+      "duration_ms": 514
     },
     {
       "name": "b-racing-write",
       "method": "POST",
       "status": 200,
-      "duration_ms": 930
+      "duration_ms": 959
     },
     {
       "name": "a-racing-delete",
       "method": "POST",
       "status": 200,
-      "duration_ms": 1567
+      "duration_ms": 1216
     },
     {
       "name": "b-stale-progress-after-delete",
       "method": "POST",
       "status": 200,
-      "duration_ms": 447
+      "duration_ms": 510
     },
     {
       "name": "b-stale-draft-after-delete",
       "method": "POST",
       "status": 200,
-      "duration_ms": 955
+      "duration_ms": 504
     },
     {
       "name": "a-write-new-generation",
       "method": "POST",
       "status": 200,
-      "duration_ms": 930
+      "duration_ms": 531
     },
     {
       "name": "b-pull-new-generation",
       "method": "GET",
       "status": 200,
-      "duration_ms": 455
+      "duration_ms": 496
     },
     {
       "name": "b-stale-write-after-new-progress",
       "method": "POST",
       "status": 200,
-      "duration_ms": 484
+      "duration_ms": 525
     },
     {
       "name": "a-write-new-draft",
       "method": "POST",
       "status": 200,
-      "duration_ms": 462
+      "duration_ms": 518
     },
     {
       "name": "b-stale-draft-after-new-draft",
       "method": "POST",
       "status": 200,
-      "duration_ms": 964
+      "duration_ms": 504
     },
     {
       "name": "final-draft-state",
       "method": "GET",
       "status": 200,
-      "duration_ms": 440
+      "duration_ms": 509
     },
     {
       "name": "final-progress-state",
       "method": "GET",
       "status": 200,
-      "duration_ms": 450
+      "duration_ms": 513
     },
     {
       "name": "final-reset-state",
       "method": "GET",
       "status": 200,
-      "duration_ms": 933
+      "duration_ms": 508
     }
   ],
+  "network_retries": [],
   "checks": {
     "same_account_two_sessions": true,
     "question_bank_edge_function_cors": true,
@@ -149,13 +150,13 @@
     "no_unhandled_http_4xx_5xx": true
   },
   "final_state": {
-    "reset_version": 25,
+    "reset_version": 33,
     "progress_version": 2,
     "answer_ids": [
       "G3-NEW"
     ],
-    "draft_saved_at": "2026-10-15T07:01:34.692371+08:00"
+    "draft_saved_at": "2026-10-16T07:19:45.119187+08:00"
   },
   "result": "PASS",
-  "finished_at": "2026-10-14T23:01:37.7241090+00:00"
+  "finished_at": "2026-10-15T23:19:46.8698910+00:00"
 }

@@ -1,0 +1,31 @@
+{
+  "candidate": "V4.1.11 Gate 3 Revalidation Candidate",
+  "staging_url": "https://xhfpoaco78813-stack.github.io/esgtestsystem/",
+  "runs": [
+    {
+      "file": "gate3-two-browser-online-run1.json",
+      "started_at": "2026-10-15T23:10:13.323Z",
+      "finished_at": "2026-10-15T23:10:53.369Z",
+      "result": "PASS",
+      "checks_passed": 16,
+      "checks_total": 16,
+      "delete_duration_ms": 799,
+      "console_problems": 0,
+      "http_failures": 0,
+      "unhandled_network_failures": 0
+    },
+    {
+      "file": "gate3-two-browser-online-run2.json",
+      "started_at": "2026-10-15T23:12:20.538Z",
+      "finished_at": "2026-10-15T23:12:57.919Z",
+      "result": "PASS",
+      "checks_passed": 16,
+      "checks_total": 16,
+      "delete_duration_ms": 813,
+      "console_problems": 0,
+      "http_failures": 0,
+      "unhandled_network_failures": 0
+    }
+  ],
+  "result": "PASS"
+}

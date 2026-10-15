@@ -10,10 +10,13 @@ $apiKey = [regex]::Match($runtime, '"supabaseAnonKey":"([^"]+)"').Groups[1].Valu
 if (-not $url -or -not $apiKey.StartsWith('sb_publishable_')) { throw 'staging publishable runtime config missing' }
 
 $client = [System.Net.Http.HttpClient]::new()
+$client.DefaultRequestVersion = [Version]::new(1,1)
+$client.DefaultVersionPolicy = [System.Net.Http.HttpVersionPolicy]::RequestVersionOrLower
 $evidence = [ordered]@{
   started_at = [DateTimeOffset]::UtcNow.ToString('o')
   project_ref = ([Uri]$url).Host.Split('.')[0]
   requests = [System.Collections.Generic.List[object]]::new()
+  network_retries = [System.Collections.Generic.List[object]]::new()
   checks = [ordered]@{}
 }
 
@@ -26,11 +29,25 @@ function Start-ApiRequest {
     $json = $Body | ConvertTo-Json -Depth 20 -Compress
     $request.Content = [System.Net.Http.StringContent]::new($json, [Text.Encoding]::UTF8, 'application/json')
   }
-  [pscustomobject]@{Name=$Name;Method=$Method;Started=[Diagnostics.Stopwatch]::StartNew();Task=$client.SendAsync($request);Request=$request}
+  [pscustomobject]@{Name=$Name;Endpoint=$Endpoint;Method=$Method;Token=$Token;Body=$Body;HasBody=$PSBoundParameters.ContainsKey('Body');Started=[Diagnostics.Stopwatch]::StartNew();Task=$client.SendAsync($request);Request=$request}
 }
 function Complete-ApiRequest {
   param($Pending)
-  $response = $Pending.Task.GetAwaiter().GetResult()
+  $response = $null
+  for($attempt=1;$attempt -le 4;$attempt++) {
+    try {
+      $response = $Pending.Task.GetAwaiter().GetResult()
+      break
+    } catch {
+      $Pending.Started.Stop(); $Pending.Request.Dispose()
+      $transient = $_.Exception.ToString() -match 'SSL connection|unexpected EOF|connection.*closed|connection.*reset|timed out|temporarily unavailable'
+      if(-not $transient -or $attempt -eq 4){ throw }
+      $evidence.network_retries.Add([ordered]@{name=$Pending.Name;attempt=$attempt;error=$_.Exception.GetType().Name;duration_ms=$Pending.Started.ElapsedMilliseconds})
+      Start-Sleep -Milliseconds (300*$attempt)
+      if($Pending.HasBody){$Pending=Start-ApiRequest -Name $Pending.Name -Endpoint $Pending.Endpoint -Method $Pending.Method -Token $Pending.Token -Body $Pending.Body}
+      else{$Pending=Start-ApiRequest -Name $Pending.Name -Endpoint $Pending.Endpoint -Method $Pending.Method -Token $Pending.Token}
+    }
+  }
   $text = $response.Content.ReadAsStringAsync().GetAwaiter().GetResult()
   $Pending.Started.Stop()
   $evidence.requests.Add([ordered]@{name=$Pending.Name;method=$Pending.Method;status=[int]$response.StatusCode;duration_ms=$Pending.Started.ElapsedMilliseconds})
@@ -46,11 +63,16 @@ function Invoke-Api {
 }
 function Invoke-Rpc($Name,$Token,$Body,$Label) { Invoke-Api -Name $Label -Endpoint "/rest/v1/rpc/$Name" -Method POST -Token $Token -Body $Body }
 function Invoke-CorsProbe($Name,$Endpoint,$Origin) {
-  $request = [System.Net.Http.HttpRequestMessage]::new([System.Net.Http.HttpMethod]::Options, $url + $Endpoint)
-  [void]$request.Headers.TryAddWithoutValidation('Origin', $Origin)
-  [void]$request.Headers.TryAddWithoutValidation('Access-Control-Request-Method', 'POST')
-  [void]$request.Headers.TryAddWithoutValidation('Access-Control-Request-Headers', 'authorization,apikey,content-type')
-  $watch = [Diagnostics.Stopwatch]::StartNew(); $response = $client.SendAsync($request).GetAwaiter().GetResult(); $watch.Stop()
+  $response=$null;$request=$null;$watch=$null
+  for($attempt=1;$attempt -le 4;$attempt++){
+    $request = [System.Net.Http.HttpRequestMessage]::new([System.Net.Http.HttpMethod]::Options, $url + $Endpoint)
+    [void]$request.Headers.TryAddWithoutValidation('Origin', $Origin)
+    [void]$request.Headers.TryAddWithoutValidation('Access-Control-Request-Method', 'POST')
+    [void]$request.Headers.TryAddWithoutValidation('Access-Control-Request-Headers', 'authorization,apikey,content-type')
+    $watch=[Diagnostics.Stopwatch]::StartNew()
+    try{$response=$client.SendAsync($request).GetAwaiter().GetResult();$watch.Stop();break}
+    catch{$watch.Stop();$request.Dispose();$transient=$_.Exception.ToString()-match 'SSL connection|unexpected EOF|connection.*closed|connection.*reset|timed out|temporarily unavailable';if(-not $transient -or $attempt -eq 4){throw};$evidence.network_retries.Add([ordered]@{name=$Name;attempt=$attempt;error=$_.Exception.GetType().Name;duration_ms=$watch.ElapsedMilliseconds});Start-Sleep -Milliseconds (300*$attempt)}
+  }
   $statusCode = [int]$response.StatusCode
   $evidence.requests.Add([ordered]@{name=$Name;method='OPTIONS';status=$statusCode;duration_ms=$watch.ElapsedMilliseconds})
   $allowOrigin = if ($response.Headers.Contains('Access-Control-Allow-Origin')) { @($response.Headers.GetValues('Access-Control-Allow-Origin'))[0] } else { '' }
