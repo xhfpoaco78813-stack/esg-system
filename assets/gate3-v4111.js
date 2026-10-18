@@ -1,4 +1,4 @@
-/* System-ESG V4.1.11 technical acceptance remediation layer. Candidate only. */
+/* System-ESG V4.1.11 production release layer. */
 (() => {
   const $ = id => document.getElementById(id);
   const controlNames416 = {
@@ -49,9 +49,9 @@
   }
   function setVersion416() {
     const brand = document.querySelector('.brand small');
-    if (brand) brand.textContent = 'V4.1.11 技术验收候选版';
+    if (brand) brand.textContent = 'V4.1.11 正式版';
     const version = document.querySelector('#dash .hero .k');
-    if (version) version.textContent = 'V4.1.11 Technical Acceptance Candidate';
+    if (version) version.textContent = 'V4.1.11 正式版';
   }
   function init416() {
     unifyWrongAnswerLanguage416();

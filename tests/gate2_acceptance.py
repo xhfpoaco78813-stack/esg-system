@@ -59,7 +59,7 @@ check("all source records are approved", all(row["status"] == "approved" for row
 check("all approved questions have answer basis", all(bool(row[9]) for row in questions))
 
 check("V4.1.5 layer is loaded last", INDEX.rfind("gate2-v415.js") > INDEX.rfind("gate1-v41.js"))
-check("Gate 2 base is retained in technical candidate", "V4.1.11 Technical Acceptance Candidate" in INDEX and "V4.1.5 Gate 2 Revalidation" in GATE2)
+check("Gate 2 base is retained in V4.1.11 release", ("V4.1.11 Technical Acceptance Candidate" in INDEX or "V4.1.11 正式版" in INDEX) and "V4.1.5 Gate 2 Revalidation" in GATE2)
 check("home CTA says start practice", ">开始练习</button>" in INDEX and "startApprovedPractice415" in GATE2)
 check("home practice uses approved pool", "question.review_status === 'approved'" in GATE2 and "question.verified === true" in GATE2)
 check("practice type options map enum values", "GT_TYPES.map(type =>" in GATE2 and "typeLabels415" in GATE2)
