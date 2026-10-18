@@ -81,6 +81,17 @@ alter table public.esg_competency_snapshots enable row level security;
 
 revoke all on public.esg_knowledge_sources, public.esg_knowledge_points, public.esg_product_events, public.esg_validation_leads, public.esg_competency_snapshots from anon, authenticated;
 
+drop policy if exists esg_sources_read on public.esg_knowledge_sources;
+drop policy if exists esg_kp_read on public.esg_knowledge_points;
+drop policy if exists esg_events_insert on public.esg_product_events;
+drop policy if exists esg_events_editor_read on public.esg_product_events;
+drop policy if exists esg_leads_insert on public.esg_validation_leads;
+drop policy if exists esg_leads_editor_read on public.esg_validation_leads;
+drop policy if exists esg_leads_editor_update on public.esg_validation_leads;
+drop policy if exists esg_competency_self_insert on public.esg_competency_snapshots;
+drop policy if exists esg_competency_self_read on public.esg_competency_snapshots;
+drop policy if exists esg_competency_self_update on public.esg_competency_snapshots;
+
 create policy esg_sources_read on public.esg_knowledge_sources for select to authenticated using (review_status = 'approved' or public.esg_is_editor());
 create policy esg_kp_read on public.esg_knowledge_points for select to authenticated using ((verified and review_status = 'approved') or public.esg_is_editor());
 create policy esg_events_insert on public.esg_product_events for insert to anon, authenticated with check (user_id is null or user_id = (select auth.uid()));

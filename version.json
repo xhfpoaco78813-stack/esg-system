@@ -1,8 +1,8 @@
 {
   "version": "4.1.11-production",
-  "built_at": "2026-10-18T15:05:35.410328+00:00",
+  "built_at": "2026-10-18T23:52:47.239034+00:00",
   "gate": "Technical acceptance passed; production deployment authorized",
-  "deployment_status": "production-prepared; database-migration-pending; formal-site-unchanged",
+  "deployment_status": "production-live; formal-site-v4.1.11; formal-supabase-migrations-applied",
   "hash_scope": "Every packaged file except version.json; hashes use the exact ZIP entry bytes.",
   "files": {
     ".gitignore": "2a4fce9976377a39374db7d3e23bc8358227ff8c6d33f218c7df17918484fa41",
@@ -42,6 +42,7 @@
     "docs/GATE3-REVALIDATION-V419-REPORT.md": "8faa2467d3ac0cb462c2e7319a47c24bf9d0d15da8e62ec5a6a191c9d93833ea",
     "docs/GATE3-STAGING-MANIFEST.md": "82f1bda7f04627de2944a3c95cb2263fe6664ba96125fb1bb321ba6d86ab1db3",
     "docs/GATE3-TWO-BROWSER-VALIDATION.md": "5e9ebb2c892cbf243a0302ebfc9e737ae61794b70133832f14073f62d24d7809",
+    "docs/V4.1.11-PRODUCTION-DEPLOYMENT.md": "c968bb4fb81aa46edff613a16e4a2c63de44b9b52f100c43e9acbfa18c6d5b7e",
     "docs/V4.1.11-TECHNICAL-ACCEPTANCE.md": "679df4415d00a32afc632cc877e8b35488862c3390c3a66f4eb46f652c5a2b42",
     "index.html": "c79dc2b4615910f800496b76765df3b1925f7fabb5845b730feb5fac9615cbe6",
     "pilot.html": "aad5344f972214ab73940aaa62082ec53ac7db20dc8adc1670d29639bd86246d",
@@ -50,7 +51,7 @@
     "supabase/migrations/202609140001_v33_roles_prerequisite.sql": "776e29e6b1089f3ed811b319a661650c15d3c5c141c79bb402ffaf765de7ad2a",
     "supabase/migrations/202609150001_v34_feedback.sql": "e48409ca2b6cf8289d83464a63656e505002f97dbe805eea2f9585bd79cc523e",
     "supabase/migrations/202609170001_v36_account_admin.sql": "ef47d5db6f1bfdefe1056aa2af312cb50fec1cb312c83749a50ca3ad02918666",
-    "supabase/migrations/202610070001_v39_venture_validation.sql": "89c8cb9270050dcf1eb7ce9595a6137172734473c1bd37690c7ba65b2651358e",
+    "supabase/migrations/202610070001_v39_venture_validation.sql": "0c62772e138627d99cc44447c0d27315afc078fb4ac09656e5f92470018bfc93",
     "supabase/migrations/202610080001_v40_cross_device_sync.sql": "34e967189790ce71ed0940278ec213a3f448f5d92a2f6340a40b42d1462a5a51",
     "supabase/migrations/202610080002_v40_exam_draft_tombstone.sql": "69fdf3352edcf4ec8f189b3d3eef9acd5e4a164b184886812b226a45de1da81f",
     "supabase/migrations/202610080003_v40_exam_draft_polling.sql": "b5fdd1298f6505291b24b81bbeae366fad6d62eb5b7c27c6742508863df6f540",
